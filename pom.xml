@@ -33,6 +33,23 @@
     </properties>
 
     <developers>
+
+        <developer>
+            <id>TerryIsmael</id>
+            <name>Ismael</name>
+            <email>terryismael2@gmailcom</email>
+            <url>https://github.com/TerryIsmael</url>
+            <roles>
+                <role>Contributor</role>
+            </roles>
+            <properties>
+                <picUrl>
+                https://avatars.githubusercontent.com/u/106593307?v=4&amp;format=jpg&amp;name
+                =large
+                </picUrl>
+            </properties>
+        </developer>
+        
         <developer>
             <id>Dani</id>
             <name>Daniel</name>
@@ -47,6 +64,7 @@
                 </picUrl>
             </properties>
         </developer>
+
         <developer>
  		        <id>Virgilio</id>
 		            <name>Virgilio</name>
