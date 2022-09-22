@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springframework.samples</groupId>
-    <artifactId>spring-petclinic</artifactId>
+    <artifactId>G2-L4</artifactId>
     <version>2.2.0.BUILD-SNAPSHOT</version>
 
     <parent>
@@ -12,7 +12,7 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.2.4.RELEASE</version>
     </parent>
-    <name>petclinic</name>
+    <name>G2-L4-4</name>
 
     <properties>
 
@@ -31,7 +31,9 @@
         <spring-format.version>0.0.19</spring-format.version>
 
     </properties>
+
     <developers>
+ josalcsan1
  <developer>
  <id>josalcsan1</id>
  <name>JoseJavier</name>
@@ -46,8 +48,21 @@ https://us.123rf.com/450wm/atoss/atoss1910/atoss191000025/131367855-colecci%C3%B
 </picUrl>
  </properties>
  </developer>
- <!-- More developers ...-->
-</developers>
+        <developer>
+            <id>rafgoncas1</id>
+            <name>Rafael</name>
+            <email>rafaelgonzalezcastillero@gmail.com</email>
+            <url>https://www.youtube.com/watch?v=dQw4w9WgXcQ</url>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <properties>
+                <picUrl>
+                 https://pbs.twimg.com/media/Eh4n9GhUMAAdO8x?format=jpg&amp;name=large
+                </picUrl>
+            </properties>
+        </developer>
+    </developers>
     <dependencies>
         <!-- Spring and Spring Boot dependencies -->
         <dependency>
