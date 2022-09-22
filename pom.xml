@@ -31,7 +31,22 @@
         <spring-format.version>0.0.19</spring-format.version>
 
     </properties>
-
+    <developers>
+        <developer>
+            <id>Dani</id>
+            <name>Daniel</name>
+            <email>daniel.arriaza.arriaza@gmail.com</email>
+            <url>https://www.rosalia.com/tour/</url>
+            <roles>
+                <role>tester</role>
+            </roles>
+            <properties>
+                <picUrl>
+                https://i.pinimg.com/originals/5d/c1/6c/5dc16c432dfef87cd96f401a90ac5dcb.jpg
+                </picUrl>
+            </properties>
+        </developer>
+    </developers>
     <dependencies>
         <!-- Spring and Spring Boot dependencies -->
         <dependency>
