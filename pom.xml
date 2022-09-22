@@ -32,24 +32,21 @@
 
     </properties>
 
- 		<developer>
- 		<id>Virgilio</id>
-		<name>Virgilio</name>
- 		<email>sowonation.gfriend@gmail.com</email>
- 		<url>https://github.com/virolialo</url>
- 		<roles>
- 			<role>leader</role>
- 		</roles>
- 		<properties>
- 			<picUrl>
-				https://avatars.githubusercontent.com/u/106593307?v=4&amp;format=jpg&amp;name
-                =large
-			</picUrl>
- 		</properties>
- 	</developer>
-
     <developers>
-      
+        <developer>
+            <id>Dani</id>
+            <name>Daniel</name>
+            <email>daniel.arriaza.arriaza@gmail.com</email>
+            <url>https://www.rosalia.com/tour/</url>
+            <roles>
+                <role>tester</role>
+            </roles>
+            <properties>
+                <picUrl>
+                https://i.pinimg.com/originals/5d/c1/6c/5dc16c432dfef87cd96f401a90ac5dcb.jpg
+                </picUrl>
+            </properties>
+        </developer>
         <developer>
  		        <id>Virgilio</id>
 		            <name>Virgilio</name>
@@ -93,7 +90,6 @@
                 </picUrl>
             </properties>
         </developer>
-        
     </developers>
 
     <dependencies>
