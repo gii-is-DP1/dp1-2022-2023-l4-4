@@ -33,6 +33,21 @@
     </properties>
 
     <developers>
+ josalcsan1
+ <developer>
+ <id>josalcsan1</id>
+ <name>JoseJavier</name>
+ <email>jjavierrr20@gmail.com</email>
+ <url>https://github.com/gii-is-DP1</url>
+ <roles>
+ <role>Developer</role>
+ </roles>
+ <properties>
+ <picUrl>
+https://us.123rf.com/450wm/atoss/atoss1910/atoss191000025/131367855-colecci%C3%B3n-de-aguacate-aislado-en-blanco-medio-camino-de-recortes-de-aguacate-fotograf%C3%ADa-macro-de-est.jpg?ver=6
+</picUrl>
+ </properties>
+ </developer>
         <developer>
             <id>rafgoncas1</id>
             <name>Rafael</name>
@@ -48,7 +63,6 @@
             </properties>
         </developer>
     </developers>
-
     <dependencies>
         <!-- Spring and Spring Boot dependencies -->
         <dependency>
