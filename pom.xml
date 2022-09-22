@@ -32,6 +32,23 @@
 
     </properties>
 
+    <developers>
+        <developer>
+            <id>rafgoncas1</id>
+            <name>Rafael</name>
+            <email>rafaelgonzalezcastillero@gmail.com</email>
+            <url>https://www.youtube.com/watch?v=dQw4w9WgXcQ</url>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <properties>
+                <picUrl>
+                 https://pbs.twimg.com/media/Eh4n9GhUMAAdO8x?format=jpg&amp;name=large
+                </picUrl>
+            </properties>
+        </developer>
+    </developers>
+
     <dependencies>
         <!-- Spring and Spring Boot dependencies -->
         <dependency>
