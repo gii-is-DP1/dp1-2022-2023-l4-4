@@ -31,7 +31,24 @@
         <spring-format.version>0.0.19</spring-format.version>
 
     </properties>
-
+	<developers>
+ 		<developer>
+ 		<id>Virgilio</id>
+		<name>Virgilio</name>
+ 		<email>sowonation.gfriend@gmail.com</email>
+ 		<url>https://github.com/virolialo</url>
+ 		<roles>
+ 			<role>leader</role>
+ 		</roles>
+ 		<properties>
+ 			<picUrl>
+				https://avatars.githubusercontent.com/u/106593307?v=4&amp;format=jpg&amp;name
+                =large
+			</picUrl>
+ 		</properties>
+ 	</developer>
+ 	</developers>
+ 	
     <dependencies>
         <!-- Spring and Spring Boot dependencies -->
         <dependency>
