@@ -10,7 +10,7 @@
     <div class="row">
         <h2> Project ${title}</h2>
         <p><h2> Group ${group}</h2></p>
-        <p><ul>
+        <p><ul> 
             <c:forEach items="${persons}" var="person">
                 <li>${person.firstName}&nbsp;${person.lastName}</li>
             </c:forEach>
