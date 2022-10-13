@@ -1,3 +1,6 @@
+# Vídeo a las normas del juego 
+https://www.youtube.com/watch?v=O5SUvapiPrE
+
 # Spring PetClinic Sample Application 
 
 This is a fork of https://github.com/spring-projects/spring-petclinic to be used for the DP1 course. The main changes that have been performed were:
