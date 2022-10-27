@@ -20,10 +20,10 @@ import lombok.Setter;
 @Table(name = "celd")
 public class Celd extends BaseEntity{
 
-    @Column(name="celdType")
+    @Column(name="celd_type")
     private CeldType celdType;
 
-    @Column(name="connectedCelds")
+    @Column(name="connected_celds")
     private List<Celd> connectectedCelds;
     
 }
