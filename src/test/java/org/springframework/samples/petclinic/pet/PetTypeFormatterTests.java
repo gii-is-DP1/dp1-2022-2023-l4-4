@@ -14,6 +14,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.cluedo.pet.PetService;
+import org.springframework.cluedo.pet.PetType;
+import org.springframework.cluedo.pet.PetTypeFormatter;
 
 /**
  * Test class for {@link PetTypeFormatter}
