@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.cluedo.pet;
+package org.springframework.samples.petclinic.pet;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -33,9 +33,9 @@ import javax.persistence.Table;
 
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
-import org.springframework.cluedo.model.NamedEntity;
-import org.springframework.cluedo.owner.Owner;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.samples.petclinic.model.NamedEntity;
+import org.springframework.samples.petclinic.owner.Owner;
 
 /**
  * Simple business object representing a pet.
