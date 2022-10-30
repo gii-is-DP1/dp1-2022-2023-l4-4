@@ -1,6 +1,7 @@
 package org.springframework.samples.petclinic.user;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -25,4 +26,8 @@ public class UserGame extends BaseEntity{
     private Boolean isAfk;
     @NotNull
     private SuspectType suspect;
+
+    @ManyToOne(optional = false)
+    private User user;
+
 }

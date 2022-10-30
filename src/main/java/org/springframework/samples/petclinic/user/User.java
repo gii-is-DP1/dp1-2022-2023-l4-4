@@ -31,6 +31,9 @@ public class User extends BaseEntity{
 	private String imageurl;
 	
 	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userGame")
+	private Set<UserGame> userGames;
+
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	private Set<Authorities> authorities;
 }
