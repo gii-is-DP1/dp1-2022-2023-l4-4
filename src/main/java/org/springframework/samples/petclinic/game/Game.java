@@ -30,7 +30,7 @@ public class Game {
 
     @OneToOne
     @JoinColumn(name = "user_id")
-	private User hostId;
+	private User host;
 
     private Integer playersNumber;
     private boolean isPrivate;
