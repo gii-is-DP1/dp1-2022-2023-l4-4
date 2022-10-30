@@ -1,5 +1,10 @@
 package org.springframework.samples.petclinic.game;
 
-public interface GameRepository {
-    
+import java.util.List;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.repository.CrudRepository;
+
+public interface GameRepository extends CrudRepository<Game,Integer>{
+     List<Game> findAll() throws DataAccessException;
 }
