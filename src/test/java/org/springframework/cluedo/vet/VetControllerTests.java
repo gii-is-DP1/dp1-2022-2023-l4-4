@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.vet;
+package org.springframework.cluedo.vet;
 
 import static org.hamcrest.xml.HasXPath.hasXPath;
 import static org.mockito.BDDMockito.given;
@@ -15,10 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cluedo.configuration.SecurityConfiguration;
-import org.springframework.cluedo.vet.Specialty;
-import org.springframework.cluedo.vet.Vet;
-import org.springframework.cluedo.vet.VetController;
-import org.springframework.cluedo.vet.VetService;
+
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;

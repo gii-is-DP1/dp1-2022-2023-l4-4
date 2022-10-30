@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.owner;
+package org.springframework.cluedo.owner;
 
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
@@ -17,9 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cluedo.configuration.SecurityConfiguration;
-import org.springframework.cluedo.owner.Owner;
-import org.springframework.cluedo.owner.OwnerController;
-import org.springframework.cluedo.owner.OwnerService;
 import org.springframework.cluedo.user.AuthoritiesService;
 import org.springframework.cluedo.user.UserService;
 import org.springframework.context.annotation.ComponentScan;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.samples.petclinic.vet;
+package org.springframework.cluedo.owner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,11 +22,12 @@ import java.util.Collection;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.cluedo.util.EntityUtils;
-import org.springframework.cluedo.vet.Vet;
-import org.springframework.cluedo.vet.VetService;
+import org.springframework.cluedo.owner.Owner;
+import org.springframework.cluedo.owner.OwnerService;
+import org.springframework.cluedo.user.User;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Integration test of the Service and the Repository layer.
@@ -40,7 +41,7 @@ import org.springframework.stereotype.Service;
  * <li><strong>Dependency Injection</strong> of test fixture instances, meaning that we
  * don't need to perform application context lookups. See the use of
  * {@link Autowired @Autowired} on the <code>{@link
- * ClinicServiceTests#clinicService clinicService}</code> instance variable, which uses
+ * OwnerServiceTests#clinicService clinicService}</code> instance variable, which uses
  * autowiring <em>by type</em>.
  * <li><strong>Transaction management</strong>, meaning each test method is executed in
  * its own transaction, which is automatically rolled back by default. Thus, even if tests
@@ -59,20 +60,65 @@ import org.springframework.stereotype.Service;
  */
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-class VetServiceTests {
-
-	@Autowired
-	protected VetService vetService;	
+class OwnerServiceTests {                
+        @Autowired
+	protected OwnerService ownerService;
 
 	@Test
-	void shouldFindVets() {
-		Collection<Vet> vets = this.vetService.findVets();
+	void shouldFindOwnersByLastName() {
+		Collection<Owner> owners = this.ownerService.findOwnerByLastName("Davis");
+		assertThat(owners.size()).isEqualTo(2);
 
-		Vet vet = EntityUtils.getById(vets, Vet.class, 3);
-		assertThat(vet.getLastName()).isEqualTo("Douglas");
-		assertThat(vet.getNrOfSpecialties()).isEqualTo(2);
-		assertThat(vet.getSpecialties().get(0).getName()).isEqualTo("dentistry");
-		assertThat(vet.getSpecialties().get(1).getName()).isEqualTo("surgery");
+		owners = this.ownerService.findOwnerByLastName("Daviss");
+		assertThat(owners.isEmpty()).isTrue();
+	}
+
+	@Test
+	void shouldFindSingleOwnerWithPet() {
+		Owner owner = this.ownerService.findOwnerById(1);
+		assertThat(owner.getLastName()).startsWith("Franklin");
+		assertThat(owner.getPets().size()).isEqualTo(1);
+		assertThat(owner.getPets().get(0).getType()).isNotNull();
+		assertThat(owner.getPets().get(0).getType().getName()).isEqualTo("cat");
+	}
+
+	@Test
+	@Transactional
+	public void shouldInsertOwner() {
+		Collection<Owner> owners = this.ownerService.findOwnerByLastName("Schultz");
+		int found = owners.size();
+
+		Owner owner = new Owner();
+		owner.setFirstName("Sam");
+		owner.setLastName("Schultz");
+		owner.setAddress("4, Evans Street");
+		owner.setCity("Wollongong");
+		owner.setTelephone("4444444444");
+                User user=new User();
+                user.setUsername("Sam");
+                user.setPassword("supersecretpassword");
+                owner.setUser(user);                
+                
+		this.ownerService.saveOwner(owner);
+		assertThat(owner.getId().longValue()).isNotEqualTo(0);
+
+		owners = this.ownerService.findOwnerByLastName("Schultz");
+		assertThat(owners.size()).isEqualTo(found + 1);
+	}
+
+	@Test
+	@Transactional
+	void shouldUpdateOwner() {
+		Owner owner = this.ownerService.findOwnerById(1);
+		String oldLastName = owner.getLastName();
+		String newLastName = oldLastName + "X";
+
+		owner.setLastName(newLastName);
+		this.ownerService.saveOwner(owner);
+
+		// retrieving new name from database
+		owner = this.ownerService.findOwnerById(1);
+		assertThat(owner.getLastName()).isEqualTo(newLastName);
 	}
 
 

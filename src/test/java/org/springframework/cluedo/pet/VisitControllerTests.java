@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.pet;
+package org.springframework.cluedo.pet;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -14,9 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cluedo.configuration.SecurityConfiguration;
-import org.springframework.cluedo.pet.Pet;
-import org.springframework.cluedo.pet.PetService;
-import org.springframework.cluedo.pet.VisitController;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;

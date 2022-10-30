@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.samples.petclinic.pet;
+package org.springframework.cluedo.pet;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,10 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.cluedo.owner.Owner;
 import org.springframework.cluedo.owner.OwnerService;
-import org.springframework.cluedo.pet.Pet;
-import org.springframework.cluedo.pet.PetService;
-import org.springframework.cluedo.pet.PetType;
-import org.springframework.cluedo.pet.Visit;
 import org.springframework.cluedo.pet.exceptions.DuplicatedPetNameException;
 import org.springframework.cluedo.util.EntityUtils;
 import org.springframework.context.annotation.ComponentScan;

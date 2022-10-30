@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.web;
+package org.springframework.cluedo.web;
 
 /**
  * Test class for {@link CrashController}

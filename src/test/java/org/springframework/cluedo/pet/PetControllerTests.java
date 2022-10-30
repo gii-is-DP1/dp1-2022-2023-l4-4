@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.pet;
+package org.springframework.cluedo.pet;
 
 /*
  * Copyright 2012-2019 the original author or authors.
@@ -33,11 +33,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cluedo.configuration.SecurityConfiguration;
 import org.springframework.cluedo.owner.Owner;
 import org.springframework.cluedo.owner.OwnerService;
-import org.springframework.cluedo.pet.Pet;
-import org.springframework.cluedo.pet.PetController;
-import org.springframework.cluedo.pet.PetService;
-import org.springframework.cluedo.pet.PetType;
-import org.springframework.cluedo.pet.PetTypeFormatter;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
