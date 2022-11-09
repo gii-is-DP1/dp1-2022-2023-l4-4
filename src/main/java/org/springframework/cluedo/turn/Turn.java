@@ -10,6 +10,7 @@ import javax.persistence.OneToMany;
 
 import org.springframework.cluedo.celd.Celd;
 import org.springframework.cluedo.enumerates.Phase;
+import org.springframework.cluedo.model.BaseEntity;
 import org.springframework.cluedo.user.UserGame;
 import org.springframework.data.annotation.Id;
 
@@ -19,12 +20,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Turn {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique=true,nullable=false,precision=10)
-    private long id;
+public class Turn extends BaseEntity{
     
 
     @ManyToOne
@@ -44,6 +40,5 @@ public class Turn {
     private Celd finalPosition;
 
     private Phase phase;
-
 
 }
