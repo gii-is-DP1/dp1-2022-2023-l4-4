@@ -3,6 +3,7 @@ package org.springframework.cluedo.turn;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cluedo.accusation.AccusationController;
 import org.springframework.cluedo.enumerates.Phase;
 import org.springframework.cluedo.exceptions.WrongPhaseException;
 import org.springframework.stereotype.Service;
@@ -12,10 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class TurnService {
     
     private TurnRepository turnRepository;
+    private AccusationController accusationController;
 
     @Autowired
-    private TurnService (TurnRepository turnRepository){
+    private TurnService (TurnRepository turnRepository, AccusationController accusationController){
         this.turnRepository=turnRepository;
+        this.accusationController=accusationController;
     }
 
     public Turn throwDice(Turn turn) throws WrongPhaseException{
@@ -33,13 +36,22 @@ public class TurnService {
         if(turn.getPhase()!=Phase.ACUSATION){
             throw new WrongPhaseException();
         }
-        turn.setPhase(Phase.MOVEMENT);
+        accusationController.makeAccusation();
+        turn.setPhase(Phase.FINAL);
+        return save(turn);
+    }
+
+    public Turn makeFinalAcusation(Turn turn) throws WrongPhaseException{
+        if(turn.getPhase()!=Phase.FINAL){
+            throw new WrongPhaseException();
+        }
+        accusationController.makeFinalAcusation();
+        turn.setPhase(Phase.FINISHED);
         return save(turn);
     }
 
     @Transactional
     public Turn save(Turn turn){
-        turnRepository.save(turn);
-        return turn;
+        return turnRepository.save(turn);
     }
 }
