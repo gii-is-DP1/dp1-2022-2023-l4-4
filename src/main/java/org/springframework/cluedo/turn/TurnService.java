@@ -3,7 +3,7 @@ package org.springframework.cluedo.turn;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cluedo.accusation.AccusationController;
+import org.springframework.cluedo.celd.Celd;
 import org.springframework.cluedo.enumerates.Phase;
 import org.springframework.cluedo.exceptions.WrongPhaseException;
 import org.springframework.stereotype.Service;
@@ -13,12 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class TurnService {
     
     private TurnRepository turnRepository;
-    private AccusationController accusationController;
 
     @Autowired
-    private TurnService (TurnRepository turnRepository, AccusationController accusationController){
+    private TurnService (TurnRepository turnRepository){
         this.turnRepository=turnRepository;
-        this.accusationController=accusationController;
     }
 
     public Turn throwDice(Turn turn) throws WrongPhaseException{
@@ -32,20 +30,32 @@ public class TurnService {
         return save(turn);
     } 
 
-    public Turn makeAcusation(Turn turn) throws WrongPhaseException{
+    public Turn moveCharacter(Turn turn,Celd finalPosition) throws WrongPhaseException{
+        if(turn.getPhase()!=Phase.MOVEMENT){
+            throw new WrongPhaseException();
+        }
+        //celdController.movement()
+        turn.setFinalPosition(finalPosition);
+        turn.setPhase(Phase.ACUSATION);
+        return (turn);
+    }
+
+    public Turn makeAccusation(Turn turn) throws WrongPhaseException{
         if(turn.getPhase()!=Phase.ACUSATION){
             throw new WrongPhaseException();
         }
-        accusationController.makeAccusation();
+        //accusationController.makeAccusation();
         turn.setPhase(Phase.FINAL);
         return save(turn);
     }
 
-    public Turn makeFinalAcusation(Turn turn) throws WrongPhaseException{
+    public Turn makeFinalDecision(Turn turn,boolean finalAccusation) throws WrongPhaseException{
         if(turn.getPhase()!=Phase.FINAL){
             throw new WrongPhaseException();
         }
-        accusationController.makeFinalAcusation();
+       /* if(finalAccusation){
+            accusationController.makeFinalAcusation();
+        }*/ 
         turn.setPhase(Phase.FINISHED);
         return save(turn);
     }
