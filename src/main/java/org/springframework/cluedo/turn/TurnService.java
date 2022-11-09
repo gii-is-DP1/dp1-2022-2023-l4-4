@@ -62,7 +62,6 @@ public class TurnService {
 
     @Transactional
     public Turn save(Turn turn){
-        turnRepository.save(turn);
-        return turn;
+        return turnRepository.save(turn);
     }
 }
