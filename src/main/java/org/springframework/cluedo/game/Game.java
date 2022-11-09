@@ -6,6 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.cluedo.enumerates.SuspectType;
 import org.springframework.cluedo.model.BaseEntity;
@@ -25,9 +28,17 @@ public class Game extends BaseEntity{
     @JoinColumn(name = "host_id")
 	private User host;
 
+    @Min(3)
+    @Max(6)
+    @NotNull
     private Integer playersNumber;
+
+    @NotNull
     private boolean isPrivate;
+
+    @NotNull
     private Status status;
+
     private SuspectType initialPlayer;
 
     @OneToOne
@@ -35,7 +46,9 @@ public class Game extends BaseEntity{
 	private User winner;
 
     private Duration duration;
+
     private Integer round;
+
     private SuspectType playerTurn;
     
 }

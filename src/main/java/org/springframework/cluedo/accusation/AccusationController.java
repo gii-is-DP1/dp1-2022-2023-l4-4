@@ -15,8 +15,4 @@ public class AccusationController {
     public String makeAccusation() {
         return null;
     }
-
-    public Accusation makeFinalAcusation(){
-        return null;
-    }
 }
