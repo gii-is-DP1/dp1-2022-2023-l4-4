@@ -11,4 +11,8 @@ public class AccusationService {
     public AccusationService(AccusationRepository accusationRepository) {
         this.accusationRepository = accusationRepository;
     }
+    
+    public Accusation saveAccusation(Accusation accusation) {
+        return accusationRepository.save(accusation);
+    }
 }

@@ -31,4 +31,7 @@ public class Accusation extends BaseEntity{
     @NotNull
     private Card roomCard;
     
+    @ManyToOne
+    @JoinColumn(name = "shown_card_id")
+    private Card shownCard;
 }
