@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.cluedo.celd.Celd;
 import org.springframework.cluedo.enumerates.Phase;
@@ -18,23 +19,26 @@ import lombok.Setter;
 @Setter
 public class Turn extends BaseEntity{
     
-
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "user_game_id")
     private UserGame userGameId;
 
+    @NotNull
     private Integer round;
 
     private Integer diceResult;
     
     @OneToMany
-    @JoinColumn(name = "celd_id")
-    private Celd initialPosition;
+    @NotNull
+    @JoinColumn(name = "initia_celd_id")
+    private Celd initialCeld;
 
     @OneToMany
-    @JoinColumn(name = "celd_id")
-    private Celd finalPosition;
+    @JoinColumn(name = "final_celd_id")
+    private Celd finalCeld;
 
+    @NotNull
     private Phase phase;
 
 }
