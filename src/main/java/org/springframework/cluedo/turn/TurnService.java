@@ -30,12 +30,12 @@ public class TurnService {
         return save(turn);
     } 
 
-    public Turn moveCharacter(Turn turn,Celd finalPosition) throws WrongPhaseException{
+    public Turn moveCharacter(Turn turn,Celd finalCeld) throws WrongPhaseException{
         if(turn.getPhase()!=Phase.MOVEMENT){
             throw new WrongPhaseException();
         }
         //celdController.movement()
-        turn.setFinalPosition(finalPosition);
+        turn.setFinalCeld(finalCeld);
         turn.setPhase(Phase.ACUSATION);
         return (turn);
     }
