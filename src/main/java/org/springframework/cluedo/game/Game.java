@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -17,6 +18,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.cluedo.model.BaseEntity;
 import org.springframework.cluedo.user.User;
+import org.springframework.cluedo.accusation.Accusation;
 import org.springframework.cluedo.enumerates.Status;
 
 import lombok.Getter;
@@ -57,4 +59,8 @@ public class Game extends BaseEntity{
     @JoinTable(name="lobby")
     private List<User> players;
     
+    @ManyToOne
+    @JoinColumn(name="crime_scene")
+    private Accusation crimeScene;
+
 }

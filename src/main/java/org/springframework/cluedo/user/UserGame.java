@@ -1,12 +1,17 @@
 package org.springframework.cluedo.user;
 
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cluedo.card.Card;
 import org.springframework.cluedo.game.Game;
 import org.springframework.cluedo.model.BaseEntity;
 
@@ -37,4 +42,8 @@ public class UserGame extends BaseEntity{
     @ManyToOne
     @JoinColumn(name="game_id")
     private Game game;
+
+    @ManyToMany
+    @JoinTable(name="user_cards")
+    private Set<Card> cards;
 }
