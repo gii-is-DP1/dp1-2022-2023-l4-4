@@ -4,14 +4,12 @@ import java.time.Duration;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.cluedo.enumerates.SuspectType;
 import org.springframework.cluedo.model.BaseEntity;
 import org.springframework.cluedo.user.User;
 import org.springframework.cluedo.enumerates.Status;
@@ -48,6 +46,6 @@ public class Game extends BaseEntity{
 
     private Integer round;
 
-    private SuspectType playerTurn;
+    private Integer turnNumber;
     
 }
