@@ -4,6 +4,7 @@ import java.time.Duration;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
@@ -38,8 +39,6 @@ public class Game extends BaseEntity{
 
     @NotNull
     private Status status;
-
-    private SuspectType initialPlayer;
 
     @OneToOne
     @JoinColumn(name = "winner_id")
