@@ -1,10 +1,10 @@
 -- One admin user, named admin1 with passwor 4dm1n and authority admin
-INSERT INTO users(username,password,email,imageurl,is_admin) VALUES ('user1','v3t',"user1@gmail.com",null,FALSE);
+INSERT INTO users(id,username,password,email,imageurl,is_admin) VALUES (1,'user1','v3t',"user1@gmail.com",null,FALSE);
 -- One owner user, named owner1 with passwor 0wn3r
-INSERT INTO users(username,password,email,imageurl,is_admin) VALUES ('admin1','0wn3r',"admin1@gmail.com",null,TRUE);
+INSERT INTO users(id,username,password,email,imageurl,is_admin) VALUES (2,'admin1','0wn3r',"admin1@gmail.com",null,TRUE);
 
 -- One vet user, named vet1 with passwor v3t
-INSERT INTO users(username,password,email,imageurl,is_admin) VALUES ('user1','v3t',"user2@gmail.com",null,FALSE);
+INSERT INTO users(id,username,password,email,imageurl,is_admin) VALUES (3,'user1','v3t',"user2@gmail.com",null,FALSE);
 
 
 INSERT INTO vets(id, first_name,last_name) VALUES (1, 'James', 'Carter');
