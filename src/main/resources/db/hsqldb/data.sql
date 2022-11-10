@@ -1,11 +1,15 @@
 -- One admin user, named admin1 with passwor 4dm1n and authority admin
-INSERT INTO users(username,password,email,imageurl,is_admin) VALUES ('user1','v3t',"user1@gmail.com",null,FALSE);
+INSERT INTO users(username,password,enabled) VALUES ('admin1','4dm1n',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (1,'admin1','admin');
 -- One owner user, named owner1 with passwor 0wn3r
-INSERT INTO users(username,password,email,imageurl,is_admin) VALUES ('admin1','0wn3r',"admin1@gmail.com",null,TRUE);
-
+INSERT INTO users(username,password,enabled) VALUES ('owner1','0wn3r',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (2,'owner1','owner');
 -- One vet user, named vet1 with passwor v3t
-INSERT INTO users(username,password,email,imageurl,is_admin) VALUES ('user1','v3t',"user2@gmail.com",null,FALSE);
+INSERT INTO users(username,password,enabled) VALUES ('vet1','v3t',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (3,'vet1','veterinarian');
 
+INSERT INTO users(username,password,enabled) VALUES ('ismbargar','ismbargar',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (4,'ismbargar','owner');
 
 INSERT INTO vets(id, first_name,last_name) VALUES (1, 'James', 'Carter');
 INSERT INTO vets(id, first_name,last_name) VALUES (2, 'Helen', 'Leary');
