@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.cluedo.model.BaseEntity;
 
@@ -19,8 +20,13 @@ import lombok.Setter;
 @Table(name = "celd")
 public class Celd extends BaseEntity{
 
+    @NotNull
     @Column(name="celd_type")
     private CeldType celdType;
+
+    @NotNull
+    @Column(name = "position")
+    private Integer position;
 
     @ManyToMany
     @JoinTable(name="connected_celds")
