@@ -29,12 +29,12 @@ public class Turn extends BaseEntity{
 
     private Integer diceResult;
     
-    @OneToMany
+    @ManyToOne
     @NotNull
-    @JoinColumn(name = "initia_celd_id")
+    @JoinColumn(name = "initial_celd_id")
     private Celd initialCeld;
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "final_celd_id")
     private Celd finalCeld;
 

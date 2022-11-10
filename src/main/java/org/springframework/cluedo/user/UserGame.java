@@ -1,6 +1,7 @@
 package org.springframework.cluedo.user;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -17,12 +18,6 @@ import lombok.Setter;
 @Setter
 public class UserGame extends BaseEntity{
 
-    @NotNull
-    private Integer gameId;
-    
-    @NotNull
-    private Integer userId;
-
     private Integer order;
 
     @Min(0)
@@ -36,8 +31,10 @@ public class UserGame extends BaseEntity{
     private SuspectType suspect;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name="user_id")
     private User user;
 
     @ManyToOne
+    @JoinColumn(name="game_id")
     private Game game;
 }
