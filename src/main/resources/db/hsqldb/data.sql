@@ -6,5 +6,5 @@ INSERT INTO users(id,username,password,email,image_url) VALUES (2,'admin1','0wn3
 -- One vet user, named vet1 with passwor v3t
 INSERT INTO users(id,username,password,email,image_url) VALUES (3,'manuel333','1','user2@gmail.com',null);
 
-
+INSERT INTO celd(id,celd_type,position) VALUES (1,'CORRIDOR',7);
 
