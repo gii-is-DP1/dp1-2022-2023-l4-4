@@ -6,6 +6,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cluedo.game.Game;
 import org.springframework.cluedo.model.BaseEntity;
 
 import lombok.Getter;
@@ -15,6 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserGame extends BaseEntity{
+
     @NotNull
     private Integer gameId;
     
@@ -36,4 +38,6 @@ public class UserGame extends BaseEntity{
     @ManyToOne(optional = false)
     private User user;
 
+    @ManyToOne
+    private Game game;
 }
