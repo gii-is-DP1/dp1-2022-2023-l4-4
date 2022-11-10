@@ -24,6 +24,6 @@ public class Celd extends BaseEntity{
 
     @ManyToMany
     @JoinTable(name="connected_celds")
-    private List<Celd> connectectedCelds;
+    private List<Celd> connectedCelds;
     
 }
