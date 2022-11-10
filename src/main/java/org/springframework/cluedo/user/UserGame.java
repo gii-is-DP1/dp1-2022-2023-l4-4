@@ -17,13 +17,19 @@ import lombok.Setter;
 public class UserGame extends BaseEntity{
     @NotNull
     private Integer gameId;
+    
     @NotNull
     private Integer userId;
+
+    private Integer order;
+
     @Min(0)
     @Value("${some.key:0}")
     private Integer accusationsNumber;
+    
     @NotNull
     private Boolean isAfk;
+    
     @NotNull
     private SuspectType suspect;
 
