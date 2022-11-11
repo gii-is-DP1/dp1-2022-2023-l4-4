@@ -12,6 +12,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.cluedo.enumerates.CeldType;
 import org.springframework.cluedo.model.BaseEntity;
 
 import lombok.Getter;

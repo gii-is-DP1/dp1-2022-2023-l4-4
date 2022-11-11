@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cluedo.card.Card;
+import org.springframework.cluedo.enumerates.SuspectType;
 import org.springframework.cluedo.game.Game;
 import org.springframework.cluedo.model.BaseEntity;
 

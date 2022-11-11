@@ -1,4 +1,4 @@
-package org.springframework.cluedo.card;
+package org.springframework.cluedo.enumerates;
 
 public enum CardName {
     

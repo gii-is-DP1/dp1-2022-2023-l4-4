@@ -1,4 +1,4 @@
-package org.springframework.cluedo.celd;
+package org.springframework.cluedo.enumerates;
 
 
 public enum CeldType {
@@ -12,6 +12,7 @@ public enum CeldType {
     DINNING_HALL,
     THEATRE,
     LIVING_ROOM,
-    YARD
+    YARD,
+    CENTER
     
 }
