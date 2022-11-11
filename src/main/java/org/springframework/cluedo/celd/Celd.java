@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
@@ -32,7 +33,10 @@ public class Celd extends BaseEntity{
     private Integer position;
 
     @ManyToMany
-    @JoinTable(name="connected_celds")
+    @JoinTable(name="connected_celds",joinColumns = @JoinColumn(
+       name = "id1", referencedColumnName = "id"),
+    inverseJoinColumns = @JoinColumn(
+       name = "id2", referencedColumnName = "id"))
     private List<Celd> connectedCelds;
     
 }
