@@ -24,11 +24,9 @@ public class BoardGraph {
     }
 
     public Set<Celd> possibleMovements(Integer distancia, Celd celda) {
-        DijkstraShortestPath<Celd,DefaultEdge> dijkstra = new DijkstraShortestPath<>(tablero);
-        Graph<Celd, DefaultEdge> paths = dijkstra.getPaths(celda).getGraph();
         Set<Celd> anteriores = new HashSet<Celd>();
         anteriores.add(celda);
-        return possibleMovements(paths, 0 ,distancia, anteriores, new HashSet<Celd>(), new HashSet<Celd>());
+        return possibleMovements(tablero, 0 ,distancia, anteriores, new HashSet<Celd>(), new HashSet<Celd>());
     }
 
     private Set<Celd> possibleMovements(Graph<Celd, DefaultEdge> paths, int contador, Integer distancia, Set<Celd> anteriores,
