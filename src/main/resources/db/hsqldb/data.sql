@@ -1,10 +1,10 @@
 -- One admin user, named admin1 with passwor 4dm1n and authority admin
-INSERT INTO users(id,username,password,email,image_url) VALUES (1,'1','1','1@gmail.com',null);
+INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (1,'1','1','1@gmail.com',null,1,'admin');
 -- One owner user, named owner1 with passwor 0wn3r
-INSERT INTO users(id,username,password,email,image_url) VALUES (2,'2','2','2@gmail.com',null);
+INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (2,'2','2','2@gmail.com',null,1,'user');
 
 -- One vet user, named vet1 with passwor v3t
-INSERT INTO users(id,username,password,email,image_url) VALUES (3,'manuel333','1','user2@gmail.com',null);
+INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (3,'manuel333','1','user2@gmail.com',null,1,'user');
 
 
 INSERT INTO celd(id,celd_type,position) VALUES  

@@ -39,6 +39,7 @@ public class User extends BaseEntity{
 	@Value("${some.key:https://i0.wp.com/researchictafrica.net/wp/wp-content/uploads/2016/10/default-profile-pic.jpg?ssl=1}")
 	private String imageurl;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-	private Set<Authorities> authorities;
+	private Integer enabled;
+	
+	private String authority;
 }
