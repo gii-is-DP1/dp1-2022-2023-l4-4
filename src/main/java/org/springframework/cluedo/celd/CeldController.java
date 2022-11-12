@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.jgrapht.graph.DefaultEdge;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.boardGraph.BoardGraph;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,8 @@ public class CeldController {
         for(Celd celd:vertex) {
             System.out.println(celd.getId());
         }
+        Set<DefaultEdge> edges = board.getAllEdges();
+        edges.forEach(x->System.out.println(x));
     }
 
     @GetMapping("/move")
