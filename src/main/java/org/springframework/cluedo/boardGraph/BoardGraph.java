@@ -42,4 +42,8 @@ public class BoardGraph {
             }
         return posiblesMovimientos;
     }
+
+    public Set<Celd> getAllVertex() {
+        return tablero.vertexSet();
+    }
 }
