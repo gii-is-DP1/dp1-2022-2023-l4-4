@@ -2,6 +2,7 @@ package org.springframework.cluedo.boardGraph;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.jgrapht.Graph;
@@ -11,6 +12,7 @@ import org.jgrapht.graph.SimpleGraph;
 import org.springframework.cluedo.celd.Celd;
 
 public class BoardGraph {
+
     private static Graph<Celd, DefaultEdge> tablero = new SimpleGraph<Celd, DefaultEdge>(DefaultEdge.class);
     
     public BoardGraph(List<Celd> celds, List<List<Celd>> celdConnections) {
@@ -22,9 +24,13 @@ public class BoardGraph {
         }
     }
 
-    public Set<Celd> possibleMovements(Integer distancia, Celd celda) {
+    public Set<Celd> possibleMovements(Integer distancia, Celd celd) throws NullPointerException{
         Set<Celd> anteriores = new HashSet<Celd>();
-        anteriores.add(celda);
+        Optional<Celd> celda=this.getAllVertex().stream().filter(x->x.getId()==celd.getId()).findFirst();
+        if(!celda.isPresent()) {
+            throw new NullPointerException("Celd has not been found");
+        }
+        anteriores.add(celda.get());
         return possibleMovements(0 ,distancia, anteriores, new HashSet<Celd>(), new HashSet<Celd>());
     }
 
@@ -49,4 +55,4 @@ public class BoardGraph {
     public Set<DefaultEdge> getAllEdges() {
         return tablero.edgeSet();
     }
-}
+} 
