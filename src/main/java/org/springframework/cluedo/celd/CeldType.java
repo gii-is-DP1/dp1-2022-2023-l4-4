@@ -12,6 +12,7 @@ public enum CeldType {
     DINNING_HALL,
     THEATRE,
     LIVING_ROOM,
-    YARD
+    YARD,
+    CENTER
     
 }
