@@ -40,4 +40,9 @@ public class Celd extends BaseEntity{
        name = "id2", referencedColumnName = "id"))
     private List<Celd> connectedCelds;
     
+    @Override
+    public  boolean equals(Object o){
+      Celd celd2 = (Celd) o;
+      return this.id.equals(celd2.id);
+    }
 }

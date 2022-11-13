@@ -17,11 +17,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Turn extends BaseEntity{
-    
+
     @NotNull
     @ManyToOne
     @JoinColumn(name = "user_game_id")
-    private UserGame userGameId;
+    private UserGame userGame;
 
     @NotNull
     private Integer round;
