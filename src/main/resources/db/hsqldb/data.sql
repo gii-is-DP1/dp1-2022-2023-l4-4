@@ -1,3 +1,5 @@
+-- CREATE TABLE user_games(id integer, orderPlayer integer ,accusations_number integer ,is_afk boolean ,suspect varchar(60),user_id integer,game_id integer);
+ 
 -- One admin user, named admin1 with passwor 4dm1n and authority admin
 INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (1,'1','1','1@gmail.com',null,1,'admin');
 -- One owner user, named owner1 with passwor 0wn3r
@@ -7,494 +9,251 @@ INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES
 INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (3,'manuel333','1','user2@gmail.com',null,1,'user');
 
 
+
 INSERT INTO celd(id,celd_type,position) VALUES  
-
 (1, 'CORRIDOR',7), 
-
 (2, 'CORRIDOR',8), 
-
 (3, 'CORRIDOR',14), 
-
 (4, 'CORRIDOR',21), 
-
 (5, 'CORRIDOR',22), 
-
 (6, 'CORRIDOR',31), 
-
 (7, 'CORRIDOR',32), 
-
 (8, 'CORRIDOR',38), 
-
 (9, 'CORRIDOR',45), 
-
 (10, 'CORRIDOR',46), 
-
 (11, 'CORRIDOR',55), 
-
 (12, 'CORRIDOR',56), 
-
 (13, 'CORRIDOR',62), 
-
 (14, 'CORRIDOR',69), 
-
 (15, 'CORRIDOR',70), 
-
 (16, 'CORRIDOR',79), 
-
 (17, 'CORRIDOR',80), 
-
 (18, 'CORRIDOR',86), 
-
 (19, 'CORRIDOR',93), 
-
 (20, 'CORRIDOR',94), 
-
 (21, 'CORRIDOR',103), 
-
 (22, 'CORRIDOR',104), 
-
 (23, 'CORRIDOR',110), 
-
 (24, 'CORRIDOR',117), 
-
 (25, 'CORRIDOR',118), 
-
 (26, 'CORRIDOR',127), 
-
 (27, 'CORRIDOR',128), 
-
 (28, 'CORRIDOR',134), 
-
 (29, 'CORRIDOR',141), 
-
 (30, 'CORRIDOR',142), 
-
 (31, 'CORRIDOR',150), 
-
 (32, 'CORRIDOR',151), 
-
 (33, 'CORRIDOR',152), 
-
 (34, 'CORRIDOR',158), 
-
 (35, 'CORRIDOR',165), 
-
 (36, 'CORRIDOR',166), 
-
 (37, 'CORRIDOR',174), 
-
 (38, 'CORRIDOR',175), 
-
 (39, 'CORRIDOR',176), 
-
 (40, 'CORRIDOR',182), 
-
 (41, 'CORRIDOR',189), 
-
 (42, 'CORRIDOR',190), 
-
 (43, 'CORRIDOR',193), 
-
 (44, 'CORRIDOR',194), 
-
 (45, 'CORRIDOR',195), 
-
 (46, 'CORRIDOR',196), 
-
 (47, 'CORRIDOR',197), 
-
 (48, 'CORRIDOR',198), 
-
 (49, 'CORRIDOR',199), 
-
 (50, 'CORRIDOR',200), 
-
 (51, 'CORRIDOR',201), 
-
 (52, 'CORRIDOR',202), 
-
 (53, 'CORRIDOR', 203), 
-
 (54, 'CORRIDOR', 204), 
-
 (55, 'CORRIDOR', 205), 
-
 (56, 'CORRIDOR', 206), 
-
 (57, 'CORRIDOR', 207), 
-
 (58, 'CORRIDOR', 211), 
-
 (59, 'CORRIDOR', 212), 
-
 (60, 'CORRIDOR',213), 
-
 (61, 'CORRIDOR',214), 
-
 (62, 'CORRIDOR',215), 
-
 (63, 'CORRIDOR',216), 
-
 (64, 'CORRIDOR',217), 
-
 (65, 'CORRIDOR',218), 
-
 (66, 'CORRIDOR',219), 
-
 (67, 'CORRIDOR',220), 
-
 (68, 'CORRIDOR',221), 
-
 (69, 'CORRIDOR',222), 
-
 (70, 'CORRIDOR',223), 
-
 (71, 'CORRIDOR',224), 
-
 (72, 'CORRIDOR',225), 
-
 (73, 'CORRIDOR',226), 
-
 (74, 'CORRIDOR',227), 
-
 (75, 'CORRIDOR',228), 
-
 (76, 'CORRIDOR',229), 
-
 (77, 'CORRIDOR',230), 
-
 (78, 'CORRIDOR',231), 
-
 (79, 'CORRIDOR',232), 
-
 (80, 'CORRIDOR',233), 
-
 (81, 'CORRIDOR',234), 
-
 (82, 'CORRIDOR',235), 
-
 (83, 'CORRIDOR',236), 
-
 (84, 'CORRIDOR',237), 
-
 (85, 'CORRIDOR',238), 
-
 (86, 'CORRIDOR',239), 
-
 (87, 'CORRIDOR',240), 
-
 (88, 'CORRIDOR',245), 
-
 (89, 'CORRIDOR',246), 
-
 (90, 'CORRIDOR',247), 
-
 (91, 'CORRIDOR',248), 
-
 (92, 'CORRIDOR',249), 
-
 (93, 'CORRIDOR',250), 
-
 (94, 'CORRIDOR',251), 
-
 (95, 'CORRIDOR',252), 
-
 (96, 'CORRIDOR',253), 
-
 (97, 'CORRIDOR',254), 
-
 (98, 'CORRIDOR',255), 
-
 (99, 'CORRIDOR',256), 
-
 (100, 'CORRIDOR',257), 
-
 (101, 'CORRIDOR',258), 
-
 (102, 'CORRIDOR',259), 
-
 (103, 'CORRIDOR',260), 
-
 (104, 'CORRIDOR',261), 
-
 (105, 'CORRIDOR',262), 
-
 (106, 'CORRIDOR',263), 
-
 (107, 'CORRIDOR',264), 
-
 (108, 'CORRIDOR',273), 
-
 (109, 'CORRIDOR',274), 
-
 (110, 'CORRIDOR',283), 
-
 (111, 'CORRIDOR',297), 
-
 (112, 'CORRIDOR',298), 
-
 (113, 'CORRIDOR',307), 
-
 (114, 'CORRIDOR',321), 
-
 (115, 'CORRIDOR',322), 
-
 (116, 'CORRIDOR',331), 
-
 (117, 'CORRIDOR',345), 
-
 (118, 'CORRIDOR',346), 
-
 (119, 'CORRIDOR',355), 
-
 (120, 'CORRIDOR',369), 
-
 (121, 'CORRIDOR',370), 
-
 (122, 'CORRIDOR',379), 
-
 (123, 'CORRIDOR',393), 
-
 (124, 'CORRIDOR',394), 
-
 (125, 'CORRIDOR',403), 
-
 (126, 'CORRIDOR',417), 
-
 (127, 'CORRIDOR',418), 
-
 (128, 'CORRIDOR',419), 
-
 (129, 'CORRIDOR',420), 
-
 (130, 'CORRIDOR',421), 
-
 (131, 'CORRIDOR',422), 
-
 (132, 'CORRIDOR',423), 
-
 (133, 'CORRIDOR',424), 
-
 (134, 'CORRIDOR',425), 
-
 (135, 'CORRIDOR',426), 
-
 (136, 'CORRIDOR',427), 
-
 (137, 'CORRIDOR',437), 
-
 (138, 'CORRIDOR',438), 
-
 (139, 'CORRIDOR',439), 
-
 (140, 'CORRIDOR',440), 
-
 (141, 'CORRIDOR',441), 
-
 (142, 'CORRIDOR',442), 
-
 (143, 'CORRIDOR',443), 
-
 (144, 'CORRIDOR',444), 
-
 (145, 'CORRIDOR',445), 
-
 (146, 'CORRIDOR',446), 
-
 (147, 'CORRIDOR',447), 
-
 (148, 'CORRIDOR',448), 
-
 (149, 'CORRIDOR',449), 
-
 (150, 'CORRIDOR',450), 
-
 (151, 'CORRIDOR',451), 
-
 (152, 'CORRIDOR',452), 
-
 (153, 'CORRIDOR',453), 
-
 (154, 'CORRIDOR',454), 
-
 (155, 'CORRIDOR',455), 
-
 (156, 'CORRIDOR',456), 
-
 (157, 'CORRIDOR',457), 
-
 (158, 'CORRIDOR',458), 
-
 (159, 'CORRIDOR',459), 
-
 (160, 'CORRIDOR',460), 
-
 (161, 'CORRIDOR',461), 
-
 (162, 'CORRIDOR',462), 
-
 (163, 'CORRIDOR',463), 
-
 (164, 'CORRIDOR',464), 
-
 (165, 'CORRIDOR',465), 
-
 (166, 'CORRIDOR',466), 
-
 (167, 'CORRIDOR',473), 
-
 (168, 'CORRIDOR',474), 
-
 (169, 'CORRIDOR',475), 
-
 (170, 'CORRIDOR',476), 
-
 (171, 'CORRIDOR',477), 
-
 (172, 'CORRIDOR',478), 
-
 (173, 'CORRIDOR',479), 
-
 (174, 'CORRIDOR',480), 
-
 (175, 'CORRIDOR',481), 
-
 (176, 'CORRIDOR',482), 
-
 (177, 'CORRIDOR',483), 
-
 (178, 'CORRIDOR',484), 
-
 (179, 'CORRIDOR',485), 
-
 (180, 'CORRIDOR',486), 
-
 (181, 'CORRIDOR',487), 
-
 (182, 'CORRIDOR',488), 
-
 (183, 'CORRIDOR',489), 
-
 (184, 'CORRIDOR',490), 
-
 (185, 'CORRIDOR',497), 
-
 (186, 'CORRIDOR',498), 
-
 (187, 'CORRIDOR',499), 
-
 (188, 'CORRIDOR',500), 
-
 (189, 'CORRIDOR',501), 
-
 (190, 'CORRIDOR',511), 
-
 (191, 'CORRIDOR',512), 
-
 (192, 'CORRIDOR',513), 
-
 (193, 'CORRIDOR',514), 
-
 (194, 'CORRIDOR',521), 
-
 (195, 'CORRIDOR',522), 
-
 (196, 'CORRIDOR',523), 
-
 (197, 'CORRIDOR',524), 
-
 (198, 'CORRIDOR',536), 
-
 (199, 'CORRIDOR',537), 
-
 (200, 'CORRIDOR',538), 
-
 (201, 'CORRIDOR',545), 
-
 (202, 'CORRIDOR',546), 
-
 (203, 'CORRIDOR',547), 
-
 (204, 'CORRIDOR',548), 
-
 (205, 'CORRIDOR',560), 
-
 (206, 'CORRIDOR',561), 
-
 (207, 'CORRIDOR',570), 
-
 (208, 'CORRIDOR',571), 
-
 (209, 'CORRIDOR',572), 
-
 (210, 'CORRIDOR',584), 
-
 (211, 'CORRIDOR',585), 
-
 (212, 'CORRIDOR',596), 
-
 (213, 'CORRIDOR',597), 
-
 (214, 'CORRIDOR',596), 
-
 (215, 'CORRIDOR',608), 
-
 (216, 'CORRIDOR',609), 
-
 (217, 'CORRIDOR',618), 
-
 (218, 'CORRIDOR',619), 
-
 (219, 'CORRIDOR',620), 
-
 (220, 'CORRIDOR',532), 
-
 (221, 'CORRIDOR',633), 
-
 (222, 'CORRIDOR',642), 
-
 (223, 'CORRIDOR',643), 
-
 (224, 'CORRIDOR',644), 
-
 (225, 'CORRIDOR',656), 
-
 (226, 'CORRIDOR',657), 
-
 (227, 'CORRIDOR',666), 
-
 (228, 'CORRIDOR',667), 
-
 (229, 'CORRIDOR',668), 
-
 (230, 'CORRIDOR',680), 
-
 (231, 'CORRIDOR',681), 
-
 (232, 'CORRIDOR',690), 
-
 (233, 'CORRIDOR',691), 
-
 (234, 'CORRIDOR',692), 
-
 (235, 'SPA',51), 
-
 (236, 'THEATRE',59), 
-
 (237, 'LIVING_ROOM ',65), 
-
 (238, 'OBSERVATORY',71), 
-
 (239, 'YARD ',291), 
-
 (240, 'HALL',310), 
-
 (241, 'KITCHEN',555), 
-
 (242, 'DINNING_HALL',541), 
-
 (243, 'GUEST_ROOM',575), 
-
 (244, 'CENTER',326);  
 
 INSERT INTO connected_celds(id2,id1) VALUES
@@ -879,3 +638,11 @@ INSERT INTO connected_celds(id2,id1) VALUES
  (244,98),
  (244,128),
  (244,135);
+
+
+INSERT INTO games(id,host_id,players_number,is_private,status) VALUES (1,1,4,0,1);
+
+
+INSERT INTO user_games(id,order_user, accusations_number, is_afk,suspect,user_id,game_id) VALUES (1,3,1,1,2,1,1);
+
+INSERT INTO turn(user_game_id, round, dice_result, initial_celd_id,phase) VALUES (1,1,5,1,3);

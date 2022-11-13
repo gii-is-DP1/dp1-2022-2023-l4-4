@@ -2,11 +2,13 @@ package org.springframework.cluedo.user;
 
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -21,9 +23,10 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@Table(name = "user_games")
 public class UserGame extends BaseEntity{
-
-    private Integer order;
+    @Column
+    private Integer orderUser;
 
     @Min(0)
     @Value("${some.key:0}")
@@ -35,7 +38,7 @@ public class UserGame extends BaseEntity{
     @NotNull
     private SuspectType suspect;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
 

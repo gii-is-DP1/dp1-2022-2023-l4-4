@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.cluedo.model.BaseEntity;
 import org.springframework.cluedo.user.User;
+import org.springframework.cluedo.user.UserGame;
 import org.springframework.cluedo.accusation.Accusation;
 import org.springframework.cluedo.enumerates.Status;
 
@@ -56,7 +57,11 @@ public class Game extends BaseEntity{
 
     @ManyToMany
     @JoinTable(name="lobby")
-    private List<User> players;
+    private List<User> lobby;
+
+    @ManyToMany
+    @JoinTable(name="players")
+    private List<UserGame> players;
     
     @ManyToOne
     @JoinColumn(name="crime_scene")

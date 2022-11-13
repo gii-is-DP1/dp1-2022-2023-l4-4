@@ -1,11 +1,15 @@
 package org.springframework.cluedo.turn;
 
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.celd.Celd;
+import org.springframework.cluedo.celd.CeldRepository;
 import org.springframework.cluedo.enumerates.Phase;
 import org.springframework.cluedo.exceptions.WrongPhaseException;
+import org.springframework.cluedo.game.Game;
+import org.springframework.cluedo.user.UserGame;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,12 +17,33 @@ import org.springframework.transaction.annotation.Transactional;
 public class TurnService {
     
     private TurnRepository turnRepository;
+    private CeldRepository celdRepository;
 
     @Autowired
-    public TurnService (TurnRepository turnRepository){
+    public TurnService (TurnRepository turnRepository, CeldRepository celdRepository){
         this.turnRepository=turnRepository;
+        this.celdRepository = celdRepository;
     }
 
+    public Turn createTurn(UserGame userGame,Integer round){
+        Turn turn=new Turn();
+        turn.setUserGame(userGame);
+        turn.setRound(round);
+        //arreglar turnRepository.getTurn(userGame.getId(),round-1)
+        Optional<Turn> previousTurn = turnRepository.findById(1);
+        if(previousTurn.isPresent()){
+            turn.setInitialCeld(previousTurn.get().getFinalCeld());
+        } else{
+            turn.setInitialCeld(celdRepository.findCenter());
+        } 
+        turn.setPhase(Phase.DICE);
+        return turn;
+    }
+
+    public Integer whatPlayerGo(Game game){
+        return turnRepository.whatPlayerGo(game);
+    }
+    
     public Turn throwDice(Turn turn) throws WrongPhaseException{
         if(turn.getPhase()!=Phase.DICE){
             throw new WrongPhaseException();
