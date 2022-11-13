@@ -1,6 +1,7 @@
 package org.springframework.cluedo.game;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -41,5 +42,9 @@ public class GameService {
 	@Transactional()
 	public void saveGame(Game game){
 		gameRepository.save(game);
+	}
+	@Transactional(readOnly=true)
+	public Optional<Game> findById(Integer id){
+		return gameRepository.findById(id);
 	}
 }

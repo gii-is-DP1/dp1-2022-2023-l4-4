@@ -1,8 +1,16 @@
 package org.springframework.cluedo.game;
 
+import java.util.Optional;
+
 import javax.validation.Valid;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cluedo.enumerates.Status;
+import org.springframework.cluedo.user.User;
+import org.springframework.cluedo.user.UserService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -22,10 +30,12 @@ public class GameController {
     private final String CREATE_NEW_GAME="games/createNewGame";
     private final String LOBBY="games/lobby";
     private final GameService gameService;
+    private final UserService userService;
 
     @Autowired
-    public GameController(GameService gameService){
+    public GameController(GameService gameService, UserService userService){
         this.gameService=gameService;
+        this.userService=userService;
     }
     //Admin
     //H11
@@ -89,6 +99,34 @@ public class GameController {
     @Transactional
     @PutMapping("/{game_id}")
     public ModelAndView joinGame(@PathVariable("game_id") Integer game_id) {
-    	//Game game = gameService.
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getPrincipal().toString();
+        User loggedUser = userService.findUser(username).get();
+    	Optional<Game> game = gameService.findById(game_id);
+        ModelAndView result = new ModelAndView(GAME_LISTING);
+        if(!game.isPresent()){
+            result.addObject("message", "The game doesn't exist");
+            return result;
+        } else if(game.get().getStatus()!=Status.LOBBY){
+            result.addObject("message", "The game is started");
+            return result;
+        } else if(game.get().getPlayers().size()==game.get().getPlayersNumber()) {
+            result.addObject("message", "The lobby is full");
+            return result;
+        }else {
+            result = new ModelAndView(LOBBY);
+            Game copy = new Game();
+            BeanUtils.copyProperties(game.get(), copy);
+            copy.getPlayers().add(loggedUser);
+            gameService.saveGame(copy);
+            return result;
+        }
+    }
+
+    // H3
+    @Transactional
+    @PutMapping("/{game_id}/{host_id}")
+    public ModelAndView startGame(@PathVariable("game_id") Integer game_id, @PathVariable("host_id") Integer host_id){
+        return null;
     }
 }
