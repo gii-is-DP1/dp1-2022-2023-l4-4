@@ -15,7 +15,7 @@ public class TurnService {
     private TurnRepository turnRepository;
 
     @Autowired
-    private TurnService (TurnRepository turnRepository){
+    public TurnService (TurnRepository turnRepository){
         this.turnRepository=turnRepository;
     }
 

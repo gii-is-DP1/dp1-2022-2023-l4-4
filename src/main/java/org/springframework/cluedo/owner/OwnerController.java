@@ -21,6 +21,7 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cluedo.celd.CeldRepository;
 import org.springframework.cluedo.user.AuthoritiesService;
 import org.springframework.cluedo.user.UserService;
 import org.springframework.stereotype.Controller;
@@ -45,10 +46,12 @@ public class OwnerController {
 	private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
 
 	private final OwnerService ownerService;
+	private final CeldRepository celdRepository;
 
 	@Autowired
-	public OwnerController(OwnerService ownerService, UserService userService, AuthoritiesService authoritiesService) {
+	public OwnerController(OwnerService ownerService, UserService userService, CeldRepository celdRepository, AuthoritiesService authoritiesService) {
 		this.ownerService = ownerService;
+		this.celdRepository = celdRepository;
 	}
 
 	@InitBinder
@@ -60,6 +63,7 @@ public class OwnerController {
 	public String initCreationForm(Map<String, Object> model) {
 		Owner owner = new Owner();
 		model.put("owner", owner);
+		System.out.println(celdRepository.findById(1).get().getCeldType().toString());
 		return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
 	}
 
