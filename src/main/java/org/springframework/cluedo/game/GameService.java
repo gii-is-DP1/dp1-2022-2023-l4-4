@@ -1,11 +1,14 @@
 package org.springframework.cluedo.game;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Service
 public class GameService {
 
     private GameRepository gameRepository;
@@ -38,8 +41,13 @@ public class GameService {
 		return gameRepository.findAllPastGames(userId);
 	} 
 	//H1
-	@Transactional()
+	@Transactional
 	public void saveGame(Game game){
 		gameRepository.save(game);
+	}
+
+	@Transactional(readOnly=true)
+	public Optional<Game> getGameById(Integer id){
+		return gameRepository.findById(id);
 	}
 }

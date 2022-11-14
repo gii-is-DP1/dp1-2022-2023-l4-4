@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.cluedo.enumerates.CardName;
+import org.springframework.cluedo.enumerates.CardType;
 import org.springframework.cluedo.model.BaseEntity;
 
 @Entity
