@@ -34,7 +34,7 @@ import org.springframework.web.servlet.ModelAndView;
 import lombok.AllArgsConstructor;
 
 @Controller
-@RequestMapping("/user")
+
 public class UserController {
 
 	private static final String VIEWS_USER_LIST = "users/userList";
@@ -48,10 +48,10 @@ public class UserController {
     }
 
 	
-	@GetMapping
+	@GetMapping(value ="/users")
     public ModelAndView showUserList() {
         ModelAndView mav = new ModelAndView(VIEWS_USER_LIST);
-        mav.addObject("products", userService.getAllUsers());
+        mav.addObject("users", userService.getAllUsers());
         return mav;
     }
 
