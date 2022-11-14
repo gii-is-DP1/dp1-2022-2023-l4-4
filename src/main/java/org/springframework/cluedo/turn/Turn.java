@@ -1,17 +1,14 @@
 package org.springframework.cluedo.turn;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.cluedo.celd.Celd;
 import org.springframework.cluedo.enumerates.Phase;
+import org.springframework.cluedo.model.BaseEntity;
 import org.springframework.cluedo.user.UserGame;
-import org.springframework.data.annotation.Id;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,31 +16,28 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Turn {
+public class Turn extends BaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique=true,nullable=false,precision=10)
-    private long id;
-    
-
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "user_game_id")
-    private UserGame userGameId;
+    private UserGame userGame;
 
+    @NotNull
     private Integer round;
 
     private Integer diceResult;
     
-    @OneToMany
-    @JoinColumn(name = "celd_id")
-    private Celd initialPosition;
+    @ManyToOne
+    @NotNull
+    @JoinColumn(name = "initial_celd_id")
+    private Celd initialCeld;
 
-    @OneToMany
-    @JoinColumn(name = "celd_id")
-    private Celd finalPosition;
+    @ManyToOne
+    @JoinColumn(name = "final_celd_id")
+    private Celd finalCeld;
 
+    @NotNull
     private Phase phase;
-
 
 }

@@ -1,18 +1,25 @@
 package org.springframework.cluedo.game;
 
 import java.time.Duration;
+import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
-import org.springframework.cluedo.enumerates.SuspectType;
+
+import org.springframework.cluedo.model.BaseEntity;
 import org.springframework.cluedo.user.User;
+import org.springframework.cluedo.user.UserGame;
+import org.springframework.cluedo.accusation.Accusation;
+import org.springframework.cluedo.enumerates.Status;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,27 +28,45 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "games")
-public class Game {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(unique = true, nullable = false, precision = 10)
-	private long id;
+public class Game extends BaseEntity{
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "host_id")
 	private User host;
 
-    private Integer playersNumber;
+    @Min(3)
+    @Max(6)
+    @NotNull
+    private Integer lobbySize; 
+
+    @NotNull
     private boolean isPrivate;
-    private SuspectType initialPlayer;
+
+    @NotNull
+    private Status status;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "winner_id")
 	private User winner;
 
     private Duration duration;
+
     private Integer round;
-    private SuspectType playerTurn;
+
+    @ManyToMany
+    @JoinTable(name="lobby")
+    private List<User> lobby;
+
+    @ManyToMany
+    @JoinTable(name="players")
+    private List<UserGame> players;
     
+    @ManyToOne
+    @JoinColumn(name="crime_scene")
+    private Accusation crimeScene;
+
+    @ManyToOne
+    @JoinColumn(name="actual_Player")
+    private UserGame actualPlayer;
+
 }
