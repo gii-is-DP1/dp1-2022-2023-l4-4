@@ -12,6 +12,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.cluedo.enumerates.CeldType;
 import org.springframework.cluedo.model.BaseEntity;
 
 import lombok.Getter;
@@ -39,4 +40,9 @@ public class Celd extends BaseEntity{
        name = "id2", referencedColumnName = "id"))
     private List<Celd> connectedCelds;
     
+    @Override
+    public  boolean equals(Object o){
+      Celd celd2 = (Celd) o;
+      return this.id.equals(celd2.id);
+    }
 }
