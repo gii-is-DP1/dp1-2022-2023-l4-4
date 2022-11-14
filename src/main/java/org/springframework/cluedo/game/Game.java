@@ -37,7 +37,7 @@ public class Game extends BaseEntity{
     @Min(3)
     @Max(6)
     @NotNull
-    private Integer playersNumber;
+    private Integer lobbySize; 
 
     @NotNull
     private boolean isPrivate;
@@ -53,8 +53,6 @@ public class Game extends BaseEntity{
 
     private Integer round;
 
-    private Integer turnNumber;
-
     @ManyToMany
     @JoinTable(name="lobby")
     private List<User> lobby;
@@ -66,5 +64,9 @@ public class Game extends BaseEntity{
     @ManyToOne
     @JoinColumn(name="crime_scene")
     private Accusation crimeScene;
+
+    @ManyToOne
+    @JoinColumn(name="actual_Player")
+    private UserGame actualPlayer;
 
 }
