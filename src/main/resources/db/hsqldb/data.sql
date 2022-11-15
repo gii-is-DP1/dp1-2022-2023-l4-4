@@ -12,7 +12,7 @@ INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES
 
 
 
-INSERT INTO celd(id,celd_type,position) VALUES  
+INSERT INTO celds(id,celd_type,position) VALUES  
 (1, 'CORRIDOR',7), 
 (2, 'CORRIDOR',8), 
 (3, 'CORRIDOR',14), 
@@ -644,38 +644,61 @@ INSERT INTO connected_celds(id2,id1) VALUES
 --game 1 host 1, lobbysize 4, public, finished
 INSERT INTO games(id,host_id,lobby_size,is_private,status) VALUES (1,1,4,0,2);
 
---
-INSERT INTO user_games(id,order_user, accusations_number, is_afk,suspect,user_id,game_id) VALUES (1,0,1,1,1,1,1);
-INSERT INTO user_games(id,order_user, accusations_number, is_afk,suspect,user_id,game_id) VALUES (2,1,1,1,2,2,1);
-INSERT INTO turn(user_game_id, round, dice_result, initial_celd_id,phase) VALUES (1,1,5,1,3);
-
-INSERT INTO players(game_id,players_id) VALUES 
+INSERT INTO lobbies(game_id,user_id) VALUES
 (1,1),
 (1,2);
+
+INSERT INTO user_games(id,order_user, accusations_number, is_afk,suspect,user_id,game_id) VALUES 
+(1,0,1,1,1,1,1),
+(2,1,1,1,2,2,1);
+
+INSERT INTO turns(user_game_id, round, dice_result, initial_celd_id,phase) VALUES (1,1,5,1,3);
+
+INSERT INTO players(game_id,user_game_id) VALUES 
+(1,1),
+(1,2);
+
 --game 2, host 2, size, 3, private, ingame
-INSERT INTO games(id,host_id,lobby_size,is_private,status) VALUES (2,2,3,1,1);
+INSERT INTO games(id,host_id,lobby_size,is_private,status) VALUES (2,2,3,1,2);
 
-
-INSERT INTO user_games(id,order_user, accusations_number, is_afk,suspect,user_id,game_id) VALUES (3,0,1,1,1,1,2);
-INSERT INTO user_games(id,order_user, accusations_number, is_afk,suspect,user_id,game_id) VALUES (4,1,1,0,2,2,2);
-INSERT INTO user_games(id,order_user, accusations_number, is_afk,suspect,user_id,game_id) VALUES (5,2,1,0,3,3,2);
-INSERT INTO turn(user_game_id, round, dice_result, initial_celd_id,phase) VALUES (3,1,5,1,5);
-
-INSERT INTO players(game_id,players_id) VALUES 
+INSERT INTO lobbies(game_id,user_id) VALUES 
 (2,1),
 (2,2),
 (2,3);
+
+INSERT INTO user_games(id,order_user, accusations_number, is_afk,suspect,user_id,game_id) VALUES
+(3,0,1,1,1,1,2),
+(4,1,1,0,2,2,2),
+(5,2,1,0,3,3,2);
+
+INSERT INTO turns(user_game_id, round, dice_result, initial_celd_id,phase) VALUES (3,1,5,1,5);
+
+INSERT INTO players(game_id,user_game_id) VALUES 
+(2,1),
+(2,2),
+(2,3);
+
+
+
 --game 3 host 3, size 6, public, lobby
 INSERT INTO games(id,host_id,lobby_size,is_private,status) VALUES (3,3,6,0,0);
 
 
-INSERT INTO user_games(id,order_user, accusations_number, is_afk,suspect,user_id,game_id) VALUES (6,2,1,0,1,1,3);
-INSERT INTO user_games(id,order_user, accusations_number, is_afk,suspect,user_id,game_id) VALUES (7,1,1,1,2,2,3);
-INSERT INTO user_games(id,order_user, accusations_number, is_afk,suspect,user_id,game_id) VALUES (8,0,0,0,3,3,3);
-INSERT INTO turn(user_game_id, round, dice_result, initial_celd_id,phase) VALUES (8,1,5,1,5);
-INSERT INTO turn(user_game_id, round, dice_result, initial_celd_id,phase) VALUES (8,1,11,1,4);
+INSERT INTO lobbies(game_id,user_id) VALUES 
+(3,1),
+(3,2),
+(3,3);
 
-INSERT INTO players(game_id,players_id) VALUES 
+INSERT INTO user_games(id,order_user, accusations_number, is_afk,suspect,user_id,game_id) VALUES
+(6,2,1,0,1,1,3),
+(7,1,1,1,2,2,3),
+(8,0,0,0,3,3,3);
+
+INSERT INTO turns(user_game_id, round, dice_result, initial_celd_id,phase) VALUES
+(8,1,5,1,5),
+(8,1,11,1,4);
+
+INSERT INTO players(game_id,user_game_id) VALUES 
 (3,1),
 (3,2),
 (3,3);

@@ -1,5 +1,5 @@
 package org.springframework.cluedo.vet;
-
+/*
 import static org.hamcrest.xml.HasXPath.hasXPath;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -23,9 +23,9 @@ import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-/**
+*
  * Test class for the {@link VetController}
- */
+ 
 @WebMvcTest(controllers = VetController.class, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class), excludeAutoConfiguration = SecurityConfiguration.class)
 class VetControllerTests {
 
@@ -72,3 +72,4 @@ class VetControllerTests {
 	}
 
 }
+*/
