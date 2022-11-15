@@ -3,6 +3,7 @@ package org.springframework.cluedo.turn;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.cluedo.celd.Celd;
@@ -16,6 +17,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@Table(name="turns")
 public class Turn extends BaseEntity{
 
     @NotNull

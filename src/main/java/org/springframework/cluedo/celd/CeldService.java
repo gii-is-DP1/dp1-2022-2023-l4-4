@@ -2,10 +2,12 @@ package org.springframework.cluedo.celd;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.boardGraph.BoardGraph;
+import org.springframework.cluedo.exceptions.DataNotFound;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -48,7 +50,12 @@ public class CeldService {
         return board.possibleMovements(pasos, celd);
     }
 
-    public Celd getById(int i) {
-        return celdRepository.findById(i).get();
+    public Celd getById(int i) throws DataNotFound{
+        Optional<Celd> nrCeld = celdRepository.findById(i);
+        if(nrCeld.isPresent()){
+            return nrCeld.get();
+        }else{
+            throw new DataNotFound();
+        }
     }
 }
