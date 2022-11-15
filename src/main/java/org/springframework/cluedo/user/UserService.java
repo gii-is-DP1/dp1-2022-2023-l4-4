@@ -20,7 +20,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cluedo.exceptions.DataNotFound;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,7 +53,21 @@ public class UserService {
 		userRepository.save(user);
 	}
 	
-	public User findUserById(int id) {
-		return userRepository.findUserById(id);
+	public Optional<User> findUserById(int id) {
+		return userRepository.findById(id);
+	}
+
+	public Optional<User> findUserByUsername(String username) {
+		return userRepository.findByUsername(username);
+	}
+
+	public User getLoggedUser() throws DataNotFound{
+		UserDetails a=(UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Optional<User> nr_user= userRepository.findByUsername(a.getUsername());
+		if (nr_user.isPresent()){
+			return nr_user.get();
+		}else{
+			throw new DataNotFound();
+		}
 	}
 }

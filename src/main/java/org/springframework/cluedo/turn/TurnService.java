@@ -29,8 +29,7 @@ public class TurnService {
         Turn turn=new Turn();
         turn.setUserGame(userGame);
         turn.setRound(round);
-        //arreglar turnRepository.getTurn(userGame.getId(),round-1)
-        Optional<Turn> previousTurn = turnRepository.findById(1);
+        Optional<Turn> previousTurn = turnRepository.getTurn(userGame.getId(),round-1);
         if(previousTurn.isPresent()){
             turn.setInitialCeld(previousTurn.get().getFinalCeld());
         } else{
@@ -39,11 +38,11 @@ public class TurnService {
         turn.setPhase(Phase.DICE);
         return turn;
     }
-
-    public Integer whatPlayerGo(Game game){
-        return turnRepository.whatPlayerGo(game);
+   
+    public Optional<Turn> getTurn(UserGame userGame,Integer round){
+        return turnRepository.getTurn(userGame.getId(),round);
     }
-    
+
     public Turn throwDice(Turn turn) throws WrongPhaseException{
         if(turn.getPhase()!=Phase.DICE){
             throw new WrongPhaseException();
@@ -54,6 +53,7 @@ public class TurnService {
         turn.setPhase(Phase.MOVEMENT);
         return save(turn);
     } 
+
 
     public Turn moveCharacter(Turn turn,Celd finalCeld) throws WrongPhaseException{
         if(turn.getPhase()!=Phase.MOVEMENT){

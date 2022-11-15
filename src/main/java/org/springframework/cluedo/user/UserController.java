@@ -87,7 +87,7 @@ public class UserController {
 
 	@GetMapping(value = "/users/{userId}/edit")
 	public String initUpdateForm(@PathVariable("userId") int userId, Model model){
-		User user = this.userService.findUserById(userId);
+		User user = this.userService.findUserById(userId).get();
 		model.addAttribute("user", user);
 		return VIEWS_USER_CREATE_OR_UPDATE_FORM;
 	}
