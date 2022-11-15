@@ -1,19 +1,26 @@
 package org.springframework.cluedo.game;
 
 import java.util.Optional;
+import java.util.Random;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.enumerates.Status;
+import org.springframework.cluedo.enumerates.SuspectType;
 import org.springframework.cluedo.user.User;
+import org.springframework.cluedo.user.UserGame;
 import org.springframework.cluedo.user.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.websocket.server.PathParam;
 
@@ -49,6 +56,7 @@ public class GameController {
     private final String GAME_PAST_LISTING="games/gamePastList";
     private final String CREATE_NEW_GAME="games/createNewGame";
     private final String LOBBY="games/lobby";
+    private final String ON_GAME="games/onGame";
     private final GameService gameService;
     private final UserService userService;
     private final String DICE_VIEW=""; 
@@ -150,8 +158,49 @@ public class GameController {
     @Transactional
     @PutMapping("/{game_id}/{host_id}")
     public ModelAndView startGame(@PathVariable("game_id") Integer game_id, @PathVariable("host_id") Integer host_id){
-        
-        return null;
+        Optional<Game> game = gameService.getGameById(game_id);
+        if(!game.isPresent()){
+            ModelAndView result = new ModelAndView(GAME_LISTING);
+            result.addObject("message", "The game doesn't exist");
+            return result;
+        } else if (game.get().getHost().getId()!=host_id){
+            ModelAndView result = new ModelAndView(GAME_LISTING);
+            result.addObject("message", "The host is incorrec");
+            return result;
+        } else if (game.get().getLobbySize()<3) {
+            ModelAndView result = new ModelAndView(LOBBY);
+            result.addObject("message", "The game needs at least 3 players to start");
+            return result;
+        } else {
+            ModelAndView result = new ModelAndView("ON_GAME");
+            Game copy = new Game();
+            BeanUtils.copyProperties(game.get(), copy);
+            copy.setStatus(Status.IN_PROGRESS);
+            copy.setDuration(Duration.ofMinutes(0));
+            copy.setCrimeScene(null); // No terminado
+            copy.setRound(1);
+            
+            List<SuspectType> suspects=new ArrayList<>();
+            for (SuspectType value : SuspectType.values()) {
+                suspects.add(value);
+            }
+            
+            for (User user : game.get().getLobby()) {
+                Integer available = suspects.size();
+                UserGame userGame = new UserGame();
+                userGame.setAccusationsNumber(0);
+                userGame.setGame(copy);
+                userGame.setUser(user);
+                userGame.setIsAfk(false);
+                Integer randomInt = ThreadLocalRandom.current().nextInt(available)+1;
+                userGame.setSuspect(suspects.get(randomInt));
+                suspects.remove(suspects.get(randomInt));
+                userGame.setCards(null);
+                copy.getPlayers().add(userGame);
+            }
+            gameService.saveGame(copy);
+            return result;
+        }   
     }
 
 
