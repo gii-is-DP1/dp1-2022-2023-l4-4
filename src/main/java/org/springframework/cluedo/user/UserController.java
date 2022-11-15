@@ -16,10 +16,12 @@
 package org.springframework.cluedo.user;
 
 import java.util.Map;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cluedo.exceptions.DataNotFound;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -54,7 +56,16 @@ public class UserController {
         return mav;
     }
 
-
+	@GetMapping(value="users/{userId}")
+	public ModelAndView showUser(@PathVariable("userId") int userId) throws DataNotFound{
+		ModelAndView mav = new ModelAndView("users/userDetails");
+		Optional<User> nrUser = userService.findUserById(userId);
+		if(nrUser.isPresent()){
+			mav.addObject("user", nrUser.get());
+		return mav;
+		}
+		throw new DataNotFound();
+	}
 
 
 
