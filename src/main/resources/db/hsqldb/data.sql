@@ -642,9 +642,13 @@ INSERT INTO connected_celds(id2,id1) VALUES
  (244,135);
 
 
-INSERT INTO games(id,host_id,lobby_size,is_private,status) VALUES (1,1,4,0,1);
+INSERT INTO games(id,host_id,lobby_size,is_private,status) VALUES (1,1,4,0,2);
 
 
 INSERT INTO user_games(id,order_user, accusations_number, is_afk,suspect,user_id,game_id) VALUES (1,3,1,1,2,1,1);
-
+INSERT INTO user_games(id,order_user, accusations_number, is_afk,suspect,user_id,game_id) VALUES (2,3,1,1,2,2,1);
 INSERT INTO turn(user_game_id, round, dice_result, initial_celd_id,phase) VALUES (1,1,5,1,3);
+
+INSERT INTO players(game_id,players_id) VALUES 
+(1,1),
+(1,2);

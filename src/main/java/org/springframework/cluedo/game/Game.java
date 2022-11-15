@@ -40,7 +40,7 @@ public class Game extends BaseEntity{
     private Integer lobbySize; 
 
     @NotNull
-    private boolean isPrivate;
+    private Boolean isPrivate;
 
     @NotNull
     private Status status;
@@ -68,5 +68,8 @@ public class Game extends BaseEntity{
     @ManyToOne
     @JoinColumn(name="actual_Player")
     private UserGame actualPlayer;
-
+    
+    public Boolean getIsPrivate(){
+        return isPrivate;
+    }
 }

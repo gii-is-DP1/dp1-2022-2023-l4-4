@@ -13,12 +13,18 @@ public class CeldService {
     @Autowired
     CeldRepository celdRepository;
 
+    BoardGraph board;
+
     public CeldService(CeldRepository cRepository) {
         this.celdRepository=cRepository;
     }
 
     public List<Celd> getAllCelds() {
         return celdRepository.findAll();
+    }
+
+    public BoardGraph init() {
+        return new BoardGraph(getAllCelds(), getAllPairs());
     }
 
     public List<List<Celd>> getAllPairs() {
@@ -35,7 +41,10 @@ public class CeldService {
         return connections;
     }
 
-    public Set<Celd> getAllPossibleMovements(Integer pasos, Celd celd, BoardGraph board) {
+    public Set<Celd> getAllPossibleMovements(Integer pasos, Celd celd) {
+        if (board==null){
+            init();
+        }
         return board.possibleMovements(pasos, celd);
     }
 

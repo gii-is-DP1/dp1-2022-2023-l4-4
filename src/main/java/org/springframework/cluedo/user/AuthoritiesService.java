@@ -46,7 +46,7 @@ public class AuthoritiesService {
 		authoritiesRepository.save(authorities);
 	}
 	
-	@Transactional
+	/*@Transactional
 	public void saveAuthorities(String username, String role) throws DataAccessException {
 		Authorities authority = new Authorities();
 		Optional<User> user = userService.findUser(username);
@@ -57,7 +57,7 @@ public class AuthoritiesService {
 			authoritiesRepository.save(authority);
 		}else
 			throw new DataAccessException("User '"+username+"' not found!") {};
-	}
+	}*/
 
 
 }
