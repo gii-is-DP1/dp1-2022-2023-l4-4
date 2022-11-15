@@ -54,7 +54,7 @@ public class GameController {
     //Admin
     //H11
     @Transactional(readOnly = true)
-    @GetMapping(value = "/admin")
+    @GetMapping(value = "/allNotFinishedGames")
     public ModelAndView getAllActiveGames() {
         ModelAndView result = new ModelAndView(GAME_LISTING);
         result.addObject("games", gameService.getAllNotFinishedGames());
@@ -62,7 +62,7 @@ public class GameController {
     }
     //H12
     @Transactional(readOnly = true)
-    @GetMapping("/admin/past")
+    @GetMapping("/allFinishedGames")
     public ModelAndView getAllPastGames(){
         ModelAndView result = new ModelAndView(GAME_PAST_LISTING);
         result.addObject("games", gameService.getAllFinishedGames());
@@ -72,14 +72,14 @@ public class GameController {
 
     //H10
     @Transactional(readOnly = true)
-    @GetMapping()
+    @GetMapping("/lobbies")
     public ModelAndView getAllPublicLobbies(){
         ModelAndView result=new ModelAndView(GAME_LISTING);
         result.addObject("games", gameService.getAllPublicLobbies());
         return result;
     }
     //H11
-    @GetMapping("/past")
+    @GetMapping("/played")
     public ModelAndView getAllPastUserGames(){
         User user= userService.getLoggedUser().get();
         ModelAndView result = new ModelAndView(GAME_PAST_LISTING);
