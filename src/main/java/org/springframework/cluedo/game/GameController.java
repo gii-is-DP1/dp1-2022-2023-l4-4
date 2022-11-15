@@ -72,7 +72,7 @@ private UserService userService;
     }
     //H11
     @GetMapping("/past")
-    public ModelAndView getAllPastUserGames(@PathVariable("id") Integer id) throws DataNotFound{
+    public ModelAndView getAllPastUserGames() throws DataNotFound{
         User user= userService.getLoggedUser();
         ModelAndView result = new ModelAndView(GAME_PAST_LISTING);
         result.addObject("games", gameService.findAllPastUserGames(user.getId()));
