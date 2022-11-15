@@ -23,13 +23,13 @@ public class GameService {
     //Admin
 	//H12
     @Transactional(readOnly = true)
-	public List<Game> findAllActiveGames() throws DataAccessException {
+	public List<Game> getAllActiveGames() throws DataAccessException {
 		return gameRepository.findAllActiveGames();
 	}
 	//H13
 	@Transactional(readOnly=true)
-	public List<Game> findAllPastGames(){
-		return gameRepository.findAllPastGames();
+	public List<Game> getAllFinishedGames(){
+		return gameRepository.findAllFinishedGames();
 	}
 
 	
@@ -37,14 +37,14 @@ public class GameService {
 	//User
 	//H10
 	@Transactional(readOnly=true)
-	public List<Game> findAllActivePublicGames(){
-		return gameRepository.findAllActivePublicGames();
+	public List<Game> getAllPublicLobbies(){
+		return gameRepository.findAllPublicLobbies();
 	}
 	//H11
 	@Transactional(readOnly=true)
-	public List<Game> findAllPastUserGames(Integer userId) {
+	public List<Game> getMyFinishedGames(Integer userId) {
 		List<Game> res= new ArrayList<>();
-		gameRepository.findAllById(gameRepository.findAllPastUserGames(userId)).forEach(x->res.add(x));
+		gameRepository.findAllById(gameRepository.findMyFinishedGames(userId)).forEach(x->res.add(x));
 		return res;
 	} 
 	//H1

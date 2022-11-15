@@ -11,14 +11,9 @@ import org.springframework.cluedo.user.User;
 import org.springframework.cluedo.user.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 import javax.websocket.server.PathParam;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cluedo.celd.Celd;
 import org.springframework.cluedo.celd.CeldService;
 import org.springframework.cluedo.exceptions.CorruptGame;
 import org.springframework.cluedo.exceptions.DataNotFound;
@@ -26,11 +21,6 @@ import org.springframework.cluedo.exceptions.GameNotExists;
 import org.springframework.cluedo.exceptions.WrongPhaseException;
 import org.springframework.cluedo.turn.Turn;
 import org.springframework.cluedo.turn.TurnService;
-import org.springframework.cluedo.user.User;
-import org.springframework.cluedo.user.UserService;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -68,7 +58,7 @@ public class GameController {
     @GetMapping(value = "/admin")
     public ModelAndView getAllActiveGames() {
         ModelAndView result = new ModelAndView(GAME_LISTING);
-        result.addObject("games", gameService.findAllActiveGames());
+        result.addObject("games", gameService.getAllActiveGames());
         return result;
     }
     //H12
@@ -76,7 +66,7 @@ public class GameController {
     @GetMapping("/admin/past")
     public ModelAndView getAllPastGames(){
         ModelAndView result = new ModelAndView(GAME_PAST_LISTING);
-        result.addObject("games", gameService.findAllPastGames());
+        result.addObject("games", gameService.getAllFinishedGames());
         return result;
     }
     //User
@@ -84,9 +74,9 @@ public class GameController {
     //H10
     @Transactional(readOnly = true)
     @GetMapping()
-    public ModelAndView getAllActivePublicGames(){
+    public ModelAndView getAllPublicLobbies(){
         ModelAndView result=new ModelAndView(GAME_LISTING);
-        result.addObject("games", gameService.findAllActiveGames());
+        result.addObject("games", gameService.getAllPublicLobbies());
         return result;
     }
     //H11
@@ -94,7 +84,7 @@ public class GameController {
     public ModelAndView getAllPastUserGames() throws DataNotFound{
         User user= userService.getLoggedUser();
         ModelAndView result = new ModelAndView(GAME_PAST_LISTING);
-        result.addObject("games", gameService.findAllPastUserGames(user.getId()));
+        result.addObject("games", gameService.getMyFinishedGames(user.getId()));
         return result;
     }
     
