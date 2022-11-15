@@ -23,52 +23,87 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.owner.Owner;
 import org.springframework.cluedo.owner.OwnerService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
-/**
- * @author Juergen Hoeller
- * @author Ken Krebs
- * @author Arjen Poutsma
- * @author Michael Isvy
- */
+import lombok.AllArgsConstructor;
+
 @Controller
+
+
 public class UserController {
 
-	private static final String VIEWS_OWNER_CREATE_FORM = "users/createOwnerForm";
-
-	private final OwnerService ownerService;
+	private static final String VIEWS_USER_LIST = "users/userList";
+  
+  private static final String VIEWS_USER_CREATE_OR_UPDATE_FORM = "users/createOrUpdateUserForm";
 
 	@Autowired
-	public UserController(OwnerService clinicService) {
-		this.ownerService = clinicService;
-	}
+	private UserService userService;
+	
 
-	@InitBinder
-	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setDisallowedFields("id");
-	}
+	@Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+	
+	@GetMapping(value ="/users")
+    public ModelAndView showUserList() {
+        ModelAndView mav = new ModelAndView(VIEWS_USER_LIST);
+        mav.addObject("users", userService.getAllUsers());
+        return mav;
+    }
+
+
+
+
 
 	@GetMapping(value = "/users/new")
 	public String initCreationForm(Map<String, Object> model) {
-		Owner owner = new Owner();
-		model.put("owner", owner);
-		return VIEWS_OWNER_CREATE_FORM;
+		User user = new User();
+		model.put("user", user);
+		return VIEWS_USER_CREATE_OR_UPDATE_FORM;
 	}
 
 	@PostMapping(value = "/users/new")
-	public String processCreationForm(@Valid Owner owner, BindingResult result) {
+	public String processCreationForm(@Valid User user, BindingResult result) {
 		if (result.hasErrors()) {
-			return VIEWS_OWNER_CREATE_FORM;
+			return VIEWS_USER_CREATE_OR_UPDATE_FORM;
 		}
 		else {
 			//creating owner, user, and authority
-			this.ownerService.saveOwner(owner);
+			this.userService.saveUser(user);
 			return "redirect:/";
 		}
 	}
+
+
+	@GetMapping(value = "/users/{userId}/edit")
+	public String initUpdateForm(@PathVariable("userId") int userId, Model model){
+		User user = this.userService.findUserById(userId);
+		model.addAttribute("user", user);
+		return VIEWS_USER_CREATE_OR_UPDATE_FORM;
+	}
+
+	@PostMapping(value= "/users/{userId}/edit")
+	public String processUpdateForm(@Valid User user, @PathVariable("userId") int userId, BindingResult result){
+		if(result.hasErrors()){
+			return VIEWS_USER_CREATE_OR_UPDATE_FORM;
+		}else{
+			user.setId(userId);
+			this.userService.saveUser(user);
+			return "redirect:/users/{userId}";
+		}
+	}
+
+
+
 
 }

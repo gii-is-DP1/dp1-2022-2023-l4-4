@@ -11,6 +11,13 @@ import org.springframework.cluedo.user.User;
 import org.springframework.cluedo.user.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import javax.websocket.server.PathParam;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cluedo.celd.CeldService;
+import org.springframework.cluedo.exceptions.WrongPhaseException;
+import org.springframework.cluedo.turn.Turn;
+import org.springframework.cluedo.turn.TurnService;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -31,10 +38,15 @@ public class GameController {
     private final String LOBBY="games/lobby";
     private final GameService gameService;
     private final UserService userService;
-
+    private final String DICE_VIEW=""; 
+    private CeldService celdService;
+    private TurnService turnService;
+    
     @Autowired
-    public GameController(GameService gameService, UserService userService){
+    public GameController(GameService gameService, CeldService celdService, TurnService turnService, UserService userService){
         this.gameService=gameService;
+        this.celdService=celdService;
+        this.turnService = turnService;
         this.userService=userService;
     }
     //Admin
@@ -129,4 +141,23 @@ public class GameController {
     public ModelAndView startGame(@PathVariable("game_id") Integer game_id, @PathVariable("host_id") Integer host_id){
         return null;
     }
+
+
+    @GetMapping("{id}/play/dices")
+    public Integer prueba(@PathVariable("id") Integer gameId){
+        Game game = gameService.getGameById(gameId).get();
+        Integer a= turnService.whatPlayerGo(game);
+        System.out.println(a);
+        return a;
+    }
+    
+    /*private ModelAndView throwDices(@PathParam("id") Integer gameId) throws WrongPhaseException{
+        Game game = gameService.getGameById(gameId).get();
+        turnService.whatPlayerGo(game);
+        turnService.createTurn(gameService.getGameById(gameId).get().get,turn);
+        turnService.throwDice(turn);
+        ModelAndView result = new ModelAndView(DICE_VIEW);
+        return result;
+    }
+*/
 }

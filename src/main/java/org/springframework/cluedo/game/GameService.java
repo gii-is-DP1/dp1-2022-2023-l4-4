@@ -41,12 +41,13 @@ public class GameService {
 		return gameRepository.findAllPastGames(userId);
 	} 
 	//H1
-	@Transactional()
+	@Transactional
 	public void saveGame(Game game){
 		gameRepository.save(game);
 	}
+
 	@Transactional(readOnly=true)
-	public Optional<Game> findById(Integer id){
+	public Optional<Game> getGameById(Integer id){
 		return gameRepository.findById(id);
 	}
 }

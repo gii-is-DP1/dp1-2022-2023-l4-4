@@ -16,6 +16,7 @@
 package org.springframework.cluedo.user;
 
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,13 +39,18 @@ public class UserService {
 	public UserService(UserRepository userRepository) {
 		this.userRepository = userRepository;
 	}
+	@Transactional
+	public List<User> getAllUsers(){
+		return userRepository.findAll();
+	}
+
 
 	@Transactional
 	public void saveUser(User user) throws DataAccessException {
 		userRepository.save(user);
 	}
 	
-	public Optional<User> findUser(String username) {
-		return userRepository.findById(username);
+	public User findUserById(int id) {
+		return userRepository.findUserById(id);
 	}
 }

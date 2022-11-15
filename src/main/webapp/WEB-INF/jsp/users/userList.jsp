@@ -5,32 +5,34 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
-<petclinic:layout pageName="owners">
-    <h2>Owners</h2>
+<petclinic:layout pageName="users">
+    <h2>Users</h2>
 
-    <table id="ownersTable" class="table table-striped">
+    <table id="usersTable" class="table table-striped">
         <thead>
         <tr>
-            <th style="width: 150px;">Name</th>
-            <th style="width: 200px;">Address</th>
-    
-           
+            <th style="width: 150px;">Username</th>
+            <th style="width: 200px;">Email</th>
+            <th style="width: 120px">Password</th>
+            
         </tr>
         </thead>
         <tbody>
-        <c:forEach items="${selections}" var="owner">
+        <c:forEach items="${users}" var="user">
             <tr>
                 <td>
-                    <spring:url value="/owners/{ownerId}" var="ownerUrl">
-                        <spring:param name="ownerId" value="${owner.id}"/>
+                    <spring:url value="/user/{userId}" var="userUrl">
+                        <spring:param name="userId" value="${user.id}"/>
                     </spring:url>
-                    <a href="${fn:escapeXml(ownerUrl)}"><c:out value="${owner.firstName}"/></a>
+                    <a href="${fn:escapeXml(userUrl)}"><c:out value="${user.username} "/></a>
                 </td>
                 <td>
-                    <c:out value="${owner.address}"/>
+                    <c:out value="${user.email}"/>
                 </td>
-            
-                
+                <td>
+                    <c:out value="${user.password}"/>
+                </td>
+                         
       
 <!--
                 <td> 
