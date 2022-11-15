@@ -1,6 +1,7 @@
 package org.springframework.cluedo.game;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.cluedo.user.User;
 import org.springframework.dao.DataAccessException;
@@ -24,4 +25,5 @@ public interface GameRepository extends CrudRepository<Game,Integer>{
      //H13
      @Query("select g from Game g WHERE g.status=org.springframework.cluedo.enumerates.Status.FINISHED")
      List<Game> findAllPastGames();
+     Optional<Game> findById(Integer id);
 }

@@ -50,7 +50,7 @@ public class Game extends BaseEntity{
 	private User winner;
 
     private Duration duration;
-
+    @Min(0)
     private Integer round;
 
     @ManyToMany
