@@ -63,7 +63,7 @@ public class GameController {
         this.userService=userService;
     }
     //Admin
-    //H11
+    //H12
     @Transactional(readOnly = true)
     @GetMapping(value = "/admin")
     public ModelAndView getAllActiveGames() {
@@ -71,7 +71,7 @@ public class GameController {
         result.addObject("games", gameService.findAllActiveGames());
         return result;
     }
-    //H12
+    //H13
     @Transactional(readOnly = true)
     @GetMapping("/admin/past")
     public ModelAndView getAllPastGames(){
@@ -123,10 +123,8 @@ public class GameController {
     // H2
     @Transactional
     @PutMapping("/{game_id}")
-    public ModelAndView joinGame(@PathVariable("game_id") Integer game_id) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getPrincipal().toString();
-        User loggedUser = userService.findUserByUsername(username).get();
+    public ModelAndView joinGame(@PathVariable("game_id") Integer game_id) throws DataNotFound{
+        User loggedUser = userService.getLoggedUser();
     	Optional<Game> game = gameService.getGameById(game_id);
         ModelAndView result = new ModelAndView(GAME_LISTING);
         if(!game.isPresent()){
@@ -152,6 +150,7 @@ public class GameController {
     @Transactional
     @PutMapping("/{game_id}/{host_id}")
     public ModelAndView startGame(@PathVariable("game_id") Integer game_id, @PathVariable("host_id") Integer host_id){
+        
         return null;
     }
 
