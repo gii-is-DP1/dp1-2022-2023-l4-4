@@ -1,7 +1,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <%--
-Cluedo: Los secretos están hechos para ser descubiertos
+Cluedo: The Game
 --%>
 
 <head>
@@ -14,7 +14,7 @@ Cluedo: Los secretos están hechos para ser descubiertos
     <spring:url value="/resources/images/favicon.png" var="favicon"/>
     <link rel="shortcut icon" type="image/x-icon" href="${favicon}">
 
-    <title>Cluedo :: Los secretos están hechos para ser descubiertos</title>
+    <title>Cluedo: The game</title>
 
     <%-- CSS generated from LESS --%>
     <spring:url value="/resources/css/petclinic.css" var="petclinicCss"/>

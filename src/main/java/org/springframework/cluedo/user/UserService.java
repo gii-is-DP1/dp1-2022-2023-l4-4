@@ -41,7 +41,11 @@ public class UserService {
 	}
 
 	public Optional<User> getLoggedUser(){
-		UserDetails a=(UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return userRepository.findByUsername(a.getUsername());
+		UserDetails userDetails=(UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return userRepository.findByUsername(userDetails.getUsername());
+	}
+
+	public UserDetails getUserDetails(){
+		return(UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 }
