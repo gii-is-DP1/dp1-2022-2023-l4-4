@@ -51,12 +51,12 @@
                     <c:out value="${game.duration}"/>
                 </td>
                 <td>
-                    <c:forEach items="${game.players}" var="player">
-                        <c:out value="${player.id}"/>
+                    <c:forEach items="${game.lobby}" var="player">
+                        <c:out value="${player.username}"/>
                     </c:forEach>
                 </td>
                 <td>
-                    <form action="" th:action="@{/games}" th:object="${gameId}" method="put">
+                    <form action="" th:action="@{/games}" th:object="${gameId}" method="post">
                         <input type="hidden" name="gameId" value="${game.id}">
                         <button class="btn btn-default" type="submit">
                             Join Game

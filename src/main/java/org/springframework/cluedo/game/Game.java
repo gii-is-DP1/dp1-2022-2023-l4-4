@@ -10,6 +10,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -57,7 +58,7 @@ public class Game extends BaseEntity{
     @JoinTable(name="lobbies",joinColumns = @JoinColumn(
         name = "game_id", referencedColumnName = "id"),
      inverseJoinColumns = @JoinColumn(
-        name = "user_id", referencedColumnName = "id"))
+        name = "user_id", referencedColumnName = "id"),uniqueConstraints = @UniqueConstraint(columnNames={"game_id", "user_id"} ))
     private List<User> lobby;
 
     @ManyToMany

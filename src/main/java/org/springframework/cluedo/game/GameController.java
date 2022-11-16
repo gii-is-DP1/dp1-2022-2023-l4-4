@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -105,29 +106,46 @@ public class GameController {
     @Transactional(readOnly = true)
     @GetMapping("/new")
     public ModelAndView createGame(){
+        User user= userService.getLoggedUser().get();
     	Game game = new Game();
     	ModelAndView result = new ModelAndView(CREATE_NEW_GAME);
+        List<Boolean> bool = new ArrayList<>();
+        bool.add(true);
+        bool.add(false);
+        result.addObject("privateList", bool);
+        result.addObject("nPlayers", List.of(3,4,5,6));
         result.addObject("game", game);
+        result.addObject("user", user);
         return result;
     }
     
     @Transactional
     @PostMapping("/new")
     public ModelAndView formNewGame(@Valid Game game, BindingResult br) {
-    	if(br.hasErrors()) {
+        game.setStatus(Status.LOBBY);
+        game.setLobby(new ArrayList<>(List.of(userService.getLoggedUser().get())));
+        if(br.hasErrors()) {
     		return new ModelAndView(CREATE_NEW_GAME, br.getModel());
     	} else {
-    		gameService.saveGame(game);
+            gameService.saveGame(game);
     		ModelAndView result = new ModelAndView(LOBBY);
+            result.addObject("lobby", game);
     		return result;
     	}
+    }
+
+    @Transactional(readOnly = true)
+    @GetMapping("/{gameId}/lobby")
+    public ModelAndView getLobby(@PathVariable("gameId") Integer gameId){
+    	ModelAndView result = new ModelAndView(LOBBY);
+        result.addObject("lobby", gameService.getGameById(gameId).get());
+        return result;
     }
     
     // H2
     @Transactional
     @PostMapping()
     public ModelAndView joinGame(@RequestParam("gameId") Integer game_id) throws DataNotFound{
-        System.out.println("murcielago" + game_id);
         Optional<User> loggedUser = userService.getLoggedUser();
     	Optional<Game> game = gameService.getGameById(game_id);
         ModelAndView result = new ModelAndView(GAME_LISTING);
@@ -140,12 +158,17 @@ public class GameController {
         } else if(game.get().getLobby().size()==game.get().getLobbySize()) {
             result.addObject("message", "The lobby is full");
             return result;
-        }else {
+        } else if(game.get().getLobby().contains(loggedUser.get())) {
+            result = new ModelAndView(LOBBY);
+            result.addObject("lobby", game.get());
+            return result;
+        } else {
             result = new ModelAndView(LOBBY);
             Game copy = new Game();
             BeanUtils.copyProperties(game.get(), copy);
             copy.getLobby().add(loggedUser.get());
             gameService.saveGame(copy);
+            result.addObject("lobby", copy);
             return result;
         }
     }
