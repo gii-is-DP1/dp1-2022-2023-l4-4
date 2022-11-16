@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -38,6 +39,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -65,7 +67,7 @@ public class GameController {
     //Admin
     //H12
     @Transactional(readOnly = true)
-    @GetMapping(value = "/allNotFinishedGames")
+    @GetMapping(value = "/admin/active")
     public ModelAndView getAllActiveGames() {
         ModelAndView result = new ModelAndView(GAME_LISTING);
         result.addObject("games", gameService.getAllNotFinishedGames());
@@ -73,24 +75,26 @@ public class GameController {
     }
     //H13
     @Transactional(readOnly = true)
-    @GetMapping("/allFinishedGames")
+    @GetMapping("/admin/past")
     public ModelAndView getAllPastGames(){
         ModelAndView result = new ModelAndView(GAME_PAST_LISTING);
         result.addObject("games", gameService.getAllFinishedGames());
+        result.addObject("admin", userService.getUserDetails().getAuthorities().toArray()[0].equals("admin"));
         return result;
     }
     //User
 
     //H10
     @Transactional(readOnly = true)
-    @GetMapping("/lobbies")
+    @GetMapping()
     public ModelAndView getAllPublicLobbies(){
         ModelAndView result=new ModelAndView(GAME_LISTING);
         result.addObject("games", gameService.getAllPublicLobbies());
+        result.addObject("gameId", 0);
         return result;
     }
     //H11
-    @GetMapping("/played")
+    @GetMapping("/past")
     public ModelAndView getAllPastUserGames(){
         User user= userService.getLoggedUser().get();
         ModelAndView result = new ModelAndView(GAME_PAST_LISTING);
@@ -102,28 +106,46 @@ public class GameController {
     @Transactional(readOnly = true)
     @GetMapping("/new")
     public ModelAndView createGame(){
+        User user= userService.getLoggedUser().get();
     	Game game = new Game();
     	ModelAndView result = new ModelAndView(CREATE_NEW_GAME);
+        List<Boolean> bool = new ArrayList<>();
+        bool.add(true);
+        bool.add(false);
+        result.addObject("privateList", bool);
+        result.addObject("nPlayers", List.of(3,4,5,6));
         result.addObject("game", game);
+        result.addObject("user", user);
         return result;
     }
     
     @Transactional
     @PostMapping("/new")
     public ModelAndView formNewGame(@Valid Game game, BindingResult br) {
-    	if(br.hasErrors()) {
+        game.setStatus(Status.LOBBY);
+        game.setLobby(new ArrayList<>(List.of(userService.getLoggedUser().get())));
+        if(br.hasErrors()) {
     		return new ModelAndView(CREATE_NEW_GAME, br.getModel());
     	} else {
-    		gameService.saveGame(game);
+            gameService.saveGame(game);
     		ModelAndView result = new ModelAndView(LOBBY);
+            result.addObject("lobby", game);
     		return result;
     	}
+    }
+
+    @Transactional(readOnly = true)
+    @GetMapping("/{gameId}/lobby")
+    public ModelAndView getLobby(@PathVariable("gameId") Integer gameId){
+    	ModelAndView result = new ModelAndView(LOBBY);
+        result.addObject("lobby", gameService.getGameById(gameId).get());
+        return result;
     }
     
     // H2
     @Transactional
-    @PutMapping("/{game_id}")
-    public ModelAndView joinGame(@PathVariable("game_id") Integer game_id) throws DataNotFound{
+    @PostMapping()
+    public ModelAndView joinGame(@RequestParam("gameId") Integer game_id) throws DataNotFound{
         Optional<User> loggedUser = userService.getLoggedUser();
     	Optional<Game> game = gameService.getGameById(game_id);
         ModelAndView result = new ModelAndView(GAME_LISTING);
@@ -133,15 +155,20 @@ public class GameController {
         } else if(game.get().getStatus()!=Status.LOBBY){
             result.addObject("message", "The game is started");
             return result;
-        } else if(game.get().getPlayers().size()==game.get().getLobby().size()) {
+        } else if(game.get().getLobby().size()==game.get().getLobbySize()) {
             result.addObject("message", "The lobby is full");
             return result;
-        }else {
+        } else if(game.get().getLobby().contains(loggedUser.get())) {
+            result = new ModelAndView(LOBBY);
+            result.addObject("lobby", game.get());
+            return result;
+        } else {
             result = new ModelAndView(LOBBY);
             Game copy = new Game();
             BeanUtils.copyProperties(game.get(), copy);
             copy.getLobby().add(loggedUser.get());
             gameService.saveGame(copy);
+            result.addObject("lobby", copy);
             return result;
         }
     }
@@ -157,7 +184,7 @@ public class GameController {
             return result;
         } else if (game.get().getHost().getId()!=host_id){
             ModelAndView result = new ModelAndView(GAME_LISTING);
-            result.addObject("message", "The host is incorrec");
+            result.addObject("message", "The host is incorrect");
             return result;
         } else if (game.get().getLobbySize()<3) {
             ModelAndView result = new ModelAndView(LOBBY);
@@ -196,7 +223,7 @@ public class GameController {
     }
 
 
-    @GetMapping("/{id}/play/startTurn")
+    @GetMapping("/{id}/play/turn")
     @Transactional
    private ModelAndView initTurn(@PathParam("id") Integer gameId) throws WrongPhaseException,DataNotFound{
         Optional<Game> nrGame = gameService.getGameById(gameId);
