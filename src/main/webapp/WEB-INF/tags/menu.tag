@@ -80,6 +80,10 @@
 												<a href="<c:url value="/logout" />"
 													class="btn btn-primary btn-block btn-sm">Logout</a>
 											</p>
+											<p class="text-left">
+												<a href="<c:url value="/profile" />"
+													class="btn btn-primary btn-block btn-sm">Profile</a>
+											</p>
 										</div>
 									</div>
 								</div>
