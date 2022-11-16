@@ -8,6 +8,7 @@
 
 <petclinic:layout pageName="admin_panel">
     <h2>ADMIN PANEL</h2>
+
     <a href="/games/allNotFinishedGames">View All Not Finished Games</a>
     <a href="/games/allFinishedGames">View All Finished Games</a>
     <a href="/games/lobbies">View All Listed Lobbies</a>
