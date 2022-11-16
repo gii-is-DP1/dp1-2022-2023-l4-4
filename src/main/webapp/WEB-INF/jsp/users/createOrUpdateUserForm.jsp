@@ -7,27 +7,15 @@
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
 <petclinic:layout pageName="users">
-    <h2>
-        <c:if test="${user['new']}">New </c:if> User
-    </h2>
-    <form:form modelAttribute="owner" class="form-horizontal" id="add-owner-form" enctype="multipart/form-data">
+    <form:form modelAttribute="user" class="form-horizontal" id="add-owner-form" enctype="multipart/form-data">
         <div class="form-group has-feedback">
-            <petclinic:inputField label="Username" name="user.username"/>
-            <petclinic:inputField label="E-mail" name="user.email"/>
-            <petclinic:inputField label="Password" name="user.password"/>
-            <label>Photos: </label>
-            <input type="file" name="user.imageUrl" accept="image/png, image/jpeg" />
+            <petclinic:inputField label="Username" name="username" />
+            <petclinic:inputField label="E-mail" name="email" />
+            <petclinic:inputField label="Password" name="password" />
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <c:choose>
-                    <c:when test="${user['new']}">
-                        <button class="btn btn-default" type="submit">Add User</button>
-                    </c:when>
-                    <c:otherwise>
-                        <button class="btn btn-default" type="submit">Update User</button>
-                    </c:otherwise>
-                </c:choose>
+                <button class="btn btn-default" type="submit">Update User</button>
             </div>
         </div>
     </form:form>
