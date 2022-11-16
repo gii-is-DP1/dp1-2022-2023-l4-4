@@ -28,7 +28,7 @@
 					<span>Home</span>
 				</petclinic:menuItem>
 
-				<petclinic:menuItem active="${name eq 'games'}" url="/games"
+				<petclinic:menuItem active="${name eq 'games'}" url="/games/lobbies"
 					title="Games">
 					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 					<span>Games</span>
@@ -38,13 +38,6 @@
 						title="Admin">
 						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
 						<span>Admin</span>
-					</petclinic:menuItem>
-				</sec:authorize>
-				<sec:authorize access="hasAuthority('admin')">
-					<petclinic:menuItem active="${name eq 'error'}" url="/oups"
-						title="trigger a RuntimeException to see how it is handled">
-						<span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
-						<span>Error</span>
 					</petclinic:menuItem>
 				</sec:authorize>
 			</ul>
@@ -79,6 +72,10 @@
 											<p class="text-left">
 												<a href="<c:url value="/logout" />"
 													class="btn btn-primary btn-block btn-sm">Logout</a>
+											</p>
+											<p class="text-left">
+												<a href="<c:url value="/profile" />"
+													class="btn btn-primary btn-block btn-sm">Profile</a>
 											</p>
 										</div>
 									</div>

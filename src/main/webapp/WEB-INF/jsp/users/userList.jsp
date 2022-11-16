@@ -13,7 +13,7 @@
         <tr>
             <th style="width: 150px;">Username</th>
             <th style="width: 200px;">Email</th>
-            <th style="width: 120px">Password</th>
+
             
         </tr>
         </thead>
@@ -21,7 +21,7 @@
         <c:forEach items="${users}" var="user">
             <tr>
                 <td>
-                    <spring:url value="/user/{userId}" var="userUrl">
+                    <spring:url value="/users/{userId}" var="userUrl">
                         <spring:param name="userId" value="${user.id}"/>
                     </spring:url>
                     <a href="${fn:escapeXml(userUrl)}"><c:out value="${user.username} "/></a>
@@ -29,9 +29,7 @@
                 <td>
                     <c:out value="${user.email}"/>
                 </td>
-                <td>
-                    <c:out value="${user.password}"/>
-                </td>
+            
                          
       
 <!--
