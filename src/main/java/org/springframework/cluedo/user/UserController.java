@@ -82,7 +82,6 @@ public class UserController {
 			return VIEWS_USER_CREATE_OR_UPDATE_FORM;
 		}
 		else {
-			//creating owner, user, and authority
 			this.userService.saveUser(user);
 			return "redirect:/";
 		}

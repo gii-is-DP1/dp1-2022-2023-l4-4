@@ -54,11 +54,17 @@ public class Game extends BaseEntity{
     private Integer round;
 
     @ManyToMany
-    @JoinTable(name="lobby")
+    @JoinTable(name="lobbies",joinColumns = @JoinColumn(
+        name = "game_id", referencedColumnName = "id"),
+     inverseJoinColumns = @JoinColumn(
+        name = "user_id", referencedColumnName = "id"))
     private List<User> lobby;
 
     @ManyToMany
-    @JoinTable(name="players")
+    @JoinTable(name="players",joinColumns = @JoinColumn(
+        name = "game_id", referencedColumnName = "id"),
+     inverseJoinColumns = @JoinColumn(
+        name = "user_game_id", referencedColumnName = "id"))
     private List<UserGame> players;
     
     @ManyToOne

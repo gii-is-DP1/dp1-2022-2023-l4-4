@@ -21,7 +21,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "celd")
+@Table(name = "celds")
 public class Celd extends BaseEntity{
 
     @NotNull
@@ -46,3 +46,4 @@ public class Celd extends BaseEntity{
       return this.id.equals(celd2.id);
     }
 }
+ 

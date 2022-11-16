@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ 
 package org.springframework.cluedo.vet;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,7 +26,7 @@ import org.springframework.cluedo.util.EntityUtils;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 
-/**
+*
  * Integration test of the Service and the Repository layer.
  * <p>
  * ClinicServiceSpringDataJpaTests subclasses benefit from the following services provided
@@ -54,7 +54,7 @@ import org.springframework.stereotype.Service;
  * @author Sam Brannen
  * @author Michael Isvy
  * @author Dave Syer
- */
+ 
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 class VetServiceTests {
@@ -75,3 +75,4 @@ class VetServiceTests {
 
 
 }
+*/
