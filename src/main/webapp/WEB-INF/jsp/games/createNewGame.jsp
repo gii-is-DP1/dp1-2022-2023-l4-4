@@ -13,7 +13,7 @@
         <form:form modelAttribute="game" class="form-horizontal">
             <input type="hidden" name="id" value="${game.id}">
             <input type="hidden" name="host" value="${user.id}">
-            <input type="hidden" name="status" value="${game.status}">
+            <input type="hidden" name="status" value="LOBBY">
             <div class="form-group has-feedback">
                 <cluedo:selectField name = "isPrivate" label="Private" names="${privateList}" size="2"></cluedo:selectField>
                 <cluedo:selectField name = "lobbySize" label="Number of players" names="${nPlayers}" size="4"></cluedo:selectField>

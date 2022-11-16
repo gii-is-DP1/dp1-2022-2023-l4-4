@@ -90,7 +90,6 @@ public class GameController {
     public ModelAndView getAllPublicLobbies(){
         ModelAndView result=new ModelAndView(GAME_LISTING);
         result.addObject("games", gameService.getAllPublicLobbies());
-        result.addObject("gameId", 0);
         return result;
     }
     //H11
@@ -124,8 +123,10 @@ public class GameController {
     public ModelAndView formNewGame(@Valid Game game, BindingResult br) {
         game.setStatus(Status.LOBBY);
         game.setLobby(new ArrayList<>(List.of(userService.getLoggedUser().get())));
+        
         if(br.hasErrors()) {
-    		return new ModelAndView(CREATE_NEW_GAME, br.getModel());
+    		System.out.println(br.getAllErrors().toString());
+            return new ModelAndView(CREATE_NEW_GAME, br.getModel());
     	} else {
             gameService.saveGame(game);
     		ModelAndView result = new ModelAndView(LOBBY);
@@ -144,29 +145,31 @@ public class GameController {
     
     // H2
     @Transactional
-    @PostMapping()
-    public ModelAndView joinGame(@RequestParam("gameId") Integer game_id) throws DataNotFound{
+    @GetMapping("/{gameId}")
+    public ModelAndView joinGame(@PathVariable("gameId") Integer gameId) throws DataNotFound{
         Optional<User> loggedUser = userService.getLoggedUser();
-    	Optional<Game> game = gameService.getGameById(game_id);
+    	Optional<Game> nrGame = gameService.getGameById(gameId);
         ModelAndView result = new ModelAndView(GAME_LISTING);
-        if(!game.isPresent()){
+        if(!nrGame.isPresent()){
             result.addObject("message", "The game doesn't exist");
             return result;
-        } else if(game.get().getStatus()!=Status.LOBBY){
+        } else if(nrGame.get().getStatus()!=Status.LOBBY){
             result.addObject("message", "The game is started");
             return result;
-        } else if(game.get().getLobby().size()==game.get().getLobbySize()) {
+        } else if(nrGame.get().getLobby().size()==nrGame.get().getLobbySize()) {
             result.addObject("message", "The lobby is full");
             return result;
-        } else if(game.get().getLobby().contains(loggedUser.get())) {
+        } else if(nrGame.get().getLobby().contains(loggedUser.get())) {
             result = new ModelAndView(LOBBY);
-            result.addObject("lobby", game.get());
+            result.addObject("lobby", nrGame.get());
             return result;
         } else {
             result = new ModelAndView(LOBBY);
             Game copy = new Game();
-            BeanUtils.copyProperties(game.get(), copy);
-            copy.getLobby().add(loggedUser.get());
+            BeanUtils.copyProperties(nrGame.get(), copy);
+            List<User> ul=copy.getLobby();
+            ul.add(loggedUser.get());
+            copy.setLobby(ul);
             gameService.saveGame(copy);
             result.addObject("lobby", copy);
             return result;
