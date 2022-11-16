@@ -65,7 +65,7 @@ public class GameController {
     //Admin
     //H12
     @Transactional(readOnly = true)
-    @GetMapping(value = "/allNotFinishedGames")
+    @GetMapping(value = "/admin/active")
     public ModelAndView getAllActiveGames() {
         ModelAndView result = new ModelAndView(GAME_LISTING);
         result.addObject("games", gameService.getAllNotFinishedGames());
@@ -73,24 +73,26 @@ public class GameController {
     }
     //H13
     @Transactional(readOnly = true)
-    @GetMapping("/allFinishedGames")
+    @GetMapping("/admin/past")
     public ModelAndView getAllPastGames(){
         ModelAndView result = new ModelAndView(GAME_PAST_LISTING);
         result.addObject("games", gameService.getAllFinishedGames());
+        result.addObject("admin", userService.getUserDetails().getAuthorities().toArray()[0].equals("admin"));
         return result;
     }
     //User
 
     //H10
     @Transactional(readOnly = true)
-    @GetMapping("/lobbies")
+    @GetMapping()
     public ModelAndView getAllPublicLobbies(){
         ModelAndView result=new ModelAndView(GAME_LISTING);
         result.addObject("games", gameService.getAllPublicLobbies());
+        
         return result;
     }
     //H11
-    @GetMapping("/played")
+    @GetMapping("/past")
     public ModelAndView getAllPastUserGames(){
         User user= userService.getLoggedUser().get();
         ModelAndView result = new ModelAndView(GAME_PAST_LISTING);
@@ -196,7 +198,7 @@ public class GameController {
     }
 
 
-    @GetMapping("/{id}/play/startTurn")
+    @GetMapping("/{id}/play/turn")
     @Transactional
    private ModelAndView initTurn(@PathParam("id") Integer gameId) throws WrongPhaseException,DataNotFound{
         Optional<Game> nrGame = gameService.getGameById(gameId);
