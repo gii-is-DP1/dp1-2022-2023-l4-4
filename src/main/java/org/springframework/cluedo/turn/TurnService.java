@@ -8,7 +8,6 @@ import org.springframework.cluedo.celd.Celd;
 import org.springframework.cluedo.celd.CeldRepository;
 import org.springframework.cluedo.enumerates.Phase;
 import org.springframework.cluedo.exceptions.WrongPhaseException;
-import org.springframework.cluedo.game.Game;
 import org.springframework.cluedo.user.UserGame;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
