@@ -674,9 +674,9 @@ INSERT INTO user_games(id,order_user, accusations_number, is_afk,suspect,user_id
 INSERT INTO turns(user_game_id, round, dice_result, initial_celd_id,phase) VALUES (3,1,5,1,5);
 
 INSERT INTO players(game_id,user_game_id) VALUES 
-(2,1),
-(2,2),
-(2,3);
+(2,3),
+(2,4),
+(2,5);
 
 
 
@@ -699,6 +699,6 @@ INSERT INTO turns(user_game_id, round, dice_result, initial_celd_id,phase) VALUE
 (8,1,11,1,4);
 
 INSERT INTO players(game_id,user_game_id) VALUES 
-(3,1),
-(3,2),
-(3,3);
+(3,6),
+(3,7),
+(3,8);

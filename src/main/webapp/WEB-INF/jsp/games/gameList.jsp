@@ -7,7 +7,9 @@
 
 
 <petclinic:layout pageName="games">
-    <h2>Games</h2>
+    <h2>
+        Active games
+    </h2>
 
     <table id="gameTable" class="table table-striped">
         <thead>
@@ -20,6 +22,7 @@
             <th style="width: 120px">Winner</th>
             <th style="width: 120px">Time</th>
             <th style="width: 120px">Players</th>
+            <th style="width: 120px">Join</th>
             
         </tr>
         </thead>
@@ -49,8 +52,16 @@
                 </td>
                 <td>
                     <c:forEach items="${game.players}" var="player">
-                        <c:out value="${player.id} "/>
+                        <c:out value="${player.id}"/>
                     </c:forEach>
+                </td>
+                <td>
+                    <form action="" th:action="@{/games}" th:object="${gameId}" method="put">
+                        <input type="hidden" name="gameId" value="${game.id}">
+                        <button class="btn btn-default" type="submit">
+                            Join Game
+                        </button>
+                    </form:form>
                 </td>
             </tr>
         </c:forEach>

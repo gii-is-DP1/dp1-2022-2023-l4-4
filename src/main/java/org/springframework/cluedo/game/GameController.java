@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -88,7 +89,7 @@ public class GameController {
     public ModelAndView getAllPublicLobbies(){
         ModelAndView result=new ModelAndView(GAME_LISTING);
         result.addObject("games", gameService.getAllPublicLobbies());
-        
+        result.addObject("gameId", 0);
         return result;
     }
     //H11
@@ -124,8 +125,9 @@ public class GameController {
     
     // H2
     @Transactional
-    @PutMapping("/{game_id}")
-    public ModelAndView joinGame(@PathVariable("game_id") Integer game_id) throws DataNotFound{
+    @PostMapping()
+    public ModelAndView joinGame(@RequestParam("gameId") Integer game_id) throws DataNotFound{
+        System.out.println("murcielago" + game_id);
         Optional<User> loggedUser = userService.getLoggedUser();
     	Optional<Game> game = gameService.getGameById(game_id);
         ModelAndView result = new ModelAndView(GAME_LISTING);
@@ -135,7 +137,7 @@ public class GameController {
         } else if(game.get().getStatus()!=Status.LOBBY){
             result.addObject("message", "The game is started");
             return result;
-        } else if(game.get().getPlayers().size()==game.get().getLobby().size()) {
+        } else if(game.get().getLobby().size()==game.get().getLobbySize()) {
             result.addObject("message", "The lobby is full");
             return result;
         }else {
@@ -159,7 +161,7 @@ public class GameController {
             return result;
         } else if (game.get().getHost().getId()!=host_id){
             ModelAndView result = new ModelAndView(GAME_LISTING);
-            result.addObject("message", "The host is incorrec");
+            result.addObject("message", "The host is incorrect");
             return result;
         } else if (game.get().getLobbySize()<3) {
             ModelAndView result = new ModelAndView(LOBBY);

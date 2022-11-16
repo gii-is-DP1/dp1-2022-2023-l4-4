@@ -48,7 +48,7 @@
                     </td>
                     <td>
                         <c:forEach items="${game.players}" var="player">
-                            <c:out value="${player.id} "/>
+                            <c:out value="${player.user.username} "/>
                         </c:forEach>
                     </td>
                 </tr>
