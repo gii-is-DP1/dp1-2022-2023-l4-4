@@ -10,7 +10,13 @@
     <h2>
         Active games
     </h2>
-
+    <h2>
+        <a href="games/new">
+            <button class="btn btn-default">
+            New Game
+            </button>
+        </a>
+    </h2>
     <table id="gameTable" class="table table-striped">
         <thead>
         <tr>
@@ -56,12 +62,11 @@
                     </c:forEach>
                 </td>
                 <td>
-                    <form action="" th:action="@{/games}" th:object="${gameId}" method="post">
-                        <input type="hidden" name="gameId" value="${game.id}">
-                        <button class="btn btn-default" type="submit">
-                            Join Game
-                        </button>
-                    </form:form>
+                    <a  href="/games/${game.id}" >
+                    <button class="btn btn-default">
+                        Join Game
+                    </button>
+                    </a>
                 </td>
             </tr>
         </c:forEach>
