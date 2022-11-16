@@ -1,3 +1,4 @@
+<<<<<<< HEAD:src/main/java/org/springframework/samples/petclinic/user/UserService.java
 /*
  * Copyright 2002-2013 the original author or authors.
  *
@@ -14,21 +15,22 @@
  * limitations under the License.
  */
 package org.springframework.samples.petclinic.user;
+=======
+
+package org.springframework.cluedo.user;
+>>>>>>> develop:src/main/java/org/springframework/cluedo/user/UserService.java
 
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Mostly used as a facade for all Petclinic controllers Also a placeholder
- * for @Transactional and @Cacheable annotations
- *
- * @author Michael Isvy
- */
 @Service
 public class UserService {
 
@@ -38,6 +40,11 @@ public class UserService {
 	public UserService(UserRepository userRepository) {
 		this.userRepository = userRepository;
 	}
+	@Transactional
+	public List<User> getAllUsers(){
+		return userRepository.findAll();
+	}
+
 
 	@Transactional
 	public void saveUser(User user) throws DataAccessException {
@@ -45,7 +52,23 @@ public class UserService {
 		userRepository.save(user);
 	}
 	
-	public Optional<User> findUser(String username) {
-		return userRepository.findById(username);
+	public Optional<User> findUserById(int id) {
+		return userRepository.findById(id);
+	}
+	public void deleteUser(int id){
+		userRepository.deleteById(id);
+	}
+
+	public Optional<User> findUserByUsername(String username) {
+		return userRepository.findByUsername(username);
+	}
+
+	public Optional<User> getLoggedUser(){
+		UserDetails userDetails=(UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return userRepository.findByUsername(userDetails.getUsername());
+	}
+
+	public UserDetails getUserDetails(){
+		return(UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 }

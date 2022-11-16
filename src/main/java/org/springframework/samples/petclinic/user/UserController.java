@@ -16,59 +16,142 @@
 package org.springframework.samples.petclinic.user;
 
 import java.util.Map;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+<<<<<<< HEAD:src/main/java/org/springframework/samples/petclinic/user/UserController.java
 import org.springframework.samples.petclinic.owner.Owner;
 import org.springframework.samples.petclinic.owner.OwnerService;
+=======
+import org.springframework.cluedo.exceptions.DataNotFound;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+>>>>>>> develop:src/main/java/org/springframework/cluedo/user/UserController.java
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
 
-/**
- * @author Juergen Hoeller
- * @author Ken Krebs
- * @author Arjen Poutsma
- * @author Michael Isvy
- */
 @Controller
+
+
 public class UserController {
 
-	private static final String VIEWS_OWNER_CREATE_FORM = "users/createOwnerForm";
-
-	private final OwnerService ownerService;
+	private static final String VIEWS_USER_LIST = "users/userList";
+  
+  	private static final String VIEWS_USER_CREATE_OR_UPDATE_FORM = "users/createOrUpdateUserForm";
+	
+	
+	@Autowired
+	private UserService userService;
+	
 
 	@Autowired
-	public UserController(OwnerService clinicService) {
-		this.ownerService = clinicService;
-	}
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
-	@InitBinder
-	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setDisallowedFields("id");
+	
+	@GetMapping(value ="/users")
+    public ModelAndView showUserList() {
+        ModelAndView mav = new ModelAndView(VIEWS_USER_LIST);
+        mav.addObject("users", userService.getAllUsers());
+        return mav;
+    }
+
+	@GetMapping(value="/users/{userId}")
+	public ModelAndView showUser(@PathVariable("userId") int userId) throws DataNotFound{
+		ModelAndView mav = new ModelAndView("users/userDetails");
+		Optional<User> nrUser = userService.findUserById(userId);
+		if(nrUser.isPresent()){
+			mav.addObject("user", nrUser.get());
+		return mav;
+		}
+		throw new DataNotFound();
+	}
+	@GetMapping(value="/users/{userId}/edit")
+	public String initUpdateUserForm(@PathVariable("userId") int userId,Model model) throws DataNotFound{
+		Optional<User> nrUser = this.userService.findUserById(userId);
+		if(nrUser.isPresent()){
+			model.addAttribute(nrUser.get());
+		return VIEWS_USER_CREATE_OR_UPDATE_FORM;
+		}
+		throw new DataNotFound();
 	}
 
 	@GetMapping(value = "/users/new")
 	public String initCreationForm(Map<String, Object> model) {
-		Owner owner = new Owner();
-		model.put("owner", owner);
-		return VIEWS_OWNER_CREATE_FORM;
+		User user = new User();
+		model.put("user", user);
+		return VIEWS_USER_CREATE_OR_UPDATE_FORM;
 	}
 
 	@PostMapping(value = "/users/new")
-	public String processCreationForm(@Valid Owner owner, BindingResult result) {
+	public String processCreationForm(@Valid User user, BindingResult result) {
 		if (result.hasErrors()) {
-			return VIEWS_OWNER_CREATE_FORM;
+			return VIEWS_USER_CREATE_OR_UPDATE_FORM;
 		}
 		else {
-			//creating owner, user, and authority
-			this.ownerService.saveOwner(owner);
+			this.userService.saveUser(user);
 			return "redirect:/";
 		}
 	}
+
+ 	@PostMapping(value= "/users/{userId}/edit")
+	public String processUpdateForm(@Valid User user, BindingResult result,@PathVariable("userId") int userId){
+		
+		if(result.hasErrors()){
+			return VIEWS_USER_CREATE_OR_UPDATE_FORM;
+		}else{
+			user.setId(userId);
+			this.userService.saveUser(user);
+			return "redirect:/users/{userId}";
+		}
+	} 
+
+	@GetMapping(value = "/users/{userId}/delete")
+	public String deleteUser(@PathVariable("userId") int userId){
+		this.userService.deleteUser(userId);
+		return "redirect:/users/";
+	}
+
+	@GetMapping(value = "/profile")
+	public ModelAndView showProfile(Map<String, Object> model) throws DataNotFound{
+		Optional<User> nrUser = userService.getLoggedUser();
+		ModelAndView mav = new ModelAndView("users/profile");
+		if(nrUser.isPresent()){
+			mav.addObject("user", nrUser.get());
+		return mav;
+		}
+		throw new DataNotFound();
+	}	
+	@GetMapping(value="/profile/edit")
+	public String initUpdateUserProfileForm(Model model) throws DataNotFound{
+		Optional<User> nrUser = userService.getLoggedUser();
+		if(nrUser.isPresent()){
+			User user = nrUser.get();
+			user.setPassword("");
+			model.addAttribute(user);
+		return VIEWS_USER_CREATE_OR_UPDATE_FORM;
+		}
+		throw new DataNotFound();
+	}
+	@PostMapping(value= "/profile/edit")
+	public String processUpdateFormProfile(@Valid User user, BindingResult result){
+		Optional<User> nrUser = userService.getLoggedUser();
+		if(result.hasErrors()){
+			return VIEWS_USER_CREATE_OR_UPDATE_FORM;
+		}else{
+			user.setId(nrUser.get().getId());
+			this.userService.saveUser(user);
+			return "users/profile";
+		}
+	} 
 
 }

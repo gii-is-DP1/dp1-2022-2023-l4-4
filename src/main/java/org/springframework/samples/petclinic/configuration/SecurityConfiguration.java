@@ -30,6 +30,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Autowired
 	DataSource dataSource;
 	
+	
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
@@ -38,9 +40,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/users/new").permitAll()
 				.antMatchers("/session/**").permitAll()
 				.antMatchers("/admin/**").hasAnyAuthority("admin")
-				.antMatchers("/owners/**").hasAnyAuthority("owner","admin")				
+				.antMatchers("/users/**").hasAnyAuthority("admin")
+				.antMatchers("/owners/**").permitAll()	
+				.antMatchers("/profile/**").authenticated()	
 				.antMatchers("/vets/**").authenticated()
+				.antMatchers("/games/**").authenticated()
+				.antMatchers("/game/**").authenticated()
+				.antMatchers("/celd/**").permitAll()
 				.anyRequest().denyAll()
+				
 				.and()
 				 	.formLogin()
 				 	/*.loginPage("/login")*/
@@ -54,22 +62,23 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // se sirve desde esta misma página.
                 http.csrf().ignoringAntMatchers("/h2-console/**");
                 http.headers().frameOptions().sameOrigin();
+        		http.cors().and().csrf().disable();
 	}
 
 	@Override
-	public void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.jdbcAuthentication()
-	      .dataSource(dataSource)
-	      .usersByUsernameQuery(
-	       "select username,password,enabled "
-	        + "from users "
-	        + "where username = ?")
-	      .authoritiesByUsernameQuery(
-	       "select username, authority "
-	        + "from authorities "
-	        + "where username = ?")	      	      
-	      .passwordEncoder(passwordEncoder());	
-	}
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.jdbcAuthentication()
+          .dataSource(dataSource)
+          .usersByUsernameQuery(
+              "select username,password,enabled "
+                + "from users "
+                + "where username = ?")
+              .authoritiesByUsernameQuery(
+               "select username,authority "
+                + "from users "
+                + "where username = ?")
+          .passwordEncoder(passwordEncoder());
+    }
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {	    
