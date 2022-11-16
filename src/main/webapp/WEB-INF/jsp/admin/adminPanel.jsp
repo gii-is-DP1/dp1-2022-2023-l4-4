@@ -8,9 +8,9 @@
 
 <petclinic:layout pageName="admin_panel">
     <h2>ADMIN PANEL</h2>
-    <a href="/games/allNotFinishedGames">View All Not Finished Games</a> <br/>
-    <a href="/games/allFinishedGames">View All Finished Games</a>  <br/>
-    <a href="/games/lobbies">View All Listed Lobbies</a>  <br/>
+    <a href="/games/admin/active">View All Not Finished Games</a> <br/>
+    <a href="/games/admin/past">View All Finished Games</a>  <br/>
+    <a href="/games">View All Listed Lobbies</a>  <br/>
     <a href="/users">View All Users</a>  <br/>
    
 </petclinic:layout>

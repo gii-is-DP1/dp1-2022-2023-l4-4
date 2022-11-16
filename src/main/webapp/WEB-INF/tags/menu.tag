@@ -28,7 +28,7 @@
 					<span>Home</span>
 				</petclinic:menuItem>
 
-				<petclinic:menuItem active="${name eq 'games'}" url="/games/lobbies"
+				<petclinic:menuItem active="${name eq 'games'}" url="/games"
 					title="Games">
 					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 					<span>Games</span>
