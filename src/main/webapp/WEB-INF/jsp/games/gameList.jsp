@@ -10,6 +10,7 @@
     <h2>
         Active games
     </h2>
+    <div class="container">
     <h2>
         <a href="games/new">
             <button class="btn btn-default">
@@ -17,6 +18,14 @@
             </button>
         </a>
     </h2>
+    <h2>
+        <a href="games/past">
+            <button class="btn btn-default">
+            Finished games
+            </button>
+        </a>
+    </h2>
+    </div>
     <table id="gameTable" class="table table-striped">
         <thead>
         <tr>

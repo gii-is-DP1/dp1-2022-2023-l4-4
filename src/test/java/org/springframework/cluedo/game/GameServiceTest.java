@@ -25,12 +25,9 @@ public class GameServiceTest {
     @Test
     void shouldFindNotFinishedGames() {
         List<Game> games = gameService.getAllNotFinishedGames();
-        Game game2 = games.stream().filter(g->g.getId()==2).findFirst().orElse(null);
         Game game3 = games.stream().filter(g->g.getId()==3).findFirst().orElse(null);
-        assertEquals(2,games.size());
-        assertNotNull(game2);
+        assertEquals(1,games.size());
         assertNotNull(game3);
-        assertEquals(Status.IN_PROGRESS, game2.getStatus());
         assertEquals(Status.LOBBY, game3.getStatus());
     }
 
@@ -38,9 +35,12 @@ public class GameServiceTest {
     void shouldFindFinishedGames() {
         List<Game> games = gameService.getAllFinishedGames();
         Game game1 = games.stream().filter(g->g.getId()==1).findFirst().orElse(null);
-        assertEquals(1,games.size());
+        Game game2 = games.stream().filter(g->g.getId()==2).findFirst().orElse(null);
+        assertEquals(2,games.size());
         assertNotNull(game1);
         assertEquals(Status.FINISHED, game1.getStatus());
+        assertNotNull(game2);
+        assertEquals(Status.FINISHED, game2.getStatus());
     }
 
     @Test

@@ -16,6 +16,7 @@
             <th style="width: 120px">Password</th>
             <th style="width: 120px">Image</th>
             
+
             
         </tr>
         </thead>
@@ -23,7 +24,7 @@
         <c:forEach items="${users}" var="user">
             <tr>
                 <td>
-                    <spring:url value="/user/{userId}" var="userUrl">
+                    <spring:url value="/users/{userId}" var="userUrl">
                         <spring:param name="userId" value="${user.id}"/>
                     </spring:url>
                     <a href="${fn:escapeXml(userUrl)}"><c:out value="${user.username} "/></a>
@@ -43,6 +44,7 @@
                     </c:if>
                 </td>
 
+            
                          
       
 <!--

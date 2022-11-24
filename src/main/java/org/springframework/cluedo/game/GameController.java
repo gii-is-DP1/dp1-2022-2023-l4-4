@@ -1,7 +1,6 @@
 package org.springframework.cluedo.game;
 
 import java.util.Optional;
-import java.util.Random;
 
 import javax.validation.Valid;
 
@@ -12,15 +11,13 @@ import org.springframework.cluedo.enumerates.SuspectType;
 import org.springframework.cluedo.user.User;
 import org.springframework.cluedo.user.UserGame;
 import org.springframework.cluedo.user.UserService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.websocket.server.PathParam;
@@ -285,10 +282,10 @@ public class GameController {
             Optional<Turn> nrTurn=turnService.getTurn(game.getActualPlayer(), game.getRound());
             if(nrTurn.isPresent()){
                 Turn turn=nrTurn.get();
-            ModelAndView result = new ModelAndView(DICE_VIEW);
-            System.out.println(celdService.getAllPossibleMovements(turn.getDiceResult(), turn.getInitialCeld()));
-            result.addObject("movements", celdService.getAllPossibleMovements(turn.getDiceResult(), turn.getInitialCeld()));
-            return result;
+                ModelAndView result = new ModelAndView(DICE_VIEW);
+                System.out.println(celdService.getAllPossibleMovements(turn.getDiceResult(), turn.getInitialCeld()));
+                result.addObject("movements", celdService.getAllPossibleMovements(turn.getDiceResult(), turn.getInitialCeld()));
+                return result;
             }else{
                 throw new CorruptGame();
             }
@@ -296,24 +293,4 @@ public class GameController {
             throw new DataNotFound();
         }
     }
-
-    /*@PostMapping("{id}/play/move")
-    @Transactional(rollbackFor = {WrongPhaseException.class,GameNotExists.class,CorruptGame.class})
-    private ModelAndView movement(@PathParam("id") Integer gameId,Celd celd) throws WrongPhaseException,GameNotExists,CorruptGame{
-        Optional<Game> nrGame = gameService.getGameById(gameId);
-        if(nrGame.isPresent()){
-            Game game= nrGame.get();
-            Optional<Turn> nrTurn=turnService.getTurn(game.getActualPlayer(), game.getRound());
-            if(nrTurn.isPresent()){
-                Turn turn=nrTurn.get();
-            ModelAndView result = new ModelAndView(DICE_VIEW);
-            result.addObject("movements", celdService.getAllPossibleMovements(turn.getDiceResult(), turn.getInitialCeld()));
-            return result;
-            }else{
-                throw new CorruptGame();
-            }
-        }else{
-            throw new GameNotExists();
-        }
-    }*/
 }

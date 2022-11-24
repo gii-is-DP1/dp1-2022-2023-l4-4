@@ -16,13 +16,18 @@
 package org.springframework.cluedo.user;
 
 import java.util.Map;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cluedo.exceptions.DataNotFound;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,8 +40,9 @@ public class UserController {
 
 	private static final String VIEWS_USER_LIST = "users/userList";
   
-  private static final String VIEWS_USER_CREATE_OR_UPDATE_FORM = "users/createOrUpdateUserForm";
-
+  	private static final String VIEWS_USER_CREATE_OR_UPDATE_FORM = "users/createOrUpdateUserForm";
+	
+	
 	@Autowired
 	private UserService userService;
 	
@@ -54,9 +60,25 @@ public class UserController {
         return mav;
     }
 
-
-
-
+	@GetMapping(value="/users/{userId}")
+	public ModelAndView showUser(@PathVariable("userId") int userId) throws DataNotFound{
+		ModelAndView mav = new ModelAndView("users/userDetails");
+		Optional<User> nrUser = userService.findUserById(userId);
+		if(nrUser.isPresent()){
+			mav.addObject("user", nrUser.get());
+		return mav;
+		}
+		throw new DataNotFound();
+	}
+	@GetMapping(value="/users/{userId}/edit")
+	public String initUpdateUserForm(@PathVariable("userId") int userId,Model model) throws DataNotFound{
+		Optional<User> nrUser = this.userService.findUserById(userId);
+		if(nrUser.isPresent()){
+			model.addAttribute(nrUser.get());
+		return VIEWS_USER_CREATE_OR_UPDATE_FORM;
+		}
+		throw new DataNotFound();
+	}
 
 	@GetMapping(value = "/users/new")
 	public String initCreationForm(Map<String, Object> model) {
@@ -76,16 +98,9 @@ public class UserController {
 		}
 	}
 
-
-	@GetMapping(value = "/users/{userId}/edit")
-	public String initUpdateForm(@PathVariable("userId") int userId, Model model){
-		User user = this.userService.findUserById(userId).get();
-		model.addAttribute("user", user);
-		return VIEWS_USER_CREATE_OR_UPDATE_FORM;
-	}
-
-	@PostMapping(value= "/users/{userId}/edit")
-	public String processUpdateForm(@Valid User user, @PathVariable("userId") int userId, BindingResult result){
+ 	@PostMapping(value= "/users/{userId}/edit")
+	public String processUpdateForm(@Valid User user, BindingResult result,@PathVariable("userId") int userId){
+		
 		if(result.hasErrors()){
 			return VIEWS_USER_CREATE_OR_UPDATE_FORM;
 		}else{
@@ -93,9 +108,45 @@ public class UserController {
 			this.userService.saveUser(user);
 			return "redirect:/users/{userId}";
 		}
+	} 
+
+	@GetMapping(value = "/users/{userId}/delete")
+	public String deleteUser(@PathVariable("userId") int userId){
+		this.userService.deleteUser(userId);
+		return "redirect:/users/";
 	}
 
-
-
+	@GetMapping(value = "/profile")
+	public ModelAndView showProfile(Map<String, Object> model) throws DataNotFound{
+		Optional<User> nrUser = userService.getLoggedUser();
+		ModelAndView mav = new ModelAndView("users/profile");
+		if(nrUser.isPresent()){
+			mav.addObject("user", nrUser.get());
+		return mav;
+		}
+		throw new DataNotFound();
+	}	
+	@GetMapping(value="/profile/edit")
+	public String initUpdateUserProfileForm(Model model) throws DataNotFound{
+		Optional<User> nrUser = userService.getLoggedUser();
+		if(nrUser.isPresent()){
+			User user = nrUser.get();
+			user.setPassword("");
+			model.addAttribute(user);
+		return VIEWS_USER_CREATE_OR_UPDATE_FORM;
+		}
+		throw new DataNotFound();
+	}
+	@PostMapping(value= "/profile/edit")
+	public String processUpdateFormProfile(@Valid User user, BindingResult result){
+		Optional<User> nrUser = userService.getLoggedUser();
+		if(result.hasErrors()){
+			return VIEWS_USER_CREATE_OR_UPDATE_FORM;
+		}else{
+			user.setId(nrUser.get().getId());
+			this.userService.saveUser(user);
+			return "users/profile";
+		}
+	} 
 
 }
