@@ -7,21 +7,11 @@ import javax.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.enumerates.Status;
-import org.springframework.cluedo.enumerates.SuspectType;
 import org.springframework.cluedo.user.User;
-import org.springframework.cluedo.user.UserGame;
 import org.springframework.cluedo.user.UserService;
-
-
-import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import java.util.concurrent.ThreadLocalRandom;
-
 import javax.websocket.server.PathParam;
-
 import org.springframework.cluedo.celd.CeldService;
 import org.springframework.cluedo.exceptions.CorruptGame;
 import org.springframework.cluedo.exceptions.DataNotFound;
@@ -192,14 +182,10 @@ public class GameController {
             ModelAndView result = new ModelAndView("ON_GAME");
             Game copy = new Game();
             BeanUtils.copyProperties(game.get(), copy);
-            copy.setStatus(Status.IN_PROGRESS);
-            copy.setDuration(Duration.ofMinutes(0));
-            copy.setCrimeScene(null); // No terminado
-            copy.setRound(1);
-            
-            
+            gameService.initGame(copy);
             userService.initializePlayers(copy.getLobby(), copy);
-            gameService.saveGame(copy);
+		    gameService.saveGame(copy);
+           
             return result;
         }   
     }

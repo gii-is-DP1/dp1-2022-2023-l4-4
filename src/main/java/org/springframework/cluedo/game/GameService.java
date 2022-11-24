@@ -1,9 +1,11 @@
 package org.springframework.cluedo.game;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cluedo.enumerates.Status;
 import org.springframework.cluedo.user.User;
 import org.springframework.cluedo.user.UserService;
 import org.springframework.dao.DataAccessException;
@@ -44,6 +46,12 @@ public class GameService {
 		//return StreamSupport.stream(gameRepository.findAllById(gameRepository.findMyFinishedGames(userId)).spliterator(),false).collect(Collectors.toList());
 		//gameRepository.findAllById(gameRepository.findMyFinishedGames(userId)).forEach(x->res.add(x));
 		return gameRepository.findMyFinishedGames(user);
+	}
+	public void initGame(Game copy){
+        copy.setStatus(Status.IN_PROGRESS);
+        copy.setDuration(Duration.ofMinutes(0));
+        copy.setCrimeScene(null); // No terminado
+        copy.setRound(1);
 	} 
 	//H1
 	@Transactional
