@@ -79,4 +79,20 @@ public class Game extends BaseEntity{
     public Boolean getIsPrivate(){
         return isPrivate;
     }
+
+    public void addPlayers(List<UserGame> newPlayers){
+        this.players.addAll(newPlayers);
+    }
+
+    public void addPlayers(UserGame newPlayer){
+        this.players.add(newPlayer);
+    }
+
+    public void addLobbyUsers(List<User> lobbyUsers){
+        this.lobby.addAll(lobbyUsers);
+    }
+
+    public void addLobbyUsers(User lobbyUser){
+        this.lobby.add(lobbyUser);
+    }
 }
