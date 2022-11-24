@@ -197,24 +197,8 @@ public class GameController {
             copy.setCrimeScene(null); // No terminado
             copy.setRound(1);
             
-            List<SuspectType> suspects=new ArrayList<>();
-            for (SuspectType value : SuspectType.values()) {
-                suspects.add(value);
-            }
             
-            for (User user : game.get().getLobby()) {
-                Integer available = suspects.size();
-                UserGame userGame = new UserGame();
-                userGame.setAccusationsNumber(0);
-                userGame.setGame(copy);
-                userGame.setUser(user);
-                userGame.setIsAfk(false);
-                Integer randomInt = ThreadLocalRandom.current().nextInt(available);
-                userGame.setSuspect(suspects.get(randomInt));
-                suspects.remove(suspects.get(randomInt));
-                userGame.setCards(null);
-                copy.getPlayers().add(userGame);
-            }
+            userService.initializePlayers(copy.getLobby(), copy);
             gameService.saveGame(copy);
             return result;
         }   

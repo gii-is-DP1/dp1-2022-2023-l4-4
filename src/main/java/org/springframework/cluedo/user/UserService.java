@@ -2,10 +2,14 @@
 package org.springframework.cluedo.user;
 
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cluedo.enumerates.SuspectType;
+import org.springframework.cluedo.game.Game;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -51,4 +55,22 @@ public class UserService {
 	public UserDetails getUserDetails(){
 		return(UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
+    public void initializePlayers(List<User> lobby, Game copy) { 
+
+		List<SuspectType> suspects= Arrays.asList(SuspectType.values());
+		
+		for (User user : lobby) {
+			Integer available = suspects.size();
+			UserGame userGame = new UserGame();
+			userGame.setAccusationsNumber(0);
+			userGame.setGame(copy);
+			userGame.setUser(user);
+			userGame.setIsAfk(false);
+			Integer randomInt = ThreadLocalRandom.current().nextInt(available);
+			userGame.setSuspect(suspects.get(randomInt));
+			suspects.remove(suspects.get(randomInt));
+			userGame.setCards(null);
+			copy.getPlayers().add(userGame);
+		}
+    }
 }
