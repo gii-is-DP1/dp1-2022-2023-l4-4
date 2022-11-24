@@ -122,6 +122,7 @@ public class GameController {
         game.setLobby(new ArrayList<>(List.of(userService.getLoggedUser().get())));
         
         if(br.hasErrors()) {
+            
     		System.out.println(br.getAllErrors().toString());
             return new ModelAndView(CREATE_NEW_GAME, br.getModel());
     	} else {
@@ -175,7 +176,7 @@ public class GameController {
 
     // H3
     @Transactional
-    @PutMapping("/{game_id}/{host_id}")
+    @GetMapping("/{game_id}/{host_id}")
     public ModelAndView startGame(@PathVariable("game_id") Integer game_id, @PathVariable("host_id") Integer host_id){
         Optional<Game> game = gameService.getGameById(game_id);
         if(!game.isPresent()){
@@ -211,7 +212,7 @@ public class GameController {
                 userGame.setGame(copy);
                 userGame.setUser(user);
                 userGame.setIsAfk(false);
-                Integer randomInt = ThreadLocalRandom.current().nextInt(available)+1;
+                Integer randomInt = ThreadLocalRandom.current().nextInt(available);
                 userGame.setSuspect(suspects.get(randomInt));
                 suspects.remove(suspects.get(randomInt));
                 userGame.setCards(null);
@@ -222,10 +223,17 @@ public class GameController {
         }   
     }
 
-
-    @GetMapping("/{id}/play/turn")
+    @GetMapping("/{gameId}/play/test")
     @Transactional
-   private ModelAndView initTurn(@PathParam("id") Integer gameId) throws WrongPhaseException,DataNotFound{
+    public Game testTurn(@PathVariable("gameId") Integer gameId) throws WrongPhaseException,DataNotFound{
+        Optional<Game> g= gameService.getGameById(gameId);
+        System.out.println(gameId);
+        return g.get();
+    }
+
+    @GetMapping("/{gameId}/play/turn")
+    @Transactional
+    public ModelAndView initTurn(@PathVariable("gameId") Integer gameId) throws WrongPhaseException,DataNotFound{
         Optional<Game> nrGame = gameService.getGameById(gameId);
         if(nrGame.isPresent()){
             Game game=nrGame.get();

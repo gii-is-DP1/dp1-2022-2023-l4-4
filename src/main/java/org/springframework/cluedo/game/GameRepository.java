@@ -28,5 +28,4 @@ public interface GameRepository extends CrudRepository<Game,Integer>{
      @Query("select g from Game g WHERE g.status=org.springframework.cluedo.enumerates.Status.FINISHED")
      List<Game> findAllFinishedGames();
      
-     Optional<Game> findById(Integer id);
 }

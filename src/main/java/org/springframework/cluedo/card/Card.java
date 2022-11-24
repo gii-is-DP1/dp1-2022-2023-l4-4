@@ -21,7 +21,7 @@ public class Card extends BaseEntity {
     private CardType cardType;
 
     @Column(name = "image_url")
-    @NotNull
+    
     private String imageUrl;
 
 

@@ -93,6 +93,7 @@ public class UserController {
 			return VIEWS_USER_CREATE_OR_UPDATE_FORM;
 		}
 		else {
+			user.setEnabled(1);
 			this.userService.saveUser(user);
 			return "redirect:/";
 		}

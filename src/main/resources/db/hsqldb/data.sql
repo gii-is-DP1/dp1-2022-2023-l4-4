@@ -1,13 +1,33 @@
 -- CREATE TABLE user_games(id integer, orderPlayer integer ,accusations_number integer ,is_afk boolean ,suspect varchar(60),user_id integer,game_id integer);
 
-INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (1,'1','1','1@gmail.com',null,1,'admin');
+INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES 
+(1,'1','1','1@gmail.com',null,1,'admin'),
+(2,'2','2','2@gmail.com',null,1,'user'),
+(3,'manuel333','1','user2@gmail.com',null,1,'user'),
+(4,'4','4','user4@gmail.com',null,1,'user');
 
-INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (2,'2','2','2@gmail.com',null,1,'user');
-
-INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (3,'manuel333','1','user2@gmail.com',null,1,'user');
-
-INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (4,'4','4','user4@gmail.com',null,1,'user');
-
+INSERT INTO cards(id,card_name,card_type,image_url) VALUES
+(1,1,3,null),
+(2,2,3,null),
+(3,3,3,null),
+(4,4,3,null),
+(5,5,3,null),
+(6,6,3,null),
+(7,7,3,null),
+(8,8,3,null),
+(9,9,3,null),
+(10,10,1,null),
+(11,11,1,null),
+(12,12,1,null),
+(13,13,1,null),
+(14,14,1,null),
+(15,15,1,null),
+(16,16,2,null),
+(17,17,2,null),
+(18,18,2,null),
+(19,19,2,null),
+(20,20,2,null),
+(21,21,2,null);
 
 
 
