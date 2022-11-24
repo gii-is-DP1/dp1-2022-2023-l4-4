@@ -12,6 +12,7 @@
             <petclinic:inputField label="Username" name="username" />
             <petclinic:inputField label="E-mail" name="email" />
             <petclinic:inputField label="Password" name="password" />
+            <input type="hidden" name="enabled" value="${user.enabled}">
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">

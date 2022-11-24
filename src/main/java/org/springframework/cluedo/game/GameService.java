@@ -52,7 +52,7 @@ public class GameService {
 	}
 
 	@Transactional(readOnly=true)
-	public Optional<Game> getGameById(Integer id){
-		return gameRepository.findById(id);
+	public Optional<Game> getGameById(Integer gameId){
+		return gameRepository.findById(gameId);
 	}
 }

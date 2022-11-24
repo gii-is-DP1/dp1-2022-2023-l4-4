@@ -1,14 +1,33 @@
 -- CREATE TABLE user_games(id integer, orderPlayer integer ,accusations_number integer ,is_afk boolean ,suspect varchar(60),user_id integer,game_id integer);
- 
--- One admin user, named admin1 with passwor 4dm1n and authority admin
 
-INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (1,'1','1','1@gmail.com',null,1,'admin');
--- One owner user, named owner1 with passwor 0wn3r
-INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (2,'2','2','2@gmail.com',null,1,'user');
+INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES 
+(1,'1','1','1@gmail.com',null,1,'admin'),
+(2,'2','2','2@gmail.com',null,1,'user'),
+(3,'manuel333','1','user2@gmail.com',null,1,'user'),
+(4,'4','4','user4@gmail.com',null,1,'user');
 
--- One vet user, named vet1 with passwor v3t
-INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (3,'manuel333','1','user2@gmail.com',null,1,'user');
-
+INSERT INTO cards(id,card_name,card_type,image_url) VALUES
+(1,1,3,null),
+(2,2,3,null),
+(3,3,3,null),
+(4,4,3,null),
+(5,5,3,null),
+(6,6,3,null),
+(7,7,3,null),
+(8,8,3,null),
+(9,9,3,null),
+(10,10,1,null),
+(11,11,1,null),
+(12,12,1,null),
+(13,13,1,null),
+(14,14,1,null),
+(15,15,1,null),
+(16,16,2,null),
+(17,17,2,null),
+(18,18,2,null),
+(19,19,2,null),
+(20,20,2,null),
+(21,21,2,null);
 
 
 
@@ -674,9 +693,9 @@ INSERT INTO user_games(id,order_user, accusations_number, is_afk,suspect,user_id
 INSERT INTO turns(user_game_id, round, dice_result, initial_celd_id,phase) VALUES (3,1,5,1,5);
 
 INSERT INTO players(game_id,user_game_id) VALUES 
-(2,1),
-(2,2),
-(2,3);
+(2,3),
+(2,4),
+(2,5);
 
 
 
@@ -699,6 +718,6 @@ INSERT INTO turns(user_game_id, round, dice_result, initial_celd_id,phase) VALUE
 (8,1,11,1,4);
 
 INSERT INTO players(game_id,user_game_id) VALUES 
-(3,1),
-(3,2),
-(3,3);
+(3,6),
+(3,7),
+(3,8);

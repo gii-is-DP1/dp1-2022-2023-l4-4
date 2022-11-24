@@ -7,8 +7,25 @@
 
 
 <petclinic:layout pageName="games">
-    <h2>Games</h2>
-
+    <h2>
+        Active games
+    </h2>
+    <div class="container">
+    <h2>
+        <a href="games/new">
+            <button class="btn btn-default">
+            New Game
+            </button>
+        </a>
+    </h2>
+    <h2>
+        <a href="games/past">
+            <button class="btn btn-default">
+            Finished games
+            </button>
+        </a>
+    </h2>
+    </div>
     <table id="gameTable" class="table table-striped">
         <thead>
         <tr>
@@ -20,6 +37,7 @@
             <th style="width: 120px">Winner</th>
             <th style="width: 120px">Time</th>
             <th style="width: 120px">Players</th>
+            <th style="width: 120px">Join</th>
             
         </tr>
         </thead>
@@ -48,9 +66,16 @@
                     <c:out value="${game.duration}"/>
                 </td>
                 <td>
-                    <c:forEach items="${game.players}" var="player">
-                        <c:out value="${player.id} "/>
+                    <c:forEach items="${game.lobby}" var="player">
+                        <c:out value="${player.username}"/>
                     </c:forEach>
+                </td>
+                <td>
+                    <a  href="/games/${game.id}" >
+                    <button class="btn btn-default">
+                        Join Game
+                    </button>
+                    </a>
                 </td>
             </tr>
         </c:forEach>

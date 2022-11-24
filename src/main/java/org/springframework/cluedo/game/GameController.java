@@ -1,7 +1,6 @@
 package org.springframework.cluedo.game;
 
 import java.util.Optional;
-import java.util.Random;
 
 import javax.validation.Valid;
 
@@ -12,14 +11,13 @@ import org.springframework.cluedo.enumerates.SuspectType;
 import org.springframework.cluedo.user.User;
 import org.springframework.cluedo.user.UserGame;
 import org.springframework.cluedo.user.UserService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.websocket.server.PathParam;
@@ -38,6 +36,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -65,7 +64,7 @@ public class GameController {
     //Admin
     //H12
     @Transactional(readOnly = true)
-    @GetMapping(value = "/allNotFinishedGames")
+    @GetMapping(value = "/admin/active")
     public ModelAndView getAllActiveGames() {
         ModelAndView result = new ModelAndView(GAME_LISTING);
         result.addObject("games", gameService.getAllNotFinishedGames());
@@ -73,24 +72,25 @@ public class GameController {
     }
     //H13
     @Transactional(readOnly = true)
-    @GetMapping("/allFinishedGames")
+    @GetMapping("/admin/past")
     public ModelAndView getAllPastGames(){
         ModelAndView result = new ModelAndView(GAME_PAST_LISTING);
         result.addObject("games", gameService.getAllFinishedGames());
+        result.addObject("admin", userService.getUserDetails().getAuthorities().toArray()[0].equals("admin"));
         return result;
     }
     //User
 
     //H10
     @Transactional(readOnly = true)
-    @GetMapping("/lobbies")
+    @GetMapping()
     public ModelAndView getAllPublicLobbies(){
         ModelAndView result=new ModelAndView(GAME_LISTING);
         result.addObject("games", gameService.getAllPublicLobbies());
         return result;
     }
     //H11
-    @GetMapping("/played")
+    @GetMapping("/past")
     public ModelAndView getAllPastUserGames(){
         User user= userService.getLoggedUser().get();
         ModelAndView result = new ModelAndView(GAME_PAST_LISTING);
@@ -102,53 +102,81 @@ public class GameController {
     @Transactional(readOnly = true)
     @GetMapping("/new")
     public ModelAndView createGame(){
+        User user= userService.getLoggedUser().get();
     	Game game = new Game();
     	ModelAndView result = new ModelAndView(CREATE_NEW_GAME);
+        List<Boolean> bool = new ArrayList<>();
+        bool.add(true);
+        bool.add(false);
+        result.addObject("privateList", bool);
+        result.addObject("nPlayers", List.of(3,4,5,6));
         result.addObject("game", game);
+        result.addObject("user", user);
         return result;
     }
     
     @Transactional
     @PostMapping("/new")
     public ModelAndView formNewGame(@Valid Game game, BindingResult br) {
-    	if(br.hasErrors()) {
-    		return new ModelAndView(CREATE_NEW_GAME, br.getModel());
+        game.setStatus(Status.LOBBY);
+        game.setLobby(new ArrayList<>(List.of(userService.getLoggedUser().get())));
+        
+        if(br.hasErrors()) {
+            
+    		System.out.println(br.getAllErrors().toString());
+            return new ModelAndView(CREATE_NEW_GAME, br.getModel());
     	} else {
-    		gameService.saveGame(game);
+            gameService.saveGame(game);
     		ModelAndView result = new ModelAndView(LOBBY);
+            result.addObject("lobby", game);
     		return result;
     	}
+    }
+
+    @Transactional(readOnly = true)
+    @GetMapping("/{gameId}/lobby")
+    public ModelAndView getLobby(@PathVariable("gameId") Integer gameId){
+    	ModelAndView result = new ModelAndView(LOBBY);
+        result.addObject("lobby", gameService.getGameById(gameId).get());
+        return result;
     }
     
     // H2
     @Transactional
-    @PutMapping("/{game_id}")
-    public ModelAndView joinGame(@PathVariable("game_id") Integer game_id) throws DataNotFound{
+    @GetMapping("/{gameId}")
+    public ModelAndView joinGame(@PathVariable("gameId") Integer gameId) throws DataNotFound{
         Optional<User> loggedUser = userService.getLoggedUser();
-    	Optional<Game> game = gameService.getGameById(game_id);
+    	Optional<Game> nrGame = gameService.getGameById(gameId);
         ModelAndView result = new ModelAndView(GAME_LISTING);
-        if(!game.isPresent()){
+        if(!nrGame.isPresent()){
             result.addObject("message", "The game doesn't exist");
             return result;
-        } else if(game.get().getStatus()!=Status.LOBBY){
+        } else if(nrGame.get().getStatus()!=Status.LOBBY){
             result.addObject("message", "The game is started");
             return result;
-        } else if(game.get().getPlayers().size()==game.get().getLobby().size()) {
+        } else if(nrGame.get().getLobby().size()==nrGame.get().getLobbySize()) {
             result.addObject("message", "The lobby is full");
             return result;
-        }else {
+        } else if(nrGame.get().getLobby().contains(loggedUser.get())) {
+            result = new ModelAndView(LOBBY);
+            result.addObject("lobby", nrGame.get());
+            return result;
+        } else {
             result = new ModelAndView(LOBBY);
             Game copy = new Game();
-            BeanUtils.copyProperties(game.get(), copy);
-            copy.getLobby().add(loggedUser.get());
+            BeanUtils.copyProperties(nrGame.get(), copy);
+            List<User> ul=copy.getLobby();
+            ul.add(loggedUser.get());
+            copy.setLobby(ul);
             gameService.saveGame(copy);
+            result.addObject("lobby", copy);
             return result;
         }
     }
 
     // H3
     @Transactional
-    @PutMapping("/{game_id}/{host_id}")
+    @GetMapping("/{game_id}/{host_id}")
     public ModelAndView startGame(@PathVariable("game_id") Integer game_id, @PathVariable("host_id") Integer host_id){
         Optional<Game> game = gameService.getGameById(game_id);
         if(!game.isPresent()){
@@ -157,7 +185,7 @@ public class GameController {
             return result;
         } else if (game.get().getHost().getId()!=host_id){
             ModelAndView result = new ModelAndView(GAME_LISTING);
-            result.addObject("message", "The host is incorrec");
+            result.addObject("message", "The host is incorrect");
             return result;
         } else if (game.get().getLobbySize()<3) {
             ModelAndView result = new ModelAndView(LOBBY);
@@ -184,7 +212,7 @@ public class GameController {
                 userGame.setGame(copy);
                 userGame.setUser(user);
                 userGame.setIsAfk(false);
-                Integer randomInt = ThreadLocalRandom.current().nextInt(available)+1;
+                Integer randomInt = ThreadLocalRandom.current().nextInt(available);
                 userGame.setSuspect(suspects.get(randomInt));
                 suspects.remove(suspects.get(randomInt));
                 userGame.setCards(null);
@@ -195,10 +223,17 @@ public class GameController {
         }   
     }
 
-
-    @GetMapping("/{id}/play/startTurn")
+    @GetMapping("/{gameId}/play/test")
     @Transactional
-   private ModelAndView initTurn(@PathParam("id") Integer gameId) throws WrongPhaseException,DataNotFound{
+    public Game testTurn(@PathVariable("gameId") Integer gameId) throws WrongPhaseException,DataNotFound{
+        Optional<Game> g= gameService.getGameById(gameId);
+        System.out.println(gameId);
+        return g.get();
+    }
+
+    @GetMapping("/{gameId}/play/turn")
+    @Transactional
+    public ModelAndView initTurn(@PathVariable("gameId") Integer gameId) throws WrongPhaseException,DataNotFound{
         Optional<Game> nrGame = gameService.getGameById(gameId);
         if(nrGame.isPresent()){
             Game game=nrGame.get();
@@ -255,10 +290,10 @@ public class GameController {
             Optional<Turn> nrTurn=turnService.getTurn(game.getActualPlayer(), game.getRound());
             if(nrTurn.isPresent()){
                 Turn turn=nrTurn.get();
-            ModelAndView result = new ModelAndView(DICE_VIEW);
-            System.out.println(celdService.getAllPossibleMovements(turn.getDiceResult(), turn.getInitialCeld()));
-            result.addObject("movements", celdService.getAllPossibleMovements(turn.getDiceResult(), turn.getInitialCeld()));
-            return result;
+                ModelAndView result = new ModelAndView(DICE_VIEW);
+                System.out.println(celdService.getAllPossibleMovements(turn.getDiceResult(), turn.getInitialCeld()));
+                result.addObject("movements", celdService.getAllPossibleMovements(turn.getDiceResult(), turn.getInitialCeld()));
+                return result;
             }else{
                 throw new CorruptGame();
             }
@@ -266,24 +301,4 @@ public class GameController {
             throw new DataNotFound();
         }
     }
-
-    /*@PostMapping("{id}/play/move")
-    @Transactional(rollbackFor = {WrongPhaseException.class,GameNotExists.class,CorruptGame.class})
-    private ModelAndView movement(@PathParam("id") Integer gameId,Celd celd) throws WrongPhaseException,GameNotExists,CorruptGame{
-        Optional<Game> nrGame = gameService.getGameById(gameId);
-        if(nrGame.isPresent()){
-            Game game= nrGame.get();
-            Optional<Turn> nrTurn=turnService.getTurn(game.getActualPlayer(), game.getRound());
-            if(nrTurn.isPresent()){
-                Turn turn=nrTurn.get();
-            ModelAndView result = new ModelAndView(DICE_VIEW);
-            result.addObject("movements", celdService.getAllPossibleMovements(turn.getDiceResult(), turn.getInitialCeld()));
-            return result;
-            }else{
-                throw new CorruptGame();
-            }
-        }else{
-            throw new GameNotExists();
-        }
-    }*/
 }
