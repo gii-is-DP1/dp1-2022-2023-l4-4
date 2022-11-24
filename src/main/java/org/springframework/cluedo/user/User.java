@@ -3,6 +3,7 @@ package org.springframework.cluedo.user;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +29,7 @@ public class User extends BaseEntity{
 
 	@Column(name="email")
 	@NotEmpty
+	@Email
 	private String email;
 
 	@Column(name="image_url")
