@@ -13,9 +13,6 @@
         <tr>
             <th style="width: 150px;">Username</th>
             <th style="width: 200px;">Email</th>
-            <th style="width: 120px">Password</th>
-            <th style="width: 120px">Image</th>
-            
 
             
         </tr>
@@ -32,18 +29,6 @@
                 <td>
                     <c:out value="${user.email}"/>
                 </td>
-                <td>
-                    <c:out value="${user.password}"/>
-                </td>
-                <td>
-                    <c:if test="${user.imageurl != null}">
-                        <img class="img-responsive" src="${user.imageurl}" style="width: 50px !important; height: 50px !important;"/>
-                    </c:if>
-                    <c:if test="${user.imageurl == null}">
-                        <img class="img-responsive" src="https://www.softzone.es/app/uploads/2018/04/guest.png" style="width: 50px !important; height: 50px !important;"/>
-                    </c:if>
-                </td>
-
             
                          
       
