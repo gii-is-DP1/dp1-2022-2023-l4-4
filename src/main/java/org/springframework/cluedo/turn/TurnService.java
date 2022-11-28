@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.celd.Celd;
 import org.springframework.cluedo.celd.CeldRepository;
 import org.springframework.cluedo.enumerates.Phase;
+import org.springframework.cluedo.exceptions.CorruptGame;
 import org.springframework.cluedo.exceptions.WrongPhaseException;
+import org.springframework.cluedo.game.Game;
 import org.springframework.cluedo.user.UserGame;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class TurnService {
     
+
+    //CELDREPOSITORY HAY QUE CAMBIARLO POR CELDSERVICE
     private TurnRepository turnRepository;
     private CeldRepository celdRepository;
 
@@ -35,6 +39,7 @@ public class TurnService {
             turn.setInitialCeld(celdRepository.findCenter());
         } 
         turn.setPhase(Phase.DICE);
+        save(turn);
         return turn;
     }
    
@@ -42,15 +47,21 @@ public class TurnService {
         return turnRepository.getTurn(userGame.getId(),round);
     }
 
-    public Turn throwDice(Turn turn) throws WrongPhaseException{
-        if(turn.getPhase()!=Phase.DICE){
-            throw new WrongPhaseException();
+    public Turn throwDice(Game game) throws WrongPhaseException,CorruptGame{
+        Optional<Turn> nrTurn=getTurn(game.getActualPlayer(), game.getRound());
+        if(nrTurn.isPresent()){
+            Turn turn=nrTurn.get();
+            if(turn.getPhase()!=Phase.DICE){
+                throw new WrongPhaseException();
+            }
+            Integer result = ThreadLocalRandom.current().nextInt(6)+1;
+            result +=ThreadLocalRandom.current().nextInt(6)+1;
+            turn.setDiceResult(result);
+            turn.setPhase(Phase.MOVEMENT);
+            return save(turn);
+        }else{
+            throw new CorruptGame();
         }
-        Integer result = ThreadLocalRandom.current().nextInt(6)+1;
-        result +=ThreadLocalRandom.current().nextInt(6)+1;
-        turn.setDiceResult(result);
-        turn.setPhase(Phase.MOVEMENT);
-        return save(turn);
     } 
 
 

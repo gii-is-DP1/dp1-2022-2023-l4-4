@@ -3,11 +3,18 @@ package org.springframework.cluedo.game;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cluedo.celd.Celd;
+import org.springframework.cluedo.celd.CeldService;
 import org.springframework.cluedo.enumerates.Status;
+import org.springframework.cluedo.exceptions.CorruptGame;
+import org.springframework.cluedo.exceptions.WrongPhaseException;
+import org.springframework.cluedo.turn.Turn;
+import org.springframework.cluedo.turn.TurnService;
 import org.springframework.cluedo.user.User;
-import org.springframework.cluedo.user.UserService;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,9 +23,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class GameService {
 
     private GameRepository gameRepository;
+	private TurnService turnService;
+	private CeldService celdService;
+
 	@Autowired
-	public GameService(GameRepository gameRepository, UserService userService) {
+	public GameService(GameRepository gameRepository, TurnService turnService, CeldService celdService) {
 		this.gameRepository = gameRepository;
+		this.turnService = turnService;
+		this.celdService = celdService;
 	}
     //Admin
 	//H12
@@ -53,6 +65,44 @@ public class GameService {
         copy.setCrimeScene(null); // No terminado
         copy.setRound(1);
 	} 
+
+	public void initTurn(Game game){
+        Integer playerCount;
+        if(game.getActualPlayer()==null){
+            playerCount= -1;
+        }else{
+            playerCount = game.getPlayers().indexOf(game.getActualPlayer());
+        }
+         if (game.getPlayers().size()-1 == playerCount){
+             game.setActualPlayer(game.getPlayers().get(0));
+             game.setRound(game.getRound()+1);
+        }else{
+            game.setActualPlayer(game.getPlayers().get(playerCount+1));
+        }
+        saveGame(game);
+        turnService.createTurn(game.getActualPlayer(),game.getRound());
+	}
+	
+	public Set<Celd> movementPosibilities(Game game) throws CorruptGame{
+        Optional<Turn> nrTurn=turnService.getTurn(game.getActualPlayer(), game.getRound());
+        if(nrTurn.isPresent()){
+            Turn turn=nrTurn.get();
+        	return celdService.getAllPossibleMovements(turn.getDiceResult(), turn.getInitialCeld());
+        }else{
+            throw new CorruptGame();
+        }
+	}
+
+	public void moveTo(Game game,Celd finalCeld) throws CorruptGame,WrongPhaseException{
+		Optional<Turn> nrTurn=turnService.getTurn(game.getActualPlayer(), game.getRound());
+        if(nrTurn.isPresent()){
+			Turn turn=nrTurn.get();
+			turnService.moveCharacter(turn, finalCeld);
+		}else{
+            throw new CorruptGame();
+        }
+	}
+
 	//H1
 	@Transactional
 	public void saveGame(Game game){
@@ -64,3 +114,4 @@ public class GameService {
 		return gameRepository.findById(gameId);
 	}
 }
+	
