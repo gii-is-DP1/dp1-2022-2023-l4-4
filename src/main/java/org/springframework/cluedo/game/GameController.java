@@ -243,13 +243,20 @@ public class GameController {
         
         Game game = null;
         ModelAndView result = new ModelAndView(DICE_VIEW);
+
         try{
             game = gameService.getGameById(gameId);
         } catch(DataNotFound e) {
             result.addObject("message", "The game doesn't exist");
             return result;
         }
-        turnService.throwDice(game);
+
+        try{
+            turnService.throwDice(game);
+        } catch(Exception e) {
+            result.addObject("message", "This is not your turn");
+            return result;
+        }
         
         return result;
     }

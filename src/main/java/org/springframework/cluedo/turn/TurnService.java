@@ -6,7 +6,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.celd.Celd;
-import org.springframework.cluedo.celd.CeldRepository;
 import org.springframework.cluedo.celd.CeldService;
 import org.springframework.cluedo.enumerates.Phase;
 import org.springframework.cluedo.exceptions.CorruptGame;
@@ -51,19 +50,15 @@ public class TurnService {
 
     public Turn throwDice(Game game) throws WrongPhaseException,CorruptGame{
         Optional<Turn> nrTurn=getTurn(game.getActualPlayer(), game.getRound());
-        if(nrTurn.isPresent()){
-            Turn turn=nrTurn.get();
-            if(turn.getPhase()!=Phase.DICE){
+        if(!nrTurn.isPresent() || nrTurn.get().getPhase()!=Phase.DICE){
                 throw new WrongPhaseException();
-            }
-            Integer result = ThreadLocalRandom.current().nextInt(6)+1;
-            result +=ThreadLocalRandom.current().nextInt(6)+1;
-            turn.setDiceResult(result);
-            turn.setPhase(Phase.MOVEMENT);
-            return save(turn);
-        }else{
-            throw new CorruptGame();
         }
+        Turn turn = nrTurn.get();
+        Integer result = ThreadLocalRandom.current().nextInt(6)+1;
+        result +=ThreadLocalRandom.current().nextInt(6)+1;
+        turn.setDiceResult(result);
+        turn.setPhase(Phase.MOVEMENT);
+        return save(turn);
     } 
 
     public Set<Celd> whereCanIMove(Game game) throws CorruptGame{

@@ -56,14 +56,13 @@ public class GameService {
 	//H11
 	@Transactional(readOnly=true)
 	public List<Game> getMyFinishedGames(User user) {
-		//return StreamSupport.stream(gameRepository.findAllById(gameRepository.findMyFinishedGames(userId)).spliterator(),false).collect(Collectors.toList());
-		//gameRepository.findAllById(gameRepository.findMyFinishedGames(userId)).forEach(x->res.add(x));
 		return gameRepository.findMyFinishedGames(user);
 	}
 
 	public void initGame(Game copy){
         copy.setStatus(Status.IN_PROGRESS);
         copy.setDuration(Duration.ofMinutes(0));
+		
         copy.setCrimeScene(null); // No terminado
         copy.setRound(1);
 	} 
