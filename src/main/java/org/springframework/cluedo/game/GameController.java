@@ -122,7 +122,14 @@ public class GameController {
     @GetMapping("/{gameId}/lobby")
     public ModelAndView getLobby(@PathVariable("gameId") Integer gameId){
     	ModelAndView result = new ModelAndView(LOBBY);
-        result.addObject("lobby", gameService.getGameById(gameId).get());
+        Game game = null;
+        try{
+            game = gameService.getGameById(gameId);
+        } catch(DataNotFound e) {
+            result.addObject("message", "The game doesn't exist");
+            return result;
+        }
+        result.addObject("lobby", game);
         return result;
     }
     
@@ -233,15 +240,18 @@ public class GameController {
     @GetMapping("/{id}/play/dices")
     @Transactional(rollbackFor = {WrongPhaseException.class,DataNotFound.class,CorruptGame.class})
     private ModelAndView throwDices(@PathParam("id") Integer gameId) throws WrongPhaseException,DataNotFound,CorruptGame{
-        Game nrGame = gameService.getGameById(gameId);
-        if(nrGame.isPresent()){
-            Game game= nrGame.get();
-            turnService.throwDice(game);
-            ModelAndView result = new ModelAndView(DICE_VIEW);
+        
+        Game game = null;
+        ModelAndView result = new ModelAndView(DICE_VIEW);
+        try{
+            game = gameService.getGameById(gameId);
+        } catch(DataNotFound e) {
+            result.addObject("message", "The game doesn't exist");
             return result;
-        }else{
-            throw new DataNotFound();
         }
+        turnService.throwDice(game);
+        
+        return result;
     }
 
     @GetMapping("/{gameId}/play/move")

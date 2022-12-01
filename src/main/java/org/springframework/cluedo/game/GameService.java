@@ -60,14 +60,6 @@ public class GameService {
 		//gameRepository.findAllById(gameRepository.findMyFinishedGames(userId)).forEach(x->res.add(x));
 		return gameRepository.findMyFinishedGames(user);
 	}
-	public Game gameExists(Integer gameId) throws DataNotFound{
-	Optional<Game> nrGame = getGameById(gameId);
-        if(nrGame.isPresent()){
-            return nrGame.get();
-		}else{
-            throw new DataNotFound();
-        }
-	}
 
 	public void initGame(Game copy){
         copy.setStatus(Status.IN_PROGRESS);
