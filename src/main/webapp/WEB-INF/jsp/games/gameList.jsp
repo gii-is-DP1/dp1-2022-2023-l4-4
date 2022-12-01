@@ -12,14 +12,14 @@
     </h2>
     <div class="container">
     <h2>
-        <a href="games/new">
+        <a href="/games/new">
             <button class="btn btn-default">
             New Game
             </button>
         </a>
     </h2>
     <h2>
-        <a href="games/past">
+        <a href="/games/past">
             <button class="btn btn-default">
             Finished games
             </button>

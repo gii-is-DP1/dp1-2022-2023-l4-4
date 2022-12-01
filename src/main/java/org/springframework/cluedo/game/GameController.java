@@ -112,8 +112,7 @@ public class GameController {
             game.setStatus(Status.LOBBY);
             game.setLobby(new ArrayList<>(List.of(userService.getLoggedUser().get())));
             gameService.saveGame(game);
-    		ModelAndView result = new ModelAndView(LOBBY);
-            result.addObject("lobby", game);
+    		ModelAndView result = new ModelAndView("redirect:"+game.getId()+"/lobby");
     		return result;
     	}
     }
@@ -171,34 +170,41 @@ public class GameController {
     }
 
     // H3
-   /*  @Transactional
-    @GetMapping("/{game_id}/{host_id}")
-    public ModelAndView startGame(@PathVariable("game_id") Integer game_id, @PathVariable("host_id") Integer host_id){
-        Optional<Game> game = gameService.getGameById(game_id);
-        if(!game.isPresent()){
+    @Transactional
+    @GetMapping("/{gameId}/start")
+    public ModelAndView startGame(@PathVariable("gameId") Integer gameId){
+        Game game = null;
+
+        try{
+            game = gameService.getGameById(gameId);
+        } catch(DataNotFound e) {
             ModelAndView result = new ModelAndView(GAME_LISTING);
             result.addObject("message", "The game doesn't exist");
             return result;
-        } else if (game.get().getHost().getId()!=host_id){
-            ModelAndView result = new ModelAndView(GAME_LISTING);
+        }
+        Optional<User> loggedUser = userService.getLoggedUser();
+        if (game.getHost()!=loggedUser.get()){
+            ModelAndView result = new ModelAndView(LOBBY);
+            result.addObject("lobby",game);
             result.addObject("message", "The host is incorrect");
             return result;
-        } else if (game.get().getLobbySize()<3) {
+        } else if (game.getLobby().size()<3) {
             ModelAndView result = new ModelAndView(LOBBY);
+            result.addObject("lobby",game);
             result.addObject("message", "The game needs at least 3 players to start");
             return result;
         } else {
             ModelAndView result = new ModelAndView("ON_GAME");
             Game copy = new Game();
-            BeanUtils.copyProperties(game.get(), copy);
+            BeanUtils.copyProperties(game, copy);
+            System.out.println("AQUI LLEGO");
             gameService.initGame(copy);
-            userService.initializePlayers(copy.getLobby(), copy);
 		    gameService.saveGame(copy);
            
             return result;
         }   
     }
-*/
+
     @GetMapping("/{gameId}/play/test")
     @Transactional
     public Game testTurn(@PathVariable("gameId") Game game) throws WrongPhaseException,DataNotFound{

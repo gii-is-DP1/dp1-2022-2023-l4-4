@@ -16,6 +16,7 @@ public enum CardName {
         PURPLE,
         WHITE,
         BLUE,
+        YELLOW,
         CHANDELIER,
         KNIFE,
         ROPE,

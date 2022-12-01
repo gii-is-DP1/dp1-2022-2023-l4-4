@@ -7,6 +7,7 @@ import java.util.Set;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cluedo.card.CardService;
 import org.springframework.cluedo.celd.Celd;
 import org.springframework.cluedo.celd.CeldService;
 import org.springframework.cluedo.enumerates.Status;
@@ -16,6 +17,7 @@ import org.springframework.cluedo.exceptions.WrongPhaseException;
 import org.springframework.cluedo.turn.Turn;
 import org.springframework.cluedo.turn.TurnService;
 import org.springframework.cluedo.user.User;
+import org.springframework.cluedo.user.UserService;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,13 +27,15 @@ public class GameService {
 
     private GameRepository gameRepository;
 	private TurnService turnService;
-	private CeldService celdService;
+	private CardService cardService;
+	private UserService userService;
 
 	@Autowired
-	public GameService(GameRepository gameRepository, TurnService turnService, CeldService celdService) {
+	public GameService(GameRepository gameRepository, TurnService turnService, CardService cardService, UserService userService) {
 		this.gameRepository = gameRepository;
 		this.turnService = turnService;
-		this.celdService = celdService;
+		this.cardService = cardService;
+		this.userService = userService;
 	}
     //Admin
 	//H12
@@ -62,15 +66,15 @@ public class GameService {
 	public void initGame(Game copy){
         copy.setStatus(Status.IN_PROGRESS);
         copy.setDuration(Duration.ofMinutes(0));
-		
-        copy.setCrimeScene(null); // No terminado
         copy.setRound(1);
+		userService.initializePlayers(copy.getLobby(), copy);
+		cardService.initCards(copy);
 	} 
 
 	public void initTurn(Game game){
         Integer playerCount;
         if(game.getActualPlayer()==null){
-            playerCount= -1;
+            playerCount= -1; 
         }else{
             playerCount = game.getPlayers().indexOf(game.getActualPlayer());
         }

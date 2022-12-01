@@ -2,6 +2,7 @@
 package org.springframework.cluedo.user;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.enumerates.SuspectType;
 import org.springframework.cluedo.game.Game;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -20,10 +22,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
 	private UserRepository userRepository;
+	private UserGameService userGameService;
 
 	@Autowired
-	public UserService(UserRepository userRepository) {
+	public UserService(UserRepository userRepository,UserGameService userGameService) {
 		this.userRepository = userRepository;
+		this.userGameService = userGameService;
 	}
 	@Transactional
 	public List<User> getAllUsers(){
@@ -57,7 +61,7 @@ public class UserService {
 	}
     public void initializePlayers(List<User> lobby, Game copy) { 
 		
-		List<SuspectType> suspects= Arrays.asList(SuspectType.values());
+		List<SuspectType> suspects= new ArrayList<>(Arrays.asList(SuspectType.values()));
 		
 		for (User user : lobby) {
 			Integer available = suspects.size();
@@ -69,8 +73,9 @@ public class UserService {
 			Integer randomInt = ThreadLocalRandom.current().nextInt(available);
 			userGame.setSuspect(suspects.get(randomInt));
 			suspects.remove(suspects.get(randomInt));
-			userGame.setCards(null);
-			copy.getPlayers().add(userGame);
+			System.out.println("A"); 
+			userGameService.saveUserGame(userGame);
+			copy.addPlayers(userGame);
 		}
     }
 }
