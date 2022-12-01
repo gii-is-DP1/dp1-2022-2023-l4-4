@@ -131,25 +131,29 @@ public class GameController {
     @GetMapping("/{gameId}")
     public ModelAndView joinGame(@PathVariable("gameId") Integer gameId) throws DataNotFound{
         Optional<User> loggedUser = userService.getLoggedUser();
-    	Optional<Game> nrGame = gameService.getGameById(gameId);
         ModelAndView result = new ModelAndView(GAME_LISTING);
-        if(!nrGame.isPresent()){
+        Game game = null;
+        try{
+            game = gameService.getGameById(gameId);
+        } catch(DataNotFound e) {
             result.addObject("message", "The game doesn't exist");
             return result;
-        } else if(nrGame.get().getStatus()!=Status.LOBBY){
+        }
+       
+        if(game.getStatus()!=Status.LOBBY){
             result.addObject("message", "The game is started");
             return result;
-        } else if(nrGame.get().getLobby().size()==nrGame.get().getLobbySize()) {
+        } else if(game.getLobby().size()==game.getLobbySize()) {
             result.addObject("message", "The lobby is full");
             return result;
-        } else if(nrGame.get().getLobby().contains(loggedUser.get())) {
+        } else if(game.getLobby().contains(loggedUser.get())) {
             result = new ModelAndView(LOBBY);
-            result.addObject("lobby", nrGame.get());
+            result.addObject("lobby", game);
             return result;
         } else {
             result = new ModelAndView(LOBBY);
             Game copy = new Game();
-            BeanUtils.copyProperties(nrGame.get(), copy);
+            BeanUtils.copyProperties(game, copy);
             List<User> ul=copy.getLobby();
             ul.add(loggedUser.get());
             copy.setLobby(ul);
@@ -229,7 +233,7 @@ public class GameController {
     @GetMapping("/{id}/play/dices")
     @Transactional(rollbackFor = {WrongPhaseException.class,DataNotFound.class,CorruptGame.class})
     private ModelAndView throwDices(@PathParam("id") Integer gameId) throws WrongPhaseException,DataNotFound,CorruptGame{
-        Optional<Game> nrGame = gameService.getGameById(gameId);
+        Game nrGame = gameService.getGameById(gameId);
         if(nrGame.isPresent()){
             Game game= nrGame.get();
             turnService.throwDice(game);
@@ -243,7 +247,7 @@ public class GameController {
     @GetMapping("/{gameId}/play/move")
     @Transactional(rollbackFor = {WrongPhaseException.class,DataNotFound.class,CorruptGame.class})
     private ModelAndView movementPosibilities(@PathParam("gameId") Integer gameId) throws WrongPhaseException,DataNotFound,CorruptGame{
-            Game game= gameService.gameExists(gameId);
+            Game game= gameService.getGameById(gameId);
             ModelAndView result = new ModelAndView(DICE_VIEW);
             result.addObject("movements", turnService.whereCanIMove(game));
             return result;

@@ -11,6 +11,7 @@ import org.springframework.cluedo.celd.Celd;
 import org.springframework.cluedo.celd.CeldService;
 import org.springframework.cluedo.enumerates.Status;
 import org.springframework.cluedo.exceptions.CorruptGame;
+import org.springframework.cluedo.exceptions.DataNotFound;
 import org.springframework.cluedo.exceptions.WrongPhaseException;
 import org.springframework.cluedo.turn.Turn;
 import org.springframework.cluedo.turn.TurnService;
@@ -111,8 +112,12 @@ public class GameService {
 	}
 
 	@Transactional(readOnly=true)
-	public Optional<Game> getGameById(Integer gameId){
-		return gameRepository.findById(gameId);
+	public Game getGameById(Integer gameId) throws DataNotFound{
+		Optional<Game> game = gameRepository.findById(gameId);
+		if(!game.isPresent()) {
+			throw new DataNotFound();
+		}
+		return game.get();
 	}
 }
 	
