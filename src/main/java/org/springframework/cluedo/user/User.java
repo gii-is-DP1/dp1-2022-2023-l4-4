@@ -1,11 +1,15 @@
 package org.springframework.cluedo.user;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cluedo.achievement.Achievement;
 import org.springframework.cluedo.model.BaseEntity;
 
 import lombok.Getter;
@@ -36,4 +40,7 @@ public class User extends BaseEntity{
 	private Integer enabled;
 	
 	private String authority;
+
+	@ManyToMany
+	private List<Achievement> achievements;
 }

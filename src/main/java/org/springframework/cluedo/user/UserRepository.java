@@ -2,6 +2,7 @@ package org.springframework.cluedo.user;
 
 
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.cluedo.achievement.Achievement;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -22,4 +23,7 @@ void deleteById(Integer id);
 
 @Query("SELECT u FROM User u WHERE u.username=:username")
 Optional<User> findByUsername(@Param("username") String username);
+
 }
+
+
