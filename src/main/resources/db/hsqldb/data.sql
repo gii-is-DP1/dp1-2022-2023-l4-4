@@ -1,13 +1,35 @@
 -- CREATE TABLE user_games(id integer, orderPlayer integer ,accusations_number integer ,is_afk boolean ,suspect varchar(60),user_id integer,game_id integer);
 
-INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (1,'1','1','1@gmail.com','https://www.adslzone.net/app/uploads-adslzone.net/2019/04/borrar-fondo-imagen.jpg',1,'admin');
 
-INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (2,'2','2','2@gmail.com',null,1,'user');
+INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES 
+(1,'1','1','1@gmail.com',null,1,'admin'),
+(2,'2','2','2@gmail.com',null,1,'user'),
+(3,'manuel333','1','user2@gmail.com',null,1,'user'),
+(4,'4','4','user4@gmail.com',null,1,'user');
 
-INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (3,'manuel333','1','user2@gmail.com','https://www.adslzone.net/app/uploads-adslzone.net/2019/04/borrar-fondo-imagen.jpg',1,'user');
 
-INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (4,'4','4','user4@gmail.com','https://www.adslzone.net/app/uploads-adslzone.net/2019/04/borrar-fondo-imagen.jpg',1,'user');
-
+INSERT INTO cards(id,card_name,card_type,image_url) VALUES
+(1,'KITCHEN','ROOM',null),
+(2,'SPA','ROOM',null),
+(3,'HALL','ROOM',null),
+(4,'OBSERVATORY','ROOM',null),
+(5,'GUESS_ROOM','ROOM',null),
+(6,'DINNING_HALL','ROOM',null),
+(7,'THEATRE','ROOM',null),
+(8,'LIVING_ROOM','ROOM',null),
+(9,'YARD','ROOM',null),
+(10,'GREEN','SUSPECT',null),
+(11,'RED','SUSPECT',null),
+(12,'PURPLE','SUSPECT',null),
+(13,'WHITE','SUSPECT',null),
+(14,'BLUE','SUSPECT',null),
+(15,'YELLOW','SUSPECT',null),
+(16,'CHANDELIER','WEAPON',null),
+(17,'KNIFE','WEAPON',null),
+(18,'ROPE','WEAPON',null),
+(19,'DUMBBELLS','WEAPON',null),
+(20,'GUN','WEAPON',null),
+(21,'POISON','WEAPON',null);
 
 
 
@@ -697,7 +719,3 @@ INSERT INTO turns(user_game_id, round, dice_result, initial_celd_id,phase) VALUE
 (8,1,5,1,5),
 (8,1,11,1,4);
 
-INSERT INTO players(game_id,user_game_id) VALUES 
-(3,6),
-(3,7),
-(3,8);
