@@ -1,11 +1,13 @@
 package org.springframework.cluedo.turn;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.celd.Celd;
 import org.springframework.cluedo.celd.CeldRepository;
+import org.springframework.cluedo.celd.CeldService;
 import org.springframework.cluedo.enumerates.Phase;
 import org.springframework.cluedo.exceptions.CorruptGame;
 import org.springframework.cluedo.exceptions.WrongPhaseException;
@@ -17,26 +19,26 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class TurnService {
     
-
-    //CELDREPOSITORY HAY QUE CAMBIARLO POR CELDSERVICE
     private TurnRepository turnRepository;
-    private CeldRepository celdRepository;
+    private CeldService celdService;
 
     @Autowired
-    public TurnService (TurnRepository turnRepository, CeldRepository celdRepository){
+    public TurnService (TurnRepository turnRepository, CeldService celdService){
         this.turnRepository=turnRepository;
-        this.celdRepository = celdRepository;
+        this.celdService = celdService;
     }
 
     public Turn createTurn(UserGame userGame,Integer round){
         Turn turn=new Turn();
         turn.setUserGame(userGame);
         turn.setRound(round);
+        System.out.println("AQUI SI LLEGAS");
         Optional<Turn> previousTurn = turnRepository.getTurn(userGame.getId(),round-1);
+        System.out.println("PERO AQUI NOPE");
         if(previousTurn.isPresent()){
             turn.setInitialCeld(previousTurn.get().getFinalCeld());
         } else{
-            turn.setInitialCeld(celdRepository.findCenter());
+            turn.setInitialCeld(celdService.getCenter());
         } 
         turn.setPhase(Phase.DICE);
         save(turn);
@@ -64,6 +66,15 @@ public class TurnService {
         }
     } 
 
+    public Set<Celd> whereCanIMove(Game game) throws CorruptGame{
+        Optional<Turn> nrTurn=getTurn(game.getActualPlayer(), game.getRound());
+            if(nrTurn.isPresent()){
+                Turn turn=nrTurn.get();
+                return celdService.getAllPossibleMovements(turn.getDiceResult(), turn.getInitialCeld());
+            }else{
+                throw new CorruptGame();
+            }
+    }
 
     public Turn moveCharacter(Turn turn,Celd finalCeld) throws WrongPhaseException{
         if(turn.getPhase()!=Phase.MOVEMENT){

@@ -39,13 +39,11 @@ public class GameController {
     private final GameService gameService;
     private final UserService userService;
     private final String DICE_VIEW=""; 
-    private CeldService celdService;
     private TurnService turnService;
     
     @Autowired
-    public GameController(GameService gameService, CeldService celdService, TurnService turnService, UserService userService){
+    public GameController(GameService gameService, TurnService turnService, UserService userService){
         this.gameService=gameService;
-        this.celdService=celdService;
         this.turnService = turnService;
         this.userService=userService;
     }
@@ -162,7 +160,7 @@ public class GameController {
     }
 
     // H3
-    @Transactional
+   /*  @Transactional
     @GetMapping("/{game_id}/{host_id}")
     public ModelAndView startGame(@PathVariable("game_id") Integer game_id, @PathVariable("host_id") Integer host_id){
         Optional<Game> game = gameService.getGameById(game_id);
@@ -189,21 +187,20 @@ public class GameController {
             return result;
         }   
     }
-
+*/
     @GetMapping("/{gameId}/play/test")
     @Transactional
-    public Game testTurn(@PathVariable("gameId") Integer gameId) throws WrongPhaseException,DataNotFound{
-        Optional<Game> g= gameService.getGameById(gameId);
-        System.out.println(gameId);
-        return g.get();
+    public Game testTurn(@PathVariable("gameId") Game game) throws WrongPhaseException,DataNotFound{
+        System.out.println(Optional.of(game).get().getId());
+        return game;
     }
 
     @GetMapping("/{gameId}/play/turn")
     @Transactional
-    public ModelAndView initTurn(@PathVariable("gameId") Integer gameId) throws WrongPhaseException,DataNotFound{
-        Optional<Game> nrGame = gameService.getGameById(gameId);
+    public ModelAndView initTurn(@PathVariable("gameId") Game game) throws WrongPhaseException,DataNotFound{
+        Optional<Game> nrGame = Optional.of(game);
+        System.out.println("AQUI------------------------------------------------------>"+nrGame.get().getId());
         if(nrGame.isPresent()){
-            Game game=nrGame.get();
             Integer playerCount;
             if(game.getActualPlayer()==null){
                 playerCount= -1;
@@ -217,8 +214,11 @@ public class GameController {
                 game.setActualPlayer(game.getPlayers().get(playerCount+1));
             }
             gameService.saveGame(game);
+            System.out.println("Llega aquí");
             Turn turn = turnService.createTurn(game.getActualPlayer(),game.getRound());
+            System.out.println("Pero aquí no");
             turnService.save(turn);
+            
             ModelAndView result = new ModelAndView(DICE_VIEW);
             return result;
         }else{
@@ -232,16 +232,9 @@ public class GameController {
         Optional<Game> nrGame = gameService.getGameById(gameId);
         if(nrGame.isPresent()){
             Game game= nrGame.get();
-            Optional<Turn> nrTurn=turnService.getTurn(game.getActualPlayer(), game.getRound());
-            if(nrTurn.isPresent()){
-                Turn turn=nrTurn.get();
-                turn=turnService.throwDice(turn);
-                turnService.save(turn);
+            turnService.throwDice(game);
             ModelAndView result = new ModelAndView(DICE_VIEW);
             return result;
-            }else{
-                throw new CorruptGame();
-            }
         }else{
             throw new DataNotFound();
         }
@@ -250,22 +243,9 @@ public class GameController {
     @GetMapping("/{gameId}/play/move")
     @Transactional(rollbackFor = {WrongPhaseException.class,DataNotFound.class,CorruptGame.class})
     private ModelAndView movementPosibilities(@PathParam("gameId") Integer gameId) throws WrongPhaseException,DataNotFound,CorruptGame{
-        System.out.println(gameId);
-        Optional<Game> nrGame = gameService.getGameById(gameId);
-        if(nrGame.isPresent()){
-            Game game= nrGame.get();
-            Optional<Turn> nrTurn=turnService.getTurn(game.getActualPlayer(), game.getRound());
-            if(nrTurn.isPresent()){
-                Turn turn=nrTurn.get();
-                ModelAndView result = new ModelAndView(DICE_VIEW);
-                System.out.println(celdService.getAllPossibleMovements(turn.getDiceResult(), turn.getInitialCeld()));
-                result.addObject("movements", celdService.getAllPossibleMovements(turn.getDiceResult(), turn.getInitialCeld()));
-                return result;
-            }else{
-                throw new CorruptGame();
-            }
-        }else{
-            throw new DataNotFound();
-        }
+            Game game= gameService.gameExists(gameId);
+            ModelAndView result = new ModelAndView(DICE_VIEW);
+            result.addObject("movements", turnService.whereCanIMove(game));
+            return result;
     }
 }
