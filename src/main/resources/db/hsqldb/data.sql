@@ -1,10 +1,12 @@
 -- CREATE TABLE user_games(id integer, orderPlayer integer ,accusations_number integer ,is_afk boolean ,suspect varchar(60),user_id integer,game_id integer);
 
+
 INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES 
 (1,'1','1','1@gmail.com',null,1,'admin'),
 (2,'2','2','2@gmail.com',null,1,'user'),
 (3,'manuel333','1','user2@gmail.com',null,1,'user'),
 (4,'4','4','user4@gmail.com',null,1,'user');
+
 
 INSERT INTO cards(id,card_name,card_type,image_url) VALUES
 (1,'KITCHEN','ROOM',null),

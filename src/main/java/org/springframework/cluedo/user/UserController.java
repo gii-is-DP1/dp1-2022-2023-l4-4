@@ -98,12 +98,15 @@ public class UserController {
 
  	@PostMapping(value= "/users/{userId}/edit")
 	public String processUpdateForm(@Valid User user, BindingResult result,@PathVariable("userId") int userId){
-		
+		User userToChange = userService.findUserById(userId).get();
 		if(result.hasErrors()){
 			return VIEWS_USER_CREATE_OR_UPDATE_FORM;
 		}else{
-			user.setId(userId);
-			this.userService.saveUser(user);
+			userToChange.setUsername(user.getUsername());
+			userToChange.setPassword(user.getPassword());
+			userToChange.setEmail(user.getEmail());
+			userToChange.setImageurl(user.getImageurl());
+			this.userService.saveUser(userToChange);
 			return "redirect:/users/{userId}";
 		}
 	} 
@@ -141,8 +144,12 @@ public class UserController {
 		if(result.hasErrors()){
 			return VIEWS_USER_CREATE_OR_UPDATE_FORM;
 		}else{
-			user.setId(nrUser.get().getId());
-			this.userService.saveUser(user);
+			User userToChange = nrUser.get();
+			userToChange.setUsername(user.getUsername());
+			userToChange.setPassword(user.getPassword());
+			userToChange.setEmail(user.getEmail());
+			userToChange.setImageurl(user.getImageurl());
+			this.userService.saveUser(userToChange);
 			return "users/profile";
 		}
 	} 
