@@ -11,6 +11,7 @@ import org.springframework.cluedo.celd.Celd;
 import org.springframework.cluedo.celd.CeldService;
 import org.springframework.cluedo.enumerates.Status;
 import org.springframework.cluedo.exceptions.CorruptGame;
+import org.springframework.cluedo.exceptions.DataNotFound;
 import org.springframework.cluedo.exceptions.WrongPhaseException;
 import org.springframework.cluedo.turn.Turn;
 import org.springframework.cluedo.turn.TurnService;
@@ -59,6 +60,14 @@ public class GameService {
 		//gameRepository.findAllById(gameRepository.findMyFinishedGames(userId)).forEach(x->res.add(x));
 		return gameRepository.findMyFinishedGames(user);
 	}
+	public Game gameExists(Integer gameId) throws DataNotFound{
+	Optional<Game> nrGame = getGameById(gameId);
+        if(nrGame.isPresent()){
+            return nrGame.get();
+		}else{
+            throw new DataNotFound();
+        }
+	}
 
 	public void initGame(Game copy){
         copy.setStatus(Status.IN_PROGRESS);
@@ -82,16 +91,6 @@ public class GameService {
         }
         saveGame(game);
         turnService.createTurn(game.getActualPlayer(),game.getRound());
-	}
-	
-	public Set<Celd> movementPosibilities(Game game) throws CorruptGame{
-        Optional<Turn> nrTurn=turnService.getTurn(game.getActualPlayer(), game.getRound());
-        if(nrTurn.isPresent()){
-            Turn turn=nrTurn.get();
-        	return celdService.getAllPossibleMovements(turn.getDiceResult(), turn.getInitialCeld());
-        }else{
-            throw new CorruptGame();
-        }
 	}
 
 	public void moveTo(Game game,Celd finalCeld) throws CorruptGame,WrongPhaseException{
