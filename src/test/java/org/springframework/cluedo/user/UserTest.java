@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.springframework.cluedo.validatorFunction;
 import org.springframework.context.i18n.LocaleContextHolder;
 
+
 public class UserTest {
 
     @Test
@@ -29,7 +30,7 @@ public class UserTest {
         Validator validator = validatorFunction.createValidator();
         Set<ConstraintViolation<User>> constraintViolations = validator.validate(user);
 
-        assertThat(constraintViolations.size()).isEqualTo(3);
+        assertThat(constraintViolations.size()).isEqualTo(5);
 
         assertAll("constrainViolations",
                 () -> {
@@ -52,6 +53,23 @@ public class UserTest {
                     assertThat(violationsList).containsExactlyInAnyOrder("must not be empty",
                             "Debe contener 8 caractéres, uno mínimo en mayúsculas y otro en número");
                 });
+    }
+
+    @Test
+    public void shouldValidate(){
+
+    LocaleContextHolder.setLocale(Locale.ENGLISH);
+    User user = new User();
+    user.setEmail("test@test.com");
+    user.setUsername("test");
+    user.setPassword("testT3st");
+
+    Validator validator = validatorFunction.createValidator();
+    Set<ConstraintViolation<User>> constraintViolations =
+    validator.validate(user);
+
+    assertThat(constraintViolations.size()).isEqualTo(0);
+    
     }
 
 }
