@@ -3,13 +3,11 @@ package org.springframework.cluedo.game;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.card.CardService;
 import org.springframework.cluedo.celd.Celd;
-import org.springframework.cluedo.celd.CeldService;
 import org.springframework.cluedo.enumerates.Status;
 import org.springframework.cluedo.exceptions.CorruptGame;
 import org.springframework.cluedo.exceptions.DataNotFound;

@@ -12,7 +12,6 @@ import org.springframework.cluedo.user.UserService;
 import java.util.ArrayList;
 import java.util.List;
 import javax.websocket.server.PathParam;
-import org.springframework.cluedo.celd.CeldService;
 import org.springframework.cluedo.exceptions.CorruptGame;
 import org.springframework.cluedo.exceptions.DataNotFound;
 import org.springframework.cluedo.exceptions.WrongPhaseException;
@@ -106,7 +105,6 @@ public class GameController {
     public ModelAndView formNewGame(@Valid Game game, BindingResult br) {
         
         if(br.hasErrors()) {
-    		System.out.println(br.getAllErrors().toString());
             return new ModelAndView(CREATE_NEW_GAME, br.getModel());
     	} else {
             game.setStatus(Status.LOBBY);
@@ -174,7 +172,6 @@ public class GameController {
     @GetMapping("/{gameId}/start")
     public ModelAndView startGame(@PathVariable("gameId") Integer gameId){
         Game game = null;
-
         try{
             game = gameService.getGameById(gameId);
         } catch(DataNotFound e) {
@@ -197,7 +194,6 @@ public class GameController {
             ModelAndView result = new ModelAndView("ON_GAME");
             Game copy = new Game();
             BeanUtils.copyProperties(game, copy);
-            System.out.println("AQUI LLEGO");
             gameService.initGame(copy);
 		    gameService.saveGame(copy);
            
@@ -214,42 +210,43 @@ public class GameController {
 
     @GetMapping("/{gameId}/play/turn")
     @Transactional
-    public ModelAndView initTurn(@PathVariable("gameId") Game game) throws WrongPhaseException,DataNotFound{
-        Optional<Game> nrGame = Optional.of(game);
-        System.out.println("AQUI------------------------------------------------------>"+nrGame.get().getId());
-        if(nrGame.isPresent()){
-            Integer playerCount;
-            if(game.getActualPlayer()==null){
-                playerCount= -1;
-            }else{
-                playerCount = game.getPlayers().indexOf(game.getActualPlayer());
-            }
-            if (game.getPlayers().size()-1 == playerCount){
-                game.setActualPlayer(game.getPlayers().get(0));
-                game.setRound(game.getRound()+1);
-            }else{
-                game.setActualPlayer(game.getPlayers().get(playerCount+1));
-            }
-            gameService.saveGame(game);
-            System.out.println("Llega aquí");
-            Turn turn = turnService.createTurn(game.getActualPlayer(),game.getRound());
-            System.out.println("Pero aquí no");
-            turnService.save(turn);
-            
-            ModelAndView result = new ModelAndView(DICE_VIEW);
+    public ModelAndView initTurn(@PathVariable("gameId") Integer gameId) throws WrongPhaseException,DataNotFound{
+        ModelAndView result = new ModelAndView(DICE_VIEW);
+        Game game = null;
+        try{
+            game = gameService.getGameById(gameId);
+        } catch(DataNotFound e) {
+            result.addObject("message", "The game doesn't exist");
             return result;
-        }else{
-            throw new DataNotFound();
         }
+        System.out.println("AQUI------------------------------------------------------>"+game.getId());
+        Integer playerCount;
+        if(game.getActualPlayer()==null){
+            playerCount= -1;
+        }else{
+            playerCount = game.getPlayers().indexOf(game.getActualPlayer());
+        }
+        if (game.getPlayers().size()-1 == playerCount){
+            game.setActualPlayer(game.getPlayers().get(0));
+            game.setRound(game.getRound()+1);
+        }else{
+            game.setActualPlayer(game.getPlayers().get(playerCount+1));
+        }
+        gameService.saveGame(game);
+        System.out.println("Llega aquí");
+        Turn turn = turnService.createTurn(game.getActualPlayer(),game.getRound());
+        System.out.println("Pero aquí no");
+        turnService.save(turn);
+        return result;
     }
 
     @GetMapping("/{id}/play/dices")
     @Transactional(rollbackFor = {WrongPhaseException.class,DataNotFound.class,CorruptGame.class})
     private ModelAndView throwDices(@PathParam("id") Integer gameId) throws WrongPhaseException,DataNotFound,CorruptGame{
         
-        Game game = null;
+       
         ModelAndView result = new ModelAndView(DICE_VIEW);
-
+        Game game = null;
         try{
             game = gameService.getGameById(gameId);
         } catch(DataNotFound e) {
@@ -270,9 +267,15 @@ public class GameController {
     @GetMapping("/{gameId}/play/move")
     @Transactional(rollbackFor = {WrongPhaseException.class,DataNotFound.class,CorruptGame.class})
     private ModelAndView movementPosibilities(@PathParam("gameId") Integer gameId) throws WrongPhaseException,DataNotFound,CorruptGame{
-            Game game= gameService.getGameById(gameId);
-            ModelAndView result = new ModelAndView(DICE_VIEW);
-            result.addObject("movements", turnService.whereCanIMove(game));
+        ModelAndView result = new ModelAndView(DICE_VIEW);
+        Game game = null;
+        try{
+            game = gameService.getGameById(gameId);
+        } catch(DataNotFound e) {
+            result.addObject("message", "The game doesn't exist");
             return result;
+        }
+        result.addObject("movements", turnService.whereCanIMove(game));
+        return result;
     }
 }

@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.cluedo.model.BaseEntity;
 import org.springframework.cluedo.user.User;
 import org.springframework.cluedo.user.UserGame;
-import org.springframework.cluedo.accusation.Accusation;
+import org.springframework.cluedo.accusation.CrimeScene;
 import org.springframework.cluedo.enumerates.Status;
 
 import lombok.Getter;
@@ -70,7 +70,7 @@ public class Game extends BaseEntity{
     
     @ManyToOne
     @JoinColumn(name="crime_scene")
-    private Accusation crimeScene;
+    private CrimeScene crimeScene;
 
     @ManyToOne
     @JoinColumn(name="actual_Player")

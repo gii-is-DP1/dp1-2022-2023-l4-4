@@ -717,7 +717,3 @@ INSERT INTO turns(user_game_id, round, dice_result, initial_celd_id,phase) VALUE
 (8,1,5,1,5),
 (8,1,11,1,4);
 
-INSERT INTO players(game_id,user_game_id) VALUES 
-(3,6),
-(3,7),
-(3,8);

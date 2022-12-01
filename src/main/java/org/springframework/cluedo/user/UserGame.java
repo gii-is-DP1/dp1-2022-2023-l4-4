@@ -51,7 +51,7 @@ public class UserGame extends BaseEntity{
     @JoinTable(name="user_cards")
     private Set<Card> cards;
 
-    public void addCards(Card card){
+    public void addCard(Card card){
         cards.add(card);
     }
 }

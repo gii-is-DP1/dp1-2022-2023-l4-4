@@ -31,9 +31,7 @@ public class TurnService {
         Turn turn=new Turn();
         turn.setUserGame(userGame);
         turn.setRound(round);
-        System.out.println("AQUI SI LLEGAS");
         Optional<Turn> previousTurn = turnRepository.getTurn(userGame.getId(),round-1);
-        System.out.println("PERO AQUI NOPE");
         if(previousTurn.isPresent()){
             turn.setInitialCeld(previousTurn.get().getFinalCeld());
         } else{
