@@ -106,13 +106,13 @@ public class GameController {
     @Transactional
     @PostMapping("/new")
     public ModelAndView formNewGame(@Valid Game game, BindingResult br) {
-        game.setStatus(Status.LOBBY);
-        game.setLobby(new ArrayList<>(List.of(userService.getLoggedUser().get())));
         
         if(br.hasErrors()) {
     		System.out.println(br.getAllErrors().toString());
             return new ModelAndView(CREATE_NEW_GAME, br.getModel());
     	} else {
+            game.setStatus(Status.LOBBY);
+            game.setLobby(new ArrayList<>(List.of(userService.getLoggedUser().get())));
             gameService.saveGame(game);
     		ModelAndView result = new ModelAndView(LOBBY);
             result.addObject("lobby", game);

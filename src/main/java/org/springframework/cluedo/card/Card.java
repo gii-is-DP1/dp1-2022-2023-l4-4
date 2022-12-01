@@ -8,8 +8,11 @@ import org.springframework.cluedo.enumerates.CardName;
 import org.springframework.cluedo.enumerates.CardType;
 import org.springframework.cluedo.model.BaseEntity;
 
+import lombok.Getter;
+
 @Entity
 @Table(name = "cards")
+@Getter
 public class Card extends BaseEntity {
 
     @Column(name="card_name")

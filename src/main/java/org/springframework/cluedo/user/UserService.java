@@ -56,7 +56,7 @@ public class UserService {
 		return(UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
     public void initializePlayers(List<User> lobby, Game copy) { 
-
+		
 		List<SuspectType> suspects= Arrays.asList(SuspectType.values());
 		
 		for (User user : lobby) {

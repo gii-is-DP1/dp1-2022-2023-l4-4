@@ -47,12 +47,14 @@ public class GameService {
 		//gameRepository.findAllById(gameRepository.findMyFinishedGames(userId)).forEach(x->res.add(x));
 		return gameRepository.findMyFinishedGames(user);
 	}
+
 	public void initGame(Game copy){
         copy.setStatus(Status.IN_PROGRESS);
         copy.setDuration(Duration.ofMinutes(0));
         copy.setCrimeScene(null); // No terminado
         copy.setRound(1);
 	} 
+	
 	//H1
 	@Transactional
 	public void saveGame(Game game){
