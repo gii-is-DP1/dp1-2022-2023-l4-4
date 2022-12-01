@@ -1,6 +1,5 @@
 package org.springframework.cluedo.card;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -8,12 +7,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cluedo.accusation.Accusation;
 import org.springframework.cluedo.accusation.AccusationService;
 import org.springframework.cluedo.accusation.CrimeScene;
-import org.springframework.cluedo.enumerates.CardType;
 import org.springframework.cluedo.game.Game;
-import org.springframework.cluedo.game.GameService;
 import org.springframework.cluedo.user.UserGame;
 import org.springframework.cluedo.user.UserGameService;
 import org.springframework.stereotype.Service;

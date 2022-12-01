@@ -7,7 +7,6 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.cluedo.card.Card;
-import org.springframework.cluedo.model.BaseEntity;
 import org.springframework.cluedo.turn.Turn;
 
 import lombok.Getter;
