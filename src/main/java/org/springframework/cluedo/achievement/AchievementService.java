@@ -25,4 +25,9 @@ public class AchievementService {
         repo.save(achievement);
     }
 
+    @Transactional(readOnly = true)
+    public Achievement getAchievementById(Integer achievementId) {
+        return repo.findById(achievementId).orElse(null);
+    }
+
 }

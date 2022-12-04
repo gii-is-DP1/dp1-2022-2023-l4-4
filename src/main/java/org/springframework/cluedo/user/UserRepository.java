@@ -11,8 +11,9 @@ import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
-
+@Repository
 public interface UserRepository extends  CrudRepository<User, Integer>{
 	
 List<User> findAll();
@@ -24,6 +25,8 @@ void deleteById(Integer id);
 @Query("SELECT u FROM User u WHERE u.username=:username")
 Optional<User> findByUsername(@Param("username") String username);
 
+@Query("SELECT u.achievements FROM User u WHERE u.id = :userId")
+List<Achievement> getAllMyAchievements(@Param("userId") Integer userId);
 }
 
 

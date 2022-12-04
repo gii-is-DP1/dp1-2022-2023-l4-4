@@ -52,4 +52,9 @@ public class UserService {
 	public UserDetails getUserDetails(){
 		return(UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
+
+	public List<Achievement> findAllMyAchievements(){
+		User loggedUser = getLoggedUser().get();
+		return userRepository.getAllMyAchievements(loggedUser.getId());
+	}
 }

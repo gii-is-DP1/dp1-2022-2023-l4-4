@@ -1,5 +1,9 @@
 -- CREATE TABLE user_games(id integer, orderPlayer integer ,accusations_number integer ,is_afk boolean ,suspect varchar(60),user_id integer,game_id integer);
 
+INSERT INTO achievements(id, achievement_name, metric, badge, goal, description, experience, image_url) VALUES (1, 'Gamer', 0,0, 1, 'You`ve won a game.', 100, 'https://audrey-gaune-projets-web.ovh/wp-content/uploads/2016/11/Le-March%C3%A9-des-Consoles-de-Jeux-Vid%C3%A9o.jpg');
+
+
+
 INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (1,'1','1','1@gmail.com','https://www.adslzone.net/app/uploads-adslzone.net/2019/04/borrar-fondo-imagen.jpg',1,'admin');
 
 INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (2,'2','2','2@gmail.com',null,1,'user');
@@ -9,7 +13,7 @@ INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES
 INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (4,'4','4','user4@gmail.com','https://www.adslzone.net/app/uploads-adslzone.net/2019/04/borrar-fondo-imagen.jpg',1,'user');
 
 
-
+INSERT INTO users_achievements(user_id, achievements_id) VALUES (1, 1);
 
 INSERT INTO celds(id,celd_type,position) VALUES  
 (1, 'CORRIDOR',7), 

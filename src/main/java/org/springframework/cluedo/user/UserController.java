@@ -15,12 +15,14 @@
  */
 package org.springframework.cluedo.user;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cluedo.achievement.Achievement;
 import org.springframework.cluedo.exceptions.DataNotFound;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,7 +41,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class UserController {
 
 	private static final String VIEWS_USER_LIST = "users/userList";
-  
+	private final String ACHIEVEMENTS_LISTING = "achievements/myAchievements";
   	private static final String VIEWS_USER_CREATE_OR_UPDATE_FORM = "users/createOrUpdateUserForm";
 	
 	
@@ -155,5 +157,11 @@ public class UserController {
 			return "users/profile";
 		}
 	} 
-
+	@GetMapping("/myAchievements")
+	public ModelAndView getAllMyAchievements(){
+		ModelAndView result= new ModelAndView(ACHIEVEMENTS_LISTING);
+		List<Achievement> achievements = userService.findAllMyAchievements();
+		result.addObject("achievements", achievements);
+		return result; 
+	}
 }

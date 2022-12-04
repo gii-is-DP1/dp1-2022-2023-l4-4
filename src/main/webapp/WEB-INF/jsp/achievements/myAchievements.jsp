@@ -7,15 +7,9 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 
-<cluedo:layout pageName="achievements">
-    <h2>All achievements</h2>
-    <h2>
-        <a  href="/achievements/new" >
-            <button class="btn btn-default">
-                Create achievement
-            </button>
-        </a>
-    </h2>
+<cluedo:layout pageName="myAchievements">
+    <h2>My achievements</h2>
+
     <table id="achievementTable" class="table table-striped">
         <thead>
         <tr>
