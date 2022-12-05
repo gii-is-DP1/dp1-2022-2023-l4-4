@@ -23,12 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
 	private UserRepository userRepository;
-	private UserGameService userGameService;
+	
 
 	@Autowired
-	public UserService(UserRepository userRepository,UserGameService userGameService) {
+	public UserService(UserRepository userRepository) {
 		this.userRepository = userRepository;
-		this.userGameService = userGameService;
 	}
 	@Transactional
 	public List<User> getAllUsers(){
