@@ -42,6 +42,10 @@ public class UserService {
 	public Optional<User> findUserByUsername(String username) {
 		return userRepository.findByUsername(username);
 	}
+	public List<User> findUserFriends(Integer id) {
+		return userRepository.findFriendsById(id);
+	}
+
 
 	public Optional<User> getLoggedUser(){
 		UserDetails userDetails=(UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();

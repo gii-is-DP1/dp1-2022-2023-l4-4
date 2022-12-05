@@ -9,8 +9,8 @@ INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES
 -- One vet user, named vet1 with passwor v3t
 INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (3,'manuel333','1','user2@gmail.com',null,1,'user');
 
-
-
+INSERT INTO user_friends(id1,id2) VALUES (1,2);
+INSERT INTO user_friends(id1,id2) VALUES (1,3);
 
 INSERT INTO celds(id,celd_type,position) VALUES  
 (1, 'CORRIDOR',7), 

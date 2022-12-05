@@ -1,7 +1,13 @@
 package org.springframework.cluedo.user;
 
+import java.util.List;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
@@ -33,6 +39,15 @@ public class User extends BaseEntity{
 	@Column(name="image_url")
 	@Value("${some.key:https://i0.wp.com/researchictafrica.net/wp/wp-content/uploads/2016/10/default-profile-pic.jpg?ssl=1}")
 	private String imageurl;
+
+	@ManyToMany
+	@JoinTable(name="user_friends",joinColumns = @JoinColumn(
+       name = "id1", referencedColumnName = "id"),
+    inverseJoinColumns = @JoinColumn(
+       name = "id2", referencedColumnName = "id"))
+    private List<User> friends;
+
+
 
 	private Integer enabled;
 	

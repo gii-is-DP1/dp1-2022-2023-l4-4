@@ -15,6 +15,7 @@
  */
 package org.springframework.cluedo.user;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -66,6 +67,19 @@ public class UserController {
 		if(nrUser.isPresent()){
 			mav.addObject("user", nrUser.get());
 		return mav;
+		}
+		throw new DataNotFound();
+	}
+	@GetMapping(value="/users/{userId}/friends")
+	public ModelAndView showUserFriends(@PathVariable("userId") int userId) throws DataNotFound{
+		ModelAndView mav = new ModelAndView("users/userFriends");
+		List<User> nrUser = userService.findUserFriends(userId);
+		if(nrUser.size()>0){
+			mav.addObject("user", nrUser);
+			System.out.println(nrUser.size());
+			
+		return mav;
+		
 		}
 		throw new DataNotFound();
 	}

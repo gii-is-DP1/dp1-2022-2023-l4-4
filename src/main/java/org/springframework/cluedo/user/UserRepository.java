@@ -20,6 +20,9 @@ Optional<User> findById(Integer id);
 
 void deleteById(Integer id);
 
+@Query("SELECT u.friends FROM User u where u.id=:id ")
+List<User> findFriendsById(@Param("id")Integer id);
+
 @Query("SELECT u FROM User u WHERE u.username=:username")
 Optional<User> findByUsername(@Param("username") String username);
 }
