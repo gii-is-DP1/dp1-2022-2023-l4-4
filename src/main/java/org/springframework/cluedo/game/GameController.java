@@ -7,22 +7,11 @@ import javax.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.enumerates.Status;
-import org.springframework.cluedo.enumerates.SuspectType;
 import org.springframework.cluedo.user.User;
-import org.springframework.cluedo.user.UserGame;
 import org.springframework.cluedo.user.UserService;
-
-
-import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import java.util.concurrent.ThreadLocalRandom;
-
 import javax.websocket.server.PathParam;
-
-import org.springframework.cluedo.celd.CeldService;
 import org.springframework.cluedo.exceptions.CorruptGame;
 import org.springframework.cluedo.exceptions.DataNotFound;
 import org.springframework.cluedo.exceptions.WrongPhaseException;
@@ -34,9 +23,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -51,13 +38,11 @@ public class GameController {
     private final GameService gameService;
     private final UserService userService;
     private final String DICE_VIEW=""; 
-    private CeldService celdService;
     private TurnService turnService;
     
     @Autowired
-    public GameController(GameService gameService, CeldService celdService, TurnService turnService, UserService userService){
+    public GameController(GameService gameService, TurnService turnService, UserService userService){
         this.gameService=gameService;
-        this.celdService=celdService;
         this.turnService = turnService;
         this.userService=userService;
     }
@@ -118,17 +103,14 @@ public class GameController {
     @Transactional
     @PostMapping("/new")
     public ModelAndView formNewGame(@Valid Game game, BindingResult br) {
-        game.setStatus(Status.LOBBY);
-        game.setLobby(new ArrayList<>(List.of(userService.getLoggedUser().get())));
         
         if(br.hasErrors()) {
-            
-    		System.out.println(br.getAllErrors().toString());
             return new ModelAndView(CREATE_NEW_GAME, br.getModel());
     	} else {
+            game.setStatus(Status.LOBBY);
+            game.setLobby(new ArrayList<>(List.of(userService.getLoggedUser().get())));
             gameService.saveGame(game);
-    		ModelAndView result = new ModelAndView(LOBBY);
-            result.addObject("lobby", game);
+    		ModelAndView result = new ModelAndView("redirect:"+game.getId()+"/lobby");
     		return result;
     	}
     }
@@ -137,7 +119,14 @@ public class GameController {
     @GetMapping("/{gameId}/lobby")
     public ModelAndView getLobby(@PathVariable("gameId") Integer gameId){
     	ModelAndView result = new ModelAndView(LOBBY);
-        result.addObject("lobby", gameService.getGameById(gameId).get());
+        Game game = null;
+        try{
+            game = gameService.getGameById(gameId);
+        } catch(DataNotFound e) {
+            result.addObject("message", "The game doesn't exist");
+            return result;
+        }
+        result.addObject("lobby", game);
         return result;
     }
     
@@ -146,25 +135,29 @@ public class GameController {
     @GetMapping("/{gameId}")
     public ModelAndView joinGame(@PathVariable("gameId") Integer gameId) throws DataNotFound{
         Optional<User> loggedUser = userService.getLoggedUser();
-    	Optional<Game> nrGame = gameService.getGameById(gameId);
         ModelAndView result = new ModelAndView(GAME_LISTING);
-        if(!nrGame.isPresent()){
+        Game game = null;
+        try{
+            game = gameService.getGameById(gameId);
+        } catch(DataNotFound e) {
             result.addObject("message", "The game doesn't exist");
             return result;
-        } else if(nrGame.get().getStatus()!=Status.LOBBY){
+        }
+       
+        if(game.getStatus()!=Status.LOBBY){
             result.addObject("message", "The game is started");
             return result;
-        } else if(nrGame.get().getLobby().size()==nrGame.get().getLobbySize()) {
+        } else if(game.getLobby().size()==game.getLobbySize()) {
             result.addObject("message", "The lobby is full");
             return result;
-        } else if(nrGame.get().getLobby().contains(loggedUser.get())) {
+        } else if(game.getLobby().contains(loggedUser.get())) {
             result = new ModelAndView(LOBBY);
-            result.addObject("lobby", nrGame.get());
+            result.addObject("lobby", game);
             return result;
         } else {
             result = new ModelAndView(LOBBY);
             Game copy = new Game();
-            BeanUtils.copyProperties(nrGame.get(), copy);
+            BeanUtils.copyProperties(game, copy);
             List<User> ul=copy.getLobby();
             ul.add(loggedUser.get());
             copy.setLobby(ul);
@@ -176,129 +169,113 @@ public class GameController {
 
     // H3
     @Transactional
-    @GetMapping("/{game_id}/{host_id}")
-    public ModelAndView startGame(@PathVariable("game_id") Integer game_id, @PathVariable("host_id") Integer host_id){
-        Optional<Game> game = gameService.getGameById(game_id);
-        if(!game.isPresent()){
+    @GetMapping("/{gameId}/start")
+    public ModelAndView startGame(@PathVariable("gameId") Integer gameId){
+        Game game = null;
+        try{
+            game = gameService.getGameById(gameId);
+        } catch(DataNotFound e) {
             ModelAndView result = new ModelAndView(GAME_LISTING);
             result.addObject("message", "The game doesn't exist");
             return result;
-        } else if (game.get().getHost().getId()!=host_id){
-            ModelAndView result = new ModelAndView(GAME_LISTING);
+        }
+        Optional<User> loggedUser = userService.getLoggedUser();
+        if (game.getHost()!=loggedUser.get()){
+            ModelAndView result = new ModelAndView(LOBBY);
+            result.addObject("lobby",game);
             result.addObject("message", "The host is incorrect");
             return result;
-        } else if (game.get().getLobbySize()<3) {
+        } else if (game.getLobby().size()<3) {
             ModelAndView result = new ModelAndView(LOBBY);
+            result.addObject("lobby",game);
             result.addObject("message", "The game needs at least 3 players to start");
             return result;
         } else {
             ModelAndView result = new ModelAndView("ON_GAME");
             Game copy = new Game();
-            BeanUtils.copyProperties(game.get(), copy);
-            copy.setStatus(Status.IN_PROGRESS);
-            copy.setDuration(Duration.ofMinutes(0));
-            copy.setCrimeScene(null); // No terminado
-            copy.setRound(1);
-            
-            List<SuspectType> suspects=new ArrayList<>();
-            for (SuspectType value : SuspectType.values()) {
-                suspects.add(value);
-            }
-            
-            for (User user : game.get().getLobby()) {
-                Integer available = suspects.size();
-                UserGame userGame = new UserGame();
-                userGame.setAccusationsNumber(0);
-                userGame.setGame(copy);
-                userGame.setUser(user);
-                userGame.setIsAfk(false);
-                Integer randomInt = ThreadLocalRandom.current().nextInt(available);
-                userGame.setSuspect(suspects.get(randomInt));
-                suspects.remove(suspects.get(randomInt));
-                userGame.setCards(null);
-                copy.getPlayers().add(userGame);
-            }
-            gameService.saveGame(copy);
+            BeanUtils.copyProperties(game, copy);
+            gameService.initGame(copy);
+		    gameService.saveGame(copy);
+           
             return result;
         }   
     }
 
     @GetMapping("/{gameId}/play/test")
     @Transactional
-    public Game testTurn(@PathVariable("gameId") Integer gameId) throws WrongPhaseException,DataNotFound{
-        Optional<Game> g= gameService.getGameById(gameId);
-        System.out.println(gameId);
-        return g.get();
+    public Game testTurn(@PathVariable("gameId") Game game) throws WrongPhaseException,DataNotFound{
+        System.out.println(Optional.of(game).get().getId());
+        return game;
     }
 
     @GetMapping("/{gameId}/play/turn")
     @Transactional
     public ModelAndView initTurn(@PathVariable("gameId") Integer gameId) throws WrongPhaseException,DataNotFound{
-        Optional<Game> nrGame = gameService.getGameById(gameId);
-        if(nrGame.isPresent()){
-            Game game=nrGame.get();
-            Integer playerCount;
-            if(game.getActualPlayer()==null){
-                playerCount= -1;
-            }else{
-                playerCount = game.getPlayers().indexOf(game.getActualPlayer());
-            }
-            if (game.getPlayers().size()-1 == playerCount){
-                game.setActualPlayer(game.getPlayers().get(0));
-                game.setRound(game.getRound()+1);
-            }else{
-                game.setActualPlayer(game.getPlayers().get(playerCount+1));
-            }
-            gameService.saveGame(game);
-            Turn turn = turnService.createTurn(game.getActualPlayer(),game.getRound());
-            turnService.save(turn);
-            ModelAndView result = new ModelAndView(DICE_VIEW);
+        ModelAndView result = new ModelAndView(DICE_VIEW);
+        Game game = null;
+        try{
+            game = gameService.getGameById(gameId);
+        } catch(DataNotFound e) {
+            result.addObject("message", "The game doesn't exist");
             return result;
-        }else{
-            throw new DataNotFound();
         }
+        System.out.println("AQUI------------------------------------------------------>"+game.getId());
+        Integer playerCount;
+        if(game.getActualPlayer()==null){
+            playerCount= -1;
+        }else{
+            playerCount = game.getPlayers().indexOf(game.getActualPlayer());
+        }
+        if (game.getPlayers().size()-1 == playerCount){
+            game.setActualPlayer(game.getPlayers().get(0));
+            game.setRound(game.getRound()+1);
+        }else{
+            game.setActualPlayer(game.getPlayers().get(playerCount+1));
+        }
+        gameService.saveGame(game);
+        System.out.println("Llega aquí");
+        Turn turn = turnService.createTurn(game.getActualPlayer(),game.getRound());
+        System.out.println("Pero aquí no");
+        turnService.save(turn);
+        return result;
     }
 
     @GetMapping("/{id}/play/dices")
     @Transactional(rollbackFor = {WrongPhaseException.class,DataNotFound.class,CorruptGame.class})
     private ModelAndView throwDices(@PathParam("id") Integer gameId) throws WrongPhaseException,DataNotFound,CorruptGame{
-        Optional<Game> nrGame = gameService.getGameById(gameId);
-        if(nrGame.isPresent()){
-            Game game= nrGame.get();
-            Optional<Turn> nrTurn=turnService.getTurn(game.getActualPlayer(), game.getRound());
-            if(nrTurn.isPresent()){
-                Turn turn=nrTurn.get();
-                turn=turnService.throwDice(turn);
-                turnService.save(turn);
-            ModelAndView result = new ModelAndView(DICE_VIEW);
+        
+       
+        ModelAndView result = new ModelAndView(DICE_VIEW);
+        Game game = null;
+        try{
+            game = gameService.getGameById(gameId);
+        } catch(DataNotFound e) {
+            result.addObject("message", "The game doesn't exist");
             return result;
-            }else{
-                throw new CorruptGame();
-            }
-        }else{
-            throw new DataNotFound();
         }
+
+        try{
+            turnService.throwDice(game);
+        } catch(Exception e) {
+            result.addObject("message", "This is not your turn");
+            return result;
+        }
+        
+        return result;
     }
 
     @GetMapping("/{gameId}/play/move")
     @Transactional(rollbackFor = {WrongPhaseException.class,DataNotFound.class,CorruptGame.class})
     private ModelAndView movementPosibilities(@PathParam("gameId") Integer gameId) throws WrongPhaseException,DataNotFound,CorruptGame{
-        System.out.println(gameId);
-        Optional<Game> nrGame = gameService.getGameById(gameId);
-        if(nrGame.isPresent()){
-            Game game= nrGame.get();
-            Optional<Turn> nrTurn=turnService.getTurn(game.getActualPlayer(), game.getRound());
-            if(nrTurn.isPresent()){
-                Turn turn=nrTurn.get();
-                ModelAndView result = new ModelAndView(DICE_VIEW);
-                System.out.println(celdService.getAllPossibleMovements(turn.getDiceResult(), turn.getInitialCeld()));
-                result.addObject("movements", celdService.getAllPossibleMovements(turn.getDiceResult(), turn.getInitialCeld()));
-                return result;
-            }else{
-                throw new CorruptGame();
-            }
-        }else{
-            throw new DataNotFound();
+        ModelAndView result = new ModelAndView(DICE_VIEW);
+        Game game = null;
+        try{
+            game = gameService.getGameById(gameId);
+        } catch(DataNotFound e) {
+            result.addObject("message", "The game doesn't exist");
+            return result;
         }
+        result.addObject("movements", turnService.whereCanIMove(game));
+        return result;
     }
 }

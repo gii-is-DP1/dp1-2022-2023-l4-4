@@ -8,27 +8,27 @@ INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES
 
 
 INSERT INTO cards(id,card_name,card_type,image_url) VALUES
-(1,1,3,null),
-(2,2,3,null),
-(3,3,3,null),
-(4,4,3,null),
-(5,5,3,null),
-(6,6,3,null),
-(7,7,3,null),
-(8,8,3,null),
-(9,9,3,null),
-(10,10,1,null),
-(11,11,1,null),
-(12,12,1,null),
-(13,13,1,null),
-(14,14,1,null),
-(15,15,1,null),
-(16,16,2,null),
-(17,17,2,null),
-(18,18,2,null),
-(19,19,2,null),
-(20,20,2,null),
-(21,21,2,null);
+(1,'KITCHEN','ROOM',null),
+(2,'SPA','ROOM',null),
+(3,'HALL','ROOM',null),
+(4,'OBSERVATORY','ROOM',null),
+(5,'GUESS_ROOM','ROOM',null),
+(6,'DINNING_HALL','ROOM',null),
+(7,'THEATRE','ROOM',null),
+(8,'LIVING_ROOM','ROOM',null),
+(9,'YARD','ROOM',null),
+(10,'GREEN','SUSPECT',null),
+(11,'RED','SUSPECT',null),
+(12,'PURPLE','SUSPECT',null),
+(13,'WHITE','SUSPECT',null),
+(14,'BLUE','SUSPECT',null),
+(15,'YELLOW','SUSPECT',null),
+(16,'CHANDELIER','WEAPON',null),
+(17,'KNIFE','WEAPON',null),
+(18,'ROPE','WEAPON',null),
+(19,'DUMBBELLS','WEAPON',null),
+(20,'GUN','WEAPON',null),
+(21,'POISON','WEAPON',null);
 
 
 
@@ -718,7 +718,3 @@ INSERT INTO turns(user_game_id, round, dice_result, initial_celd_id,phase) VALUE
 (8,1,5,1,5),
 (8,1,11,1,4);
 
-INSERT INTO players(game_id,user_game_id) VALUES 
-(3,6),
-(3,7),
-(3,8);

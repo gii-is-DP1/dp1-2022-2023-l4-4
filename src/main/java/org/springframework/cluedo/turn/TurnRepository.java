@@ -2,8 +2,6 @@ package org.springframework.cluedo.turn;
 
 import java.util.Optional;
 
-import org.springframework.cluedo.game.Game;
-import org.springframework.cluedo.user.UserGame;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

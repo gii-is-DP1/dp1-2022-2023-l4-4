@@ -50,4 +50,8 @@ public class UserGame extends BaseEntity{
     @ManyToMany
     @JoinTable(name="user_cards")
     private Set<Card> cards;
+
+    public void addCard(Card card){
+        cards.add(card);
+    }
 }

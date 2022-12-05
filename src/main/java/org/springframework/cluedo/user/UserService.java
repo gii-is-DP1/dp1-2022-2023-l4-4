@@ -2,10 +2,17 @@
 package org.springframework.cluedo.user;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cluedo.card.Card;
+import org.springframework.cluedo.enumerates.SuspectType;
+import org.springframework.cluedo.game.Game;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,10 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
 	private UserRepository userRepository;
+	private UserGameService userGameService;
 
 	@Autowired
-	public UserService(UserRepository userRepository) {
+	public UserService(UserRepository userRepository,UserGameService userGameService) {
 		this.userRepository = userRepository;
+		this.userGameService = userGameService;
 	}
 	@Transactional
 	public List<User> getAllUsers(){
@@ -51,4 +60,22 @@ public class UserService {
 	public UserDetails getUserDetails(){
 		return(UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
+    public void initializePlayers(List<User> lobby, Game copy) { 
+		
+		List<SuspectType> suspects= new ArrayList<>(Arrays.asList(SuspectType.values()));
+		for (User user : lobby) {
+			Integer available = suspects.size();
+			UserGame userGame = new UserGame();
+			userGame.setAccusationsNumber(0);
+			userGame.setGame(copy);
+			userGame.setUser(user);
+			userGame.setIsAfk(false);
+			Integer randomInt = ThreadLocalRandom.current().nextInt(available);
+			userGame.setSuspect(suspects.get(randomInt));
+			suspects.remove(suspects.get(randomInt));
+			userGame.setCards(new HashSet<Card>());
+			userGameService.saveUserGame(userGame);
+			copy.addPlayers(userGame);
+		}
+    }
 }
