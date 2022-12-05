@@ -710,12 +710,4 @@ INSERT INTO lobbies(game_id,user_id) VALUES
 (3,2),
 (3,3);
 
-INSERT INTO user_games(id,order_user, accusations_number, is_afk,suspect,user_id,game_id) VALUES
-(6,2,1,0,1,1,3),
-(7,1,1,1,2,2,3),
-(8,0,0,0,3,3,3);
-
-INSERT INTO turns(user_game_id, round, dice_result, initial_celd_id,phase) VALUES
-(8,1,5,1,5),
-(8,1,11,1,4);
 
