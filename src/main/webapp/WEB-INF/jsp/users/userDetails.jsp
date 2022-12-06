@@ -18,6 +18,10 @@
             <th>Email</th>
             <td><c:out value="${user.email}"/></td>
         </tr>
+        <tr>
+            <th>Tag</th>
+            <td><c:out value="${user.tag}"/></td>
+        </tr>
       
     </table>
 

@@ -15,9 +15,11 @@
  */
 package org.springframework.cluedo.user;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.validation.Valid;
 
@@ -75,11 +77,13 @@ public class UserController {
 		ModelAndView mav = new ModelAndView("users/userFriends");
 		List<User> nrUser = userService.findUserFriends(userId);
 		if(nrUser.size()>0){
-			mav.addObject("user", nrUser);
-			System.out.println(nrUser.size());
-			
+			mav.addObject("user", nrUser);	
 		return mav;
-		
+		}
+		if(nrUser.size()==0){
+			mav.addObject("user", nrUser);	
+		return mav;
+
 		}
 		throw new DataNotFound();
 	}
@@ -100,12 +104,38 @@ public class UserController {
 		return VIEWS_USER_CREATE_OR_UPDATE_FORM;
 	}
 
+	public static String generarTag(){
+		//La variable palabra almacena el resultado final 
+				 String palabra = "#"; 
+		//La variable caracteres es un número aleatorio entre 2 y 20 que define la 
+		//longitud de la palabra. 
+				 int caracteres = 4; 
+		//Con un bucle for, que recorreremos las veces que tengamos almacenadas en la 
+		//variable caracteres, que será como mínimo 2, iremos concatenando los 
+		//caracteres aleatorios. 
+				 for (int i=0; i<caracteres; i++){ 
+		//Para generar caracteres aleatorios hay que recurrir al valor numérico de estos 
+		//caracteres en el alfabeto Ascii. En este programa vamos a generar palabras con 
+		//letras minúsculas, que se encuentran en el rango 65-90. El método floor 
+		//devuelve el máximo entero. 
+				 int codigoAscii = (int)Math.floor(Math.random()*(90 -
+				 65)+65); 
+		//para pasar el código a carácter basta con hacer un cast a char 
+				 palabra = palabra + (char)codigoAscii; 
+				 } 
+				 String numero = (ThreadLocalRandom.current().nextInt(8)+1)+"";
+				 return palabra + numero+numero+numero+numero ; 
+			 } 
+
 	@PostMapping(value = "/users/new")
 	public String processCreationForm(@Valid User user, BindingResult result) {
 		if (result.hasErrors()) {
 			return VIEWS_USER_CREATE_OR_UPDATE_FORM;
 		}
 		else {
+			List emptyFriendList = new ArrayList();
+			user.setFriends(emptyFriendList);
+			user.setTag(generarTag());
 			this.userService.saveUser(user);
 			return "redirect:/";
 		}

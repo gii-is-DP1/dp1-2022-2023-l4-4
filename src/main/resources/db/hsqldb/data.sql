@@ -2,12 +2,12 @@
  
 -- One admin user, named admin1 with passwor 4dm1n and authority admin
 
-INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (1,'1','1','1@gmail.com',null,1,'admin');
+INSERT INTO users(id,username,password,email,image_url,enabled,authority,tag) VALUES (1,'1','1','1@gmail.com',null,1,'admin','wwww');
 -- One owner user, named owner1 with passwor 0wn3r
-INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (2,'2','2','2@gmail.com',null,1,'user');
+INSERT INTO users(id,username,password,email,image_url,enabled,authority,tag) VALUES (2,'2','2','2@gmail.com',null,1,'user','eeee');
 
 -- One vet user, named vet1 with passwor v3t
-INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (3,'manuel333','1','user2@gmail.com',null,1,'user');
+INSERT INTO users(id,username,password,email,image_url,enabled,authority,tag) VALUES (3,'3','3','3@gmail.com',null,1,'user','rrrr');
 
 INSERT INTO user_friends(id1,id2) VALUES (1,2);
 INSERT INTO user_friends(id1,id2) VALUES (1,3);
