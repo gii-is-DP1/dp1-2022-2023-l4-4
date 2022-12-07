@@ -25,8 +25,9 @@ public class CeldService {
         return celdRepository.findAll();
     }
 
-    public BoardGraph init() {
-        return new BoardGraph(getAllCelds(), getAllPairs());
+    public void init() {
+        System.out.println("ESTO ES DEL INIT-------------->"+getAllCelds());
+        board = new BoardGraph(getAllCelds(), getAllPairs());
     }
 
     public List<List<Celd>> getAllPairs() {

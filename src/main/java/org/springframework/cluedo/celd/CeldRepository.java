@@ -8,6 +8,6 @@ import org.springframework.data.repository.CrudRepository;
 public interface CeldRepository extends CrudRepository<Celd,Integer>{
     List<Celd> findAll();
 
-    @Query("SELECT c FROM Celd c WHERE c.celdType LIKE CENTER")
+    @Query("SELECT c FROM Celd c WHERE c.celdType LIKE org.springframework.cluedo.enumerates.CeldType.CENTER")
     Celd findCenter();
 }

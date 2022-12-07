@@ -7,7 +7,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.card.Card;
@@ -61,8 +64,9 @@ public class UserService {
 		return(UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
     public void initializePlayers(List<User> lobby, Game copy) { 
-		
 		List<SuspectType> suspects= new ArrayList<>(Arrays.asList(SuspectType.values()));
+		List<Integer> orderList= IntStream.rangeClosed(1, lobby.size())
+		.boxed().collect(Collectors.toList()); 
 		for (User user : lobby) {
 			Integer available = suspects.size();
 			UserGame userGame = new UserGame();
@@ -70,12 +74,16 @@ public class UserService {
 			userGame.setGame(copy);
 			userGame.setUser(user);
 			userGame.setIsAfk(false);
-			Integer randomInt = ThreadLocalRandom.current().nextInt(available);
-			userGame.setSuspect(suspects.get(randomInt));
-			suspects.remove(suspects.get(randomInt));
+			Integer suspect = ThreadLocalRandom.current().nextInt(available);
+			userGame.setSuspect(suspects.get(suspect));
+			suspects.remove(suspects.get(suspect));
 			userGame.setCards(new HashSet<Card>());
+			Integer order = ThreadLocalRandom.current().nextInt(orderList.size());
+			userGame.setOrderUser(orderList.get(order));
+			orderList.remove(orderList.get(order));
 			userGameService.saveUserGame(userGame);
 			copy.addPlayers(userGame);
 		}
+		
     }
 }

@@ -20,4 +20,5 @@ void deleteById(Integer id);
 
 @Query("SELECT u FROM User u WHERE u.username=:username")
 Optional<User> findByUsername(@Param("username") String username);
+
 }

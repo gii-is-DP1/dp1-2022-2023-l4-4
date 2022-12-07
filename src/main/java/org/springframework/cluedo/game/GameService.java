@@ -15,6 +15,8 @@ import org.springframework.cluedo.exceptions.WrongPhaseException;
 import org.springframework.cluedo.turn.Turn;
 import org.springframework.cluedo.turn.TurnService;
 import org.springframework.cluedo.user.User;
+import org.springframework.cluedo.user.UserGame;
+import org.springframework.cluedo.user.UserGameService;
 import org.springframework.cluedo.user.UserService;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -27,13 +29,15 @@ public class GameService {
 	private TurnService turnService;
 	private CardService cardService;
 	private UserService userService;
+	private UserGameService userGameService;
 
 	@Autowired
-	public GameService(GameRepository gameRepository, TurnService turnService, CardService cardService, UserService userService) {
+	public GameService(GameRepository gameRepository, TurnService turnService, CardService cardService, UserService userService, UserGameService userGameService) {
 		this.gameRepository = gameRepository;
 		this.turnService = turnService;
 		this.cardService = cardService;
 		this.userService = userService;
+		this.userGameService = userGameService;
 	}
     //Admin
 	//H12
@@ -67,33 +71,29 @@ public class GameService {
         copy.setRound(1);
 		userService.initializePlayers(copy.getLobby(), copy);
 		cardService.initCards(copy);
+		
 	} 
 
 	public void initTurn(Game game){
-        Integer playerCount;
-        if(game.getActualPlayer()==null){
-            playerCount= -1; 
-        }else{
-            playerCount = game.getPlayers().indexOf(game.getActualPlayer());
-        }
-         if (game.getPlayers().size()-1 == playerCount){
-             game.setActualPlayer(game.getPlayers().get(0));
-             game.setRound(game.getRound()+1);
-        }else{
-            game.setActualPlayer(game.getPlayers().get(playerCount+1));
-        }
-        saveGame(game);
-        turnService.createTurn(game.getActualPlayer(),game.getRound());
+		if (game.getActualPlayer()==null){
+			game.setActualPlayer(userGameService.getUsergameByGameAndOrder(game, 1));
+		}else{
+			Optional<UserGame> nrUserGame=userGameService.getNextUsergame(game);
+			if(!nrUserGame.isPresent()){
+				game.setRound(game.getRound()+1);
+				game.setActualPlayer(userGameService.getFirstUsergame(game)); 
+			}else{
+				game.setActualPlayer(nrUserGame.get()); 
+			}
+		}
+		saveGame(game);
+		turnService.createTurn(game.getActualPlayer(),game.getRound());
 	}
 
-	public void moveTo(Game game,Celd finalCeld) throws CorruptGame,WrongPhaseException{
-		Optional<Turn> nrTurn=turnService.getTurn(game.getActualPlayer(), game.getRound());
-        if(nrTurn.isPresent()){
-			Turn turn=nrTurn.get();
-			turnService.moveCharacter(turn, finalCeld);
-		}else{
-            throw new CorruptGame();
-        }
+
+	public void moveTo(Game game,Celd finalCeld) throws WrongPhaseException{
+		Turn turn=turnService.getTurn(game.getActualPlayer(), game.getRound()).get();
+		turnService.moveCharacter(turn, finalCeld);
 	}
 
 	//H1
