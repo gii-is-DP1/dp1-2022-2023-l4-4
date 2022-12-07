@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.card.CardService;
 import org.springframework.cluedo.celd.Celd;
+import org.springframework.cluedo.enumerates.Phase;
 import org.springframework.cluedo.enumerates.Status;
 import org.springframework.cluedo.exceptions.CorruptGame;
 import org.springframework.cluedo.exceptions.DataNotFound;
@@ -70,23 +71,12 @@ public class GameService {
         copy.setDuration(Duration.ofMinutes(0));
         copy.setRound(1);
 		userService.initializePlayers(copy.getLobby(), copy);
+		copy.setActualPlayer(copy.getPlayers().get(0));
 		cardService.initCards(copy);
 		
 	} 
 
 	public void initTurn(Game game){
-		if (game.getActualPlayer()==null){
-			game.setActualPlayer(userGameService.getUsergameByGameAndOrder(game, 1));
-		}else{
-			Optional<UserGame> nrUserGame=userGameService.getNextUsergame(game);
-			if(!nrUserGame.isPresent()){
-				game.setRound(game.getRound()+1);
-				game.setActualPlayer(userGameService.getFirstUsergame(game)); 
-			}else{
-				game.setActualPlayer(nrUserGame.get()); 
-			}
-		}
-		saveGame(game);
 		turnService.createTurn(game.getActualPlayer(),game.getRound());
 	}
 
@@ -110,5 +100,21 @@ public class GameService {
 		}
 		return game.get();
 	}
-}
+
+	public void finishTurn(Game game){
+		Turn actualTurn=turnService.getActualTurn(game).get();
+		actualTurn.setPhase(Phase.FINISHED);
+		turnService.saveTurn(actualTurn);
+		do{
+			if(actualTurn.getUserGame()==game.getPlayers().get(game.getPlayers().size()-1)){
+				game.setRound(game.getRound()+1);
+				game.setActualPlayer(userGameService.getFirstUsergame(game)); 
+			}else{
+				game.setActualPlayer(userGameService.getNextUsergame(game).get()); 
+			}
+		}while(game.getActualPlayer().getIsEliminated()==true);
+		saveGame(game);
+		turnService.createTurn(game.getActualPlayer(),game.getRound());
+	}
+} 
 	

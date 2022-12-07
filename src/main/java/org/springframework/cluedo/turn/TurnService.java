@@ -67,7 +67,6 @@ public class TurnService {
         Optional<Turn> nrTurn=getTurn(game.getActualPlayer(), game.getRound());
             if(nrTurn.isPresent()){
                 Turn turn=nrTurn.get();
-                System.out.println("MIRÁ ESTO WACHO-------------->"+turn.getInitialCeld().getId());
                 return celdService.getAllPossibleMovements(turn.getDiceResult(), turn.getInitialCeld());
             }else{ 
                 throw new CorruptGame();

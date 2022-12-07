@@ -1,5 +1,6 @@
 package org.springframework.cluedo.user;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,4 +28,9 @@ public class UserGameService {
     public Optional<UserGame> getNextUsergame(Game game){
         return userGameRepository.findPlayerByGameAndOrder(game,game.getActualPlayer().getOrderUser()+1);
     }
+
+    public List<UserGame> remainingPlayersNotEliminated(Game game){
+        return userGameRepository.remainingPlayersNotEliminated(game);
+    }
+
 }

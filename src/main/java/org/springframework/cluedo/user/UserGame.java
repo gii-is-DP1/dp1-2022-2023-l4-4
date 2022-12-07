@@ -37,6 +37,9 @@ public class UserGame extends BaseEntity{
     private Boolean isAfk;
     
     @NotNull
+    private Boolean isEliminated;
+    
+    @NotNull
     private SuspectType suspect;
 
     @ManyToOne

@@ -4,6 +4,7 @@ package org.springframework.cluedo.user;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -74,6 +75,7 @@ public class UserService {
 			userGame.setGame(copy);
 			userGame.setUser(user);
 			userGame.setIsAfk(false);
+			userGame.setIsEliminated(false);
 			Integer suspect = ThreadLocalRandom.current().nextInt(available);
 			userGame.setSuspect(suspects.get(suspect));
 			suspects.remove(suspects.get(suspect));
@@ -84,6 +86,6 @@ public class UserService {
 			userGameService.saveUserGame(userGame);
 			copy.addPlayers(userGame);
 		}
-		
+		copy.setPlayers(copy.getPlayers().stream().sorted(Comparator.comparing(x->x.getOrderUser())).collect(Collectors.toList()));
     }
 }
