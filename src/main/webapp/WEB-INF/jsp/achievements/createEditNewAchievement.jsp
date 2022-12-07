@@ -8,7 +8,8 @@
 <cluedo:layout pageName="New Achievement">
     <jsp:body>
         <h2>
-            New achievement
+            <c:if test="${achievement['new']}">New achievement</c:if>
+            <c:if test="${!achievement['new']}">Edit achievement</c:if>
         </h2>
         <form:form modelAttribute="achievement" class="form-horizontal">
             <input type="hidden" name="id" value="${achievement.id}">
@@ -21,7 +22,7 @@
                 <cluedo:selectField name = "badgeType" label="Type" names="${badge}" size="${badge.size()}"></cluedo:selectField>
             </div>
             <div class="form-group">
-                <button class="btn btn-default" type="submit">Add achievement</button>
+                <button class="btn btn-default" type="submit">Save achievement</button>
             </div>
         </form:form>
     </jsp:body>

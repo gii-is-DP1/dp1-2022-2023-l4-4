@@ -26,6 +26,7 @@
             <th style="width: 120px">Description</th>
             <th style="width: 120px">Experience</th>
             <th style="width: 120px">Badge</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -56,6 +57,11 @@
                         <c:if test="${achievement.imageUrl != null}">
                             <img class="img-responsive" src="${achievement.imageUrl}" style="width: 100px !important; height: 100px !important;"/>
                         </c:if>
+                    </td>
+                    <td>
+                        <a href="/achievements/${achievement.id}/edit">
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                        </a>
                     </td>
                 </tr>
             </c:forEach>

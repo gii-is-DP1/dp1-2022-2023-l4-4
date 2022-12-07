@@ -1,11 +1,13 @@
 package org.springframework.cluedo.achievement;
 
+import java.text.Bidi;
 import java.util.ArrayList;
 import java.util.List;
 
 
 import javax.validation.Valid;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.accusation.AccusationService;
 import org.springframework.cluedo.enumerates.Badge;
@@ -63,7 +65,7 @@ public class AchievementController {
     //H24 - Creacion de logros
     @Transactional(readOnly=true)
     @GetMapping("/new")
-    public ModelAndView formNewAchievement(){
+    public ModelAndView createAchievement(){
         Achievement achievement = new Achievement();
         ModelAndView result = new ModelAndView(CREATE_EDIT_ACHIEVEMENT);
         result.addObject("achievement", achievement);
@@ -73,7 +75,7 @@ public class AchievementController {
 
     @Transactional
     @PostMapping("/new")
-    public ModelAndView saveNewAchievement(@Valid Achievement achievement, BindingResult br) {
+    public ModelAndView saveCreatedAchievement(@Valid Achievement achievement, BindingResult br) {
         if(br.hasErrors()) {
             System.out.println(br.getAllErrors().toString());
             return new ModelAndView(CREATE_EDIT_ACHIEVEMENT, br.getModel());
@@ -88,8 +90,8 @@ public class AchievementController {
     }
 
     @Transactional(readOnly=true)
-    @GetMapping("/{achievements_id}/edit")
-    public ModelAndView formEditAchievement(@PathVariable("id") Integer id) {
+    @GetMapping("/{id}/edit")
+    public ModelAndView editAchievement(@PathVariable("id") Integer id) {
         Achievement achievement = achievementService.getAchievementById(id);
         ModelAndView result = new ModelAndView(CREATE_EDIT_ACHIEVEMENT);
         if(achievement != null){
@@ -99,5 +101,20 @@ public class AchievementController {
             result.addObject("message", "The achievement with id " + id + "doesn't exist");
         }
         return result;
+    }
+    @Transactional
+    @PostMapping("/{id}/edit")
+    public ModelAndView saveEditedAchievement(@Valid Achievement achievement, BindingResult br){
+        if(br.hasErrors()){
+            return new ModelAndView(CREATE_EDIT_ACHIEVEMENT,br.getModel());
+        } else {
+            ModelAndView result = getAllAchievements();
+            Achievement achievementToEdit = achievementService.getAchievementById(achievement.getId());
+            BeanUtils.copyProperties(achievement, achievementToEdit, "id","image_url");
+            achievementToEdit.setImageUrl("/resources/images/" + achievement.getBadgeType().toString().toLowerCase() + ".jpg");
+            achievementService.saveAchievement(achievementToEdit);
+            result.addObject("message", "The achievement was edited successfully");
+            return result;
+        }
     }
 }
