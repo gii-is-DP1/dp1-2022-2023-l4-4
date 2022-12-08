@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.celd.CeldService;
+import org.springframework.cluedo.enumerates.CeldType;
 import org.springframework.cluedo.enumerates.Phase;
 import org.springframework.cluedo.enumerates.Status;
 import org.springframework.cluedo.user.User;
@@ -243,14 +244,12 @@ public class GameController {
             result.addObject("message", "The game needs at least 3 players to start");
             return result;
         } else {
-            ModelAndView result = new ModelAndView(ON_GAME);
             Game copy = new Game();
             BeanUtils.copyProperties(game, copy);
             gameService.initGame(copy);
 		    gameService.saveGame(copy);
-            result.addObject("game", copy);
             turnService.createTurn(copy.getActualPlayer(),copy.getRound());
-            return result;
+            return new ModelAndView("redirect:/games/"+copy.getId()+"/play");
         }   
     }
 
@@ -272,7 +271,9 @@ public class GameController {
 
         Optional<User> nrLoggedUser=userService.getLoggedUser();
         if(!gameService.isUserTurn(nrLoggedUser, game)){
-            return notYourTurn(game);
+            ModelAndView result = new ModelAndView(ON_GAME);
+            result.addObject("game", game);
+            return result;
         }
         //TODO: implementar pantalla final
         switch(turnService.getActualTurn(game).get().getPhase()){
@@ -316,6 +317,7 @@ public class GameController {
         return null;
     }
 
+        
     @GetMapping("/{gameId}/play/dice")
     @Transactional
     public ModelAndView throwDicesButton(@PathVariable("gameId") Integer gameId) throws WrongPhaseException,DataNotFound,CorruptGame{
@@ -375,7 +377,7 @@ public class GameController {
             return result;
         } 
          
-        return new ModelAndView("redirect:/games/"+game.getId()+"/play/move");
+        return new ModelAndView("redirect:/games/"+game.getId()+"/play");
     } 
 
     @GetMapping("/{gameId}/play/move")
@@ -408,12 +410,12 @@ public class GameController {
     @PostMapping("/{gameId}/play/move")
     @Transactional
     public ModelAndView moveTo(@PathVariable("gameId") Integer gameId,CeldForm finalCeld, BindingResult br) throws WrongPhaseException,DataNotFound{
-        ModelAndView result = new ModelAndView("redirect:/games/"+gameId+"/play/accusation");
+        
         Game game = null;
         try{
             game = gameService.getGameById(gameId);
         } catch(DataNotFound e) {
-            result = new ModelAndView(GAME_LISTING); 
+            ModelAndView result = new ModelAndView(GAME_LISTING); 
             result.addObject("message", "The game doesn't exist");
             return result;
         }
@@ -429,8 +431,13 @@ public class GameController {
 
         Turn turn=turnService.getActualTurn(game).get();
         turn.setFinalCeld(finalCeld.getFinalCeld());
+        if(turn.getFinalCeld().getCeldType()!=CeldType.CORRIDOR) {
+            turn.setPhase(Phase.ACCUSATION);
+        } else {
+            turn.setPhase(Phase.FINAL);
+        }
         turnService.saveTurn(turn);
-        return result;
+        return new ModelAndView("redirect:/games/"+game.getId()+"/play");
     }
     
     @GetMapping("/{gameId}/play/accusation")
