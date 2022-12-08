@@ -44,6 +44,11 @@ public class Celd extends BaseEntity{
     public  boolean equals(Object o){
       Celd celd2 = (Celd) o;
       return this.id.equals(celd2.id);
+   }
+    
+    @Override
+    public int hashCode(){
+      return id;
     }
 }
  
