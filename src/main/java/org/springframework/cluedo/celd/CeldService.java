@@ -53,6 +53,9 @@ public class CeldService {
         if (board==null){
             init();
         }
+        System.out.println("LOS VÉRTICES-------->"+board.getAllVertex());
+        System.out.println("LAS ARISTAS-------->"+board.getAllEdges());
+        System.out.println("CELDA----------->"+celd);
         return board.possibleMovements(pasos, celd);
     }
 

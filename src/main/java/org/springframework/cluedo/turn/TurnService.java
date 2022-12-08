@@ -83,10 +83,12 @@ public class TurnService {
         return (turn);
     }
 
-    public Turn makeAccusation(Turn turn) throws WrongPhaseException{
-        if(turn.getPhase()!=Phase.ACCUSATION){
-            throw new WrongPhaseException();
+    public Turn makeAccusation(Game game) throws WrongPhaseException{
+        Optional<Turn> nrTurn=getTurn(game.getActualPlayer(), game.getRound());
+        if(!nrTurn.isPresent() || nrTurn.get().getPhase()!=Phase.DICE){
+                throw new WrongPhaseException();
         }
+        Turn turn = nrTurn.get();
         //accusationController.makeAccusation();
         turn.setPhase(Phase.FINAL);
         return saveTurn(turn);

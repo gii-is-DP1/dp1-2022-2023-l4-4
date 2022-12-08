@@ -39,7 +39,7 @@ public class GameController {
     private final String ON_GAME="games/onGame";
     private final String DICE_VIEW="games/diceView"; 
     private final String MOVE_VIEW = "games/selectCeld";
-    private final String ACCUSATION_VIEW="games/accusation";
+    private final String ACCUSATION_VIEW="games/makeAccusation";
     private final GameService gameService;
     private final UserService userService;
     private final TurnService turnService;
@@ -198,11 +198,12 @@ public class GameController {
             result.addObject("message", "The game needs at least 3 players to start");
             return result;
         } else {
-            ModelAndView result = new ModelAndView("ON_GAME");
+            ModelAndView result = new ModelAndView(ON_GAME);
             Game copy = new Game();
             BeanUtils.copyProperties(game, copy);
             gameService.initGame(copy);
 		    gameService.saveGame(copy);
+            result.addObject("game", copy);
             turnService.createTurn(copy.getActualPlayer(),copy.getRound());
             return result;
         }   
@@ -221,7 +222,9 @@ public class GameController {
         }
         ModelAndView result = checkUserAndGame(game,nrLoggedUser);
         if(result!=null && result.getModel().containsValue("Wait until it's your turn")){
-            return new ModelAndView(ON_GAME);
+            result=new ModelAndView(ON_GAME);
+            result.addObject("game", game);
+            return result;
         }
         if (result==null){
             switch(turnService.getActualTurn(game).get().getPhase()){
@@ -229,7 +232,11 @@ public class GameController {
                 case MOVEMENT:return new ModelAndView("redirect:/games/"+gameId+"/play/move");
                 case ACCUSATION:return new ModelAndView("redirect:/games/"+gameId+"/play/accusation");
                 case FINAL:return new ModelAndView("redirect:/games/"+gameId+"/play/dice");
-                default: return new ModelAndView(ON_GAME);
+                default: {
+                    result = new ModelAndView(ON_GAME);
+                    result.addObject("game", game);
+                    return result;
+                }
             }
         }
         return result; 
@@ -312,6 +319,7 @@ public class GameController {
             turnService.throwDice(game);
         } catch(Exception e) {
             ModelAndView result = new ModelAndView(ON_GAME);
+            result.addObject("game", game);
             result.addObject("message", "This is not your turn");
             return result;
         } 
@@ -340,11 +348,12 @@ public class GameController {
     @PostMapping("/{gameId}/play/move")
     @Transactional
     public ModelAndView moveTo(@PathVariable("gameId") Integer gameId,CeldForm finalCeld, BindingResult br) throws WrongPhaseException,DataNotFound{
-        ModelAndView result = new ModelAndView(ACCUSATION_VIEW);
+        ModelAndView result = new ModelAndView("redirect:/games/"+gameId+"/play/accusation");
         Game game = null;
         try{
             game = gameService.getGameById(gameId);
         } catch(DataNotFound e) {
+            result = new ModelAndView(GAME_LISTING); 
             result.addObject("message", "The game doesn't exist");
             return result;
         }
@@ -354,6 +363,52 @@ public class GameController {
         return result;
     }
     
+    @GetMapping("/{gameId}/play/accusation")
+    @Transactional
+    public ModelAndView makeAccusationButton(@PathVariable("gameId") Integer gameId) throws WrongPhaseException,DataNotFound,CorruptGame{
+        Game game = null;
+        try{
+            game = gameService.getGameById(gameId);
+        } catch(DataNotFound e) {
+            ModelAndView result = new ModelAndView("redirect:/games");
+            return result;
+        }
+        Optional<User> nrLoggedUser=userService.getLoggedUser();
+        ModelAndView result = checkUserAndGame(game,nrLoggedUser);
+        if (result==null) result=checkPhase(game,Phase.ACCUSATION); 
+        if (result==null){
+            result = new ModelAndView(ACCUSATION_VIEW);
+            result.addObject("gameId", gameId);
+            return result;
+        }else{
+            return result;
+        }
+        
+    } 
+
+    @Transactional(rollbackFor = {WrongPhaseException.class,DataNotFound.class})
+    @PostMapping("/{gameId}/play/accusation")
+    public ModelAndView makeAccusation(@PathVariable("gameId") Integer gameId) throws WrongPhaseException,DataNotFound,CorruptGame{
+        Game game = null;
+        try{
+            game = gameService.getGameById(gameId);
+        } catch(DataNotFound e) {
+            ModelAndView result = new ModelAndView(GAME_LISTING);
+            result.addObject("message", "The game doesn't exist");
+            return result;
+        }
+        try{
+            turnService.makeAccusation(game);
+        } catch(Exception e) {
+            ModelAndView result = new ModelAndView(ON_GAME);
+            result.addObject("game", game);
+            result.addObject("message", "This is not your turn");
+            return result;
+        } 
+         
+        return new ModelAndView("redirect:/games/"+game.getId()+"/play");
+    } 
+
     @GetMapping("/{gameId}/play/finish")
     @Transactional(rollbackFor = {WrongPhaseException.class,DataNotFound.class})
     public ModelAndView finishTurn(@PathVariable("gameId") Integer gameId) throws WrongPhaseException,DataNotFound,CorruptGame{
@@ -372,6 +427,7 @@ public class GameController {
         if (result==null){
             gameService.finishTurn(game);
             result = new ModelAndView(ON_GAME);
+            result.addObject("game", game);
             return result;
         }else{
             return result;
