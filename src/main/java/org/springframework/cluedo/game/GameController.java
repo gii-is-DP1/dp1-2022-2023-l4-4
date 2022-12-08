@@ -35,7 +35,8 @@ public class GameController {
     private final String GAME_LISTING="games/gameList";
     private final String GAME_PAST_LISTING="games/gamePastList";
     private final String CREATE_NEW_GAME="games/createNewGame";
-    private final String LOBBY="games/lobby";
+    private final String LOBBY_HOST="games/lobby";
+    private final String LOBBY_PLAYER="games/lobbyPlayer";
     private final String ON_GAME="games/onGame";
     private final String DICE_VIEW="games/diceView"; 
     private final String MOVE_VIEW = "games/selectCeld";
@@ -74,6 +75,15 @@ public class GameController {
     @Transactional(readOnly = true)
     @GetMapping()
     public ModelAndView getAllPublicLobbies(){
+        User user= userService.getLoggedUser().get();
+        Game game = gameService.getMyNotFinishedGame(user);
+        if(game != null) {
+            if(game.getStatus().equals(Status.LOBBY)) {
+                return new ModelAndView("redirect:/games/"+game.getId()+"/lobby");
+            } else {
+                return new ModelAndView("redirect:/games/"+game.getId()+"/play");
+            }
+        }
         ModelAndView result=new ModelAndView(GAME_LISTING);
         result.addObject("games", gameService.getAllPublicLobbies());
         return result;
@@ -92,7 +102,15 @@ public class GameController {
     @GetMapping("/new")
     public ModelAndView createGame(){
         User user= userService.getLoggedUser().get();
-    	Game game = new Game();
+        Game game = gameService.getMyNotFinishedGame(user);
+        if(game != null) {
+            if(game.getStatus().equals(Status.LOBBY)) {
+                return new ModelAndView("redirect:/games/"+game.getId()+"/lobby");
+            } else {
+                return new ModelAndView("redirect:/games/"+game.getId()+"/play");
+            }
+        }
+        game = new Game();
     	ModelAndView result = new ModelAndView(CREATE_NEW_GAME);
         List<Boolean> bool = new ArrayList<>();
         bool.add(true);
@@ -122,16 +140,45 @@ public class GameController {
     @Transactional(readOnly = true)
     @GetMapping("/{gameId}/lobby")
     public ModelAndView getLobby(@PathVariable("gameId") Integer gameId){
-    	ModelAndView result = new ModelAndView(LOBBY);
+    	ModelAndView result = null;
         Game game = null;
         try{
             game = gameService.getGameById(gameId);
         } catch(DataNotFound e) {
+            result = new ModelAndView("redirect:/games");
             result.addObject("message", "The game doesn't exist");
             return result;
         }
+        User user= userService.getLoggedUser().get();
+
+        if(!game.getLobby().contains(user)) {
+            return new ModelAndView("redirect:/games");
+        } else if (game.getHost().equals(user)){
+            result = new ModelAndView(LOBBY_HOST);
+        } else {
+            result = new ModelAndView(LOBBY_PLAYER);
+        }
+        
         result.addObject("lobby", game);
         return result;
+    }
+
+    @Transactional
+    @GetMapping("/{gameId}/leave")
+    public String leaveGame(@PathVariable("gameId") Integer gameId) {
+        Game game = null;
+        try{
+            game = gameService.getGameById(gameId);
+        } catch(DataNotFound e) {
+            return "redirect:/games";
+        }
+        User user= userService.getLoggedUser().get();
+        if(game.getStatus().equals(Status.LOBBY)) {
+            gameService.deleteUserFromLobby(user, game);
+        } else if (game.getStatus().equals(Status.IN_PROGRESS)) {
+            gameService.leaveGameInProgress(user,game);
+        }
+        return "redirect:/games";
     }
     
     // H2
@@ -159,7 +206,7 @@ public class GameController {
             result.addObject("lobby", game);
             return result;
         } else {
-            result = new ModelAndView(LOBBY);
+            result = new ModelAndView(LOBBY_HOST);
             Game copy = new Game();
             BeanUtils.copyProperties(game, copy);
             List<User> ul=copy.getLobby();
@@ -186,12 +233,12 @@ public class GameController {
         }
         Optional<User> loggedUser = userService.getLoggedUser();
         if (game.getHost()!=loggedUser.get()){
-            ModelAndView result = new ModelAndView(LOBBY);
+            ModelAndView result = new ModelAndView(LOBBY_HOST);
             result.addObject("lobby",game);
             result.addObject("message", "The host is incorrect");
             return result;
         } else if (game.getLobby().size()<3) {
-            ModelAndView result = new ModelAndView(LOBBY);
+            ModelAndView result = new ModelAndView(LOBBY_HOST);
             result.addObject("lobby",game);
             result.addObject("message", "The game needs at least 3 players to start");
             return result;

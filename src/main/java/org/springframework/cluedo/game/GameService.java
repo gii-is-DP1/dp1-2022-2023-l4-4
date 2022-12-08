@@ -130,5 +130,22 @@ public class GameService {
 		}
 		return false;
 	}
+	public Game getMyNotFinishedGame(User user) {
+		return gameRepository.getMyNotFinishedGame(user);
+	}
+	public void deleteUserFromLobby(User user, Game game) {
+		List<User> users = game.getLobby();
+		users.remove(user);
+		game.setLobby(users);
+		saveGame(game);
+	}
+	public void leaveGameInProgress(User user, Game game) {
+		List<UserGame> ugs = game.getPlayers();
+		UserGame ug = ugs.stream().filter(x->x.getUser().equals(user)).findAny().orElse(null);
+		if(ug!=null){
+			ug.setIsEliminated(true);
+			userGameService.saveUserGame(ug);
+		}
+	}
 } 
 	
