@@ -116,5 +116,19 @@ public class GameService {
 		saveGame(game);
 		turnService.createTurn(game.getActualPlayer(),game.getRound());
 	}
+
+	public boolean isUserTurn(Optional<User> user, Game game) {
+		if (!user.isPresent() || !user.get().equals(game.getActualPlayer().getUser())){
+			return false;
+		}
+		return true;
+	}
+
+	public boolean isGameInProgress(Game game) {
+		if(game.getStatus().equals(Status.IN_PROGRESS)) {
+			return true;
+		}
+		return false;
+	}
 } 
 	
