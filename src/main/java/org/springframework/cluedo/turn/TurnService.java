@@ -79,12 +79,12 @@ public class TurnService {
         }
         //celdController.movement()
         turn.setFinalCeld(finalCeld);
-        turn.setPhase(Phase.ACUSATION);
+        turn.setPhase(Phase.ACCUSATION);
         return (turn);
     }
 
     public Turn makeAccusation(Turn turn) throws WrongPhaseException{
-        if(turn.getPhase()!=Phase.ACUSATION){
+        if(turn.getPhase()!=Phase.ACCUSATION){
             throw new WrongPhaseException();
         }
         //accusationController.makeAccusation();

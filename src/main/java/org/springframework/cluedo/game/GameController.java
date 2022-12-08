@@ -39,6 +39,7 @@ public class GameController {
     private final String ON_GAME="games/onGame";
     private final String DICE_VIEW="games/diceView"; 
     private final String MOVE_VIEW = "games/selectCeld";
+    private final String ACCUSATION_VIEW="games/accusation";
     private final GameService gameService;
     private final UserService userService;
     private final TurnService turnService;
@@ -211,23 +212,27 @@ public class GameController {
     @Transactional
     public ModelAndView playGame(@PathVariable("gameId") Integer gameId) throws WrongPhaseException,DataNotFound{
         Optional<User> nrLoggedUser=userService.getLoggedUser();
-        ModelAndView result;
         Game game = null;
         try{
             game = gameService.getGameById(gameId);
         } catch(DataNotFound e) {
-            result=new ModelAndView(GAME_LISTING);
-            result.addObject("message", "The game doesn't exist");
+            ModelAndView result = new ModelAndView("redirect:/games");
             return result;
         }
-        if(!nrLoggedUser.isPresent()){
-            return new ModelAndView("/login");
+        ModelAndView result = checkUserAndGame(game,nrLoggedUser);
+        if(result!=null && result.getModel().containsValue("Wait until it's your turn")){
+            return new ModelAndView(ON_GAME);
         }
-        User loggedUser = nrLoggedUser.get();
-        if (!loggedUser.equals(game.getActualPlayer().getUser())){
-            result=new ModelAndView(ON_GAME);
+        if (result==null){
+            switch(turnService.getActualTurn(game).get().getPhase()){
+                case DICE:return new ModelAndView("redirect:/games/"+gameId+"/play/dice");
+                case MOVEMENT:return new ModelAndView("redirect:/games/"+gameId+"/play/move");
+                case ACCUSATION:return new ModelAndView("redirect:/games/"+gameId+"/play/accusation");
+                case FINAL:return new ModelAndView("redirect:/games/"+gameId+"/play/dice");
+                default: return new ModelAndView(ON_GAME);
+            }
         }
-        return new ModelAndView(ON_GAME);
+        return result; 
     }
 
     @GetMapping("/{gameId}/play/test")
@@ -239,8 +244,7 @@ public class GameController {
         return result;
     }
 
-    public ModelAndView checking(Integer gameId,Game game,Optional<User> nrLoggedUser,Phase phase){
-        
+    public ModelAndView checkUserAndGame(Game game,Optional<User> nrLoggedUser){
         //comprobar estado de la partida
         if (!game.getStatus().equals(Status.IN_PROGRESS)){
             if(game.getStatus().equals(Status.LOBBY)){
@@ -251,22 +255,23 @@ public class GameController {
                 return result; 
             }
         }
-
         //Comprobar que el usuario loggeado es el correspondiente
         if (!nrLoggedUser.isPresent() || !nrLoggedUser.get().equals(game.getActualPlayer().getUser())){
             ModelAndView result = new ModelAndView("redirect:/games/"+game.getId()+"/play");
             result.addObject("message", "Wait until it's your turn");
             return result;
         }
-     
-       /*  if (turnService.getActualTurn(game).get().getPhase()==phase){
-            ModelAndView result = new ModelAndView("redirect:/games/"+game.getId()+"/play");
-            result.addObject("message", "Wrong Phase");
-            return result; 
-        }*/
         return null;
     }
 
+    public ModelAndView checkPhase(Game game,Phase phase){
+        if (!turnService.getActualTurn(game).get().getPhase().equals(phase)){
+            ModelAndView result = new ModelAndView("redirect:/games/"+game.getId()+"/play");
+            result.addObject("message", "Wrong Phase");
+            return result; 
+        }
+        return null;
+    }
     
 
     @GetMapping("/{gameId}/play/dice")
@@ -280,7 +285,8 @@ public class GameController {
             return result;
         }
         Optional<User> nrLoggedUser=userService.getLoggedUser();
-        ModelAndView result = checking(gameId,game,nrLoggedUser,Phase.DICE);
+        ModelAndView result = checkUserAndGame(game,nrLoggedUser);
+        if (result==null) result=checkPhase(game,Phase.DICE); 
         if (result==null){
             result = new ModelAndView(DICE_VIEW);
             result.addObject("gameId", gameId);
@@ -334,7 +340,7 @@ public class GameController {
     @PostMapping("/{gameId}/play/move")
     @Transactional
     public ModelAndView moveTo(@PathVariable("gameId") Integer gameId,CeldForm finalCeld, BindingResult br) throws WrongPhaseException,DataNotFound{
-        ModelAndView result = new ModelAndView(MOVE_VIEW);
+        ModelAndView result = new ModelAndView(ACCUSATION_VIEW);
         Game game = null;
         try{
             game = gameService.getGameById(gameId);
@@ -361,7 +367,8 @@ public class GameController {
             return result;
         }
         Optional<User> nrLoggedUser=userService.getLoggedUser();
-        ModelAndView result = checking(gameId,game,nrLoggedUser,Phase.ACUSATION);
+        ModelAndView result = checkUserAndGame(game,nrLoggedUser);
+        if (result==null) result=checkPhase(game,Phase.FINAL); 
         if (result==null){
             gameService.finishTurn(game);
             result = new ModelAndView(ON_GAME);
