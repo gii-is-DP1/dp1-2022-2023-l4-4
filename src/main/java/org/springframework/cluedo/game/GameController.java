@@ -280,7 +280,7 @@ public class GameController {
             case DICE:return new ModelAndView("redirect:/games/"+gameId+"/play/dice");
             case MOVEMENT:return new ModelAndView("redirect:/games/"+gameId+"/play/move");
             case ACCUSATION:return new ModelAndView("redirect:/games/"+gameId+"/play/accusation");
-            case FINAL:return new ModelAndView("redirect:/games/"+gameId+"/play/dice");
+            case FINAL:return new ModelAndView("redirect:/games/"+gameId+"/play/finish");
             default: {
                     ModelAndView result = new ModelAndView(ON_GAME);
                     result.addObject("game", game);
@@ -428,7 +428,6 @@ public class GameController {
         if(!gameService.isUserTurn(nrLoggedUser, game)){
             return notYourTurn(game);
         }
-
         Turn turn=turnService.getActualTurn(game).get();
         turn.setFinalCeld(finalCeld.getFinalCeld());
         if(turn.getFinalCeld().getCeldType()!=CeldType.CORRIDOR) {
@@ -525,8 +524,7 @@ public class GameController {
         ModelAndView result=checkPhase(game,Phase.FINAL); 
         if (result==null){
             gameService.finishTurn(game);
-            result = new ModelAndView(ON_GAME);
-            result.addObject("game", game);
+            return new ModelAndView("redirect:/games/"+game.getId()+"/play");
 
         }
         return result;
