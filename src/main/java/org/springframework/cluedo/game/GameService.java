@@ -110,7 +110,7 @@ public class GameService {
 				game.setRound(game.getRound()+1);
 				game.setActualPlayer(userGameService.getFirstUsergame(game)); 
 			}else{
-				game.setActualPlayer(userGameService.getNextUsergame(game).get()); 
+				game.setActualPlayer(userGameService.getNextUsergame(game).get());  
 			}
 		}while(game.getActualPlayer().getIsEliminated()==true);
 		saveGame(game);

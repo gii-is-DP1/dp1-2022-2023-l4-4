@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.celd.CeldService;
+import org.springframework.cluedo.enumerates.Phase;
 import org.springframework.cluedo.enumerates.Status;
 import org.springframework.cluedo.user.User;
 import org.springframework.cluedo.user.UserService;
@@ -155,7 +156,7 @@ public class GameController {
             result.addObject("message", "The lobby is full");
             return result;
         } else if(game.getLobby().contains(loggedUser.get())) {
-            result = new ModelAndView(LOBBY);
+            result= new ModelAndView("redirect:/games/"+game.getId()+"/lobby");
             result.addObject("lobby", game);
             return result;
         } else {
@@ -166,6 +167,7 @@ public class GameController {
             ul.add(loggedUser.get());
             copy.setLobby(ul);
             gameService.saveGame(copy);
+            result= new ModelAndView("redirect:/games/"+copy.getId()+"/lobby");
             result.addObject("lobby", copy);
             return result;
         }
@@ -173,7 +175,7 @@ public class GameController {
 
     // H3
     @Transactional
-    @GetMapping("/{gameId}/start")
+    @PostMapping("/{gameId}/lobby")
     public ModelAndView startGame(@PathVariable("gameId") Integer gameId){
         Game game = null;
         try{
@@ -225,21 +227,19 @@ public class GameController {
         if (!loggedUser.equals(game.getActualPlayer().getUser())){
             result=new ModelAndView(ON_GAME);
         }
-        gameService.initTurn(game);
         return new ModelAndView(ON_GAME);
     }
 
     @GetMapping("/{gameId}/play/test")
     @Transactional
     public ModelAndView testTurn(@PathVariable("gameId") Integer gameId) throws WrongPhaseException,DataNotFound,CorruptGame{
-        ModelAndView result = new ModelAndView(DICE_VIEW);
+        ModelAndView result = new ModelAndView(MOVE_VIEW);
         startGame(gameId);
-        playTurn(gameId);
         throwDices(gameId);
         return result;
     }
 
-    public ModelAndView checking(Integer gameId,Game game,Optional<User> nrLoggedUser){
+    public ModelAndView checking(Integer gameId,Game game,Optional<User> nrLoggedUser,Phase phase){
         
         //comprobar estado de la partida
         if (!game.getStatus().equals(Status.IN_PROGRESS)){
@@ -259,8 +259,15 @@ public class GameController {
             return result;
         }
      
+       /*  if (turnService.getActualTurn(game).get().getPhase()==phase){
+            ModelAndView result = new ModelAndView("redirect:/games/"+game.getId()+"/play");
+            result.addObject("message", "Wrong Phase");
+            return result; 
+        }*/
         return null;
     }
+
+    
 
     @GetMapping("/{gameId}/play/dice")
     @Transactional
@@ -273,7 +280,7 @@ public class GameController {
             return result;
         }
         Optional<User> nrLoggedUser=userService.getLoggedUser();
-        ModelAndView result = checking(gameId,game,nrLoggedUser);
+        ModelAndView result = checking(gameId,game,nrLoggedUser,Phase.DICE);
         if (result==null){
             result = new ModelAndView(DICE_VIEW);
             result.addObject("gameId", gameId);
@@ -297,9 +304,7 @@ public class GameController {
         }
         try{
             turnService.throwDice(game);
-            System.out.println("MIRA ESTO--------------->"+turnService.getActualTurn(game).get().getPhase());
         } catch(Exception e) {
-            System.out.println("MIRA ESTO--------------->"+turnService.getActualTurn(game).get().getPhase());
             ModelAndView result = new ModelAndView(ON_GAME);
             result.addObject("message", "This is not your turn");
             return result;
@@ -356,9 +361,8 @@ public class GameController {
             return result;
         }
         Optional<User> nrLoggedUser=userService.getLoggedUser();
-        ModelAndView result = checking(gameId,game,nrLoggedUser);
+        ModelAndView result = checking(gameId,game,nrLoggedUser,Phase.ACUSATION);
         if (result==null){
-            //SE PUEDEN HACER FINISH INFINITOS AUNQUE NO TE TOQUE 
             gameService.finishTurn(game);
             result = new ModelAndView(ON_GAME);
             return result;

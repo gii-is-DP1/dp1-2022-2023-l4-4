@@ -10,10 +10,10 @@
         <div class="container">
             <h2>
                 <form:form  class="form-horizontal">
-                <div class="form-group">
-                    <button class="btn btn-default" type="submit">Throw Dice</button>
-                </div>
-            </form:form>
+                    <div class="form-group">
+                        <button class="btn btn-default" type="submit">Throw Dice</button>
+                    </div>
+                </form:form>
             </h2>
         </div>
     </jsp:body>

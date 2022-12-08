@@ -27,4 +27,9 @@
             </tr>
         </c:forEach>
     </table>
+    <form:form  class="form-horizontal">
+                <div class="form-group">
+                    <button class="btn btn-default" type="submit">Start Game</button>
+                </div>
+            </form:form>
 </cluedo:layout>
