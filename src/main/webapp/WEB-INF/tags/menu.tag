@@ -33,6 +33,18 @@
 					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 					<span>Games</span>
 				</petclinic:menuItem>
+				<petclinic:menuItem active="${name eq 'achievements'}" url="/achievements"
+					title="Achievements" dropdown="${true}">
+					<ul class="dropdown-menu">
+						<li>
+							<a href="<c:url value="/achievements"/> ">Achievements listing</a>
+						</li>
+						<li class="divider"/>
+						<li>
+							<a href="<c:url value="/myAchievements" />">My achievements <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span></a>
+						</li>
+					</ul>
+				</petclinic:menuItem>
 				<sec:authorize access="hasAuthority('admin')">
 					<petclinic:menuItem active="${name eq 'Admin'}" url="/admin"
 						title="Admin">

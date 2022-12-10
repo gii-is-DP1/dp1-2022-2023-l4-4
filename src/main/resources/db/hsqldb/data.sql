@@ -1,6 +1,13 @@
 -- CREATE TABLE user_games(id integer, orderPlayer integer ,accusations_number integer ,is_afk boolean ,suspect varchar(60),user_id integer,game_id integer);
 
 
+INSERT INTO achievements(id, achievement_name, metric, badge, goal, description, experience, image_url) VALUES (1, 'Gamer', 0,0, 1, 'You`ve won a game.', 100, 'https://audrey-gaune-projets-web.ovh/wp-content/uploads/2016/11/Le-March%C3%A9-des-Consoles-de-Jeux-Vid%C3%A9o.jpg');
+
+
+
+INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (1,'1','1','1@gmail.com','https://www.adslzone.net/app/uploads-adslzone.net/2019/04/borrar-fondo-imagen.jpg',1,'admin');
+
+
 INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES 
 (1,'1','1','1@gmail.com',null,1,'admin'),
 (2,'2','2','2@gmail.com',null,1,'user'),
@@ -31,7 +38,7 @@ INSERT INTO cards(id,card_name,card_type,image_url) VALUES
 (20,'GUN','WEAPON',null),
 (21,'POISON','WEAPON',null);
 
-
+INSERT INTO users_achievements(user_id, achievements_id) VALUES (1, 1);
 
 INSERT INTO celds(id,celd_type,position) VALUES  
 (1, 'CORRIDOR',7), 
@@ -718,4 +725,13 @@ INSERT INTO user_games(id,order_user, accusations_number, is_afk,suspect,user_id
 INSERT INTO turns(user_game_id, round, dice_result, initial_celd_id,phase) VALUES
 (8,1,5,1,5),
 (8,1,11,1,4);
+
+
+INSERT INTO players(game_id,user_game_id) VALUES 
+(3,6),
+(3,7),
+(3,8);
+
+INSERT INTO user_statistics(id, xp, total_games, total_time, total_rounds,total_accusations, victories, afk_counter, longest_game_id, shortest_game_id, total_final_accusations, user_id) VALUES (1,100,2,20,20,20,2,0,1,2,2,1),
+(2,100,2,20,20,20,2,0,1,2,2,2), (3,100,2,20,20,20,2,0,1,2,2,3), (4,100,2,20,20,20,2,0,1,2,2,4);
 

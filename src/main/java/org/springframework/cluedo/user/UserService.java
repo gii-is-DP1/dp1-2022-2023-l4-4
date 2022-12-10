@@ -10,6 +10,8 @@ import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cluedo.achievement.Achievement;
+import org.springframework.cluedo.statistics.UserStatistics;
 import org.springframework.cluedo.card.Card;
 import org.springframework.cluedo.enumerates.SuspectType;
 import org.springframework.cluedo.game.Game;
@@ -60,6 +62,17 @@ public class UserService {
 	public UserDetails getUserDetails(){
 		return(UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
+
+	public List<Achievement> findAllMyAchievements(){
+		User loggedUser = getLoggedUser().get();
+		return userRepository.getAllMyAchievements(loggedUser.getId());
+	}
+
+	public UserStatistics getMyStatistics(){
+		User loggedUser = getLoggedUser().get();
+		return userRepository.findMyStatistics(loggedUser);
+	}
+
     public void initializePlayers(List<User> lobby, Game copy) { 
 		
 		List<SuspectType> suspects= new ArrayList<>(Arrays.asList(SuspectType.values()));
@@ -78,4 +91,5 @@ public class UserService {
 			copy.addPlayers(userGame);
 		}
     }
+
 }
