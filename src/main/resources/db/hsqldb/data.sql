@@ -1,17 +1,42 @@
 -- CREATE TABLE user_games(id integer, orderPlayer integer ,accusations_number integer ,is_afk boolean ,suspect varchar(60),user_id integer,game_id integer);
 
+
 INSERT INTO achievements(id, achievement_name, metric, badge, goal, description, experience, image_url) VALUES (1, 'Gamer', 0,0, 1, 'You`ve won a game.', 100, 'https://audrey-gaune-projets-web.ovh/wp-content/uploads/2016/11/Le-March%C3%A9-des-Consoles-de-Jeux-Vid%C3%A9o.jpg');
 
 
 
 INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (1,'1','1','1@gmail.com','https://www.adslzone.net/app/uploads-adslzone.net/2019/04/borrar-fondo-imagen.jpg',1,'admin');
 
-INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (2,'2','2','2@gmail.com',null,1,'user');
 
-INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (3,'manuel333','1','user2@gmail.com','https://www.adslzone.net/app/uploads-adslzone.net/2019/04/borrar-fondo-imagen.jpg',1,'user');
+INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES 
+(1,'1','1','1@gmail.com',null,1,'admin'),
+(2,'2','2','2@gmail.com',null,1,'user'),
+(3,'manuel333','1','user2@gmail.com',null,1,'user'),
+(4,'4','4','user4@gmail.com',null,1,'user');
 
-INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (4,'4','4','user4@gmail.com','https://www.adslzone.net/app/uploads-adslzone.net/2019/04/borrar-fondo-imagen.jpg',1,'user');
 
+INSERT INTO cards(id,card_name,card_type,image_url) VALUES
+(1,'KITCHEN','ROOM',null),
+(2,'SPA','ROOM',null),
+(3,'HALL','ROOM',null),
+(4,'OBSERVATORY','ROOM',null),
+(5,'GUESS_ROOM','ROOM',null),
+(6,'DINNING_HALL','ROOM',null),
+(7,'THEATRE','ROOM',null),
+(8,'LIVING_ROOM','ROOM',null),
+(9,'YARD','ROOM',null),
+(10,'GREEN','SUSPECT',null),
+(11,'RED','SUSPECT',null),
+(12,'PURPLE','SUSPECT',null),
+(13,'WHITE','SUSPECT',null),
+(14,'BLUE','SUSPECT',null),
+(15,'YELLOW','SUSPECT',null),
+(16,'CHANDELIER','WEAPON',null),
+(17,'KNIFE','WEAPON',null),
+(18,'ROPE','WEAPON',null),
+(19,'DUMBBELLS','WEAPON',null),
+(20,'GUN','WEAPON',null),
+(21,'POISON','WEAPON',null);
 
 INSERT INTO users_achievements(user_id, achievements_id) VALUES (1, 1);
 
@@ -701,6 +726,7 @@ INSERT INTO turns(user_game_id, round, dice_result, initial_celd_id,phase) VALUE
 (8,1,5,1,5),
 (8,1,11,1,4);
 
+
 INSERT INTO players(game_id,user_game_id) VALUES 
 (3,6),
 (3,7),
@@ -708,3 +734,4 @@ INSERT INTO players(game_id,user_game_id) VALUES
 
 INSERT INTO user_statistics(id, xp, total_games, total_time, total_rounds,total_accusations, victories, afk_counter, longest_game_id, shortest_game_id, total_final_accusations, user_id) VALUES (1,100,2,20,20,20,2,0,1,2,2,1),
 (2,100,2,20,20,20,2,0,1,2,2,2), (3,100,2,20,20,20,2,0,1,2,2,3), (4,100,2,20,20,20,2,0,1,2,2,4);
+

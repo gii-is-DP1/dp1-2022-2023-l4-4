@@ -43,6 +43,10 @@ public class CeldService {
         return connections;
     }
 
+    public Celd getCenter(){
+        return celdRepository.findCenter();
+    }
+
     public Set<Celd> getAllPossibleMovements(Integer pasos, Celd celd) {
         if (board==null){
             init();
