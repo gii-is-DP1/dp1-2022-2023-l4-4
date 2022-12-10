@@ -3,6 +3,7 @@ package org.springframework.cluedo.user;
 
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.cluedo.achievement.Achievement;
+import org.springframework.cluedo.statistics.UserStatistics;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -27,6 +28,9 @@ Optional<User> findByUsername(@Param("username") String username);
 
 @Query("SELECT u.achievements FROM User u WHERE u.id = :userId")
 List<Achievement> getAllMyAchievements(@Param("userId") Integer userId);
+
+@Query("SELECT u FROM UserStatistics u WHERE u.user = :user")
+UserStatistics findMyStatistics(@Param("user") User user);
 }
 
 

@@ -24,6 +24,8 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.achievement.Achievement;
 import org.springframework.cluedo.exceptions.DataNotFound;
+import org.springframework.cluedo.statistics.UserStatistics;
+import org.springframework.cluedo.statistics.UserStatisticsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -43,11 +45,14 @@ public class UserController {
 	private static final String VIEWS_USER_LIST = "users/userList";
 	private final String ACHIEVEMENTS_LISTING = "achievements/myAchievements";
   	private static final String VIEWS_USER_CREATE_OR_UPDATE_FORM = "users/createOrUpdateUserForm";
+	private final String STATISTICS = "users/statistics";
 	
 	
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private UserStatisticsService statisticsService;
 
 	@Autowired
     public UserController(UserService userService) {
@@ -95,7 +100,12 @@ public class UserController {
 			return VIEWS_USER_CREATE_OR_UPDATE_FORM;
 		}
 		else {
+			user.setAuthority("user");
+			user.setEnabled(1);
 			this.userService.saveUser(user);
+			UserStatistics statistics = new UserStatistics();
+			statistics.setUser(user);
+			this.statisticsService.save(statistics);
 			return "redirect:/";
 		}
 	}
@@ -163,5 +173,13 @@ public class UserController {
 		List<Achievement> achievements = userService.findAllMyAchievements();
 		result.addObject("achievements", achievements);
 		return result; 
+	}
+
+	@GetMapping("/stats")
+	public ModelAndView getMyStatistics(){
+		ModelAndView result = new ModelAndView(STATISTICS);
+		UserStatistics statistics = userService.getMyStatistics();
+		result.addObject("stats", statistics);
+		return result;
 	}
 }
