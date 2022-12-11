@@ -48,7 +48,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/achievements/**").authenticated()
 				.antMatchers("/myAchievements/**").authenticated()
 				.antMatchers("/celd/**").permitAll()
-				.antMatchers("/stats/**").permitAll()
+				.antMatchers("/stats/**").authenticated()
+				.antMatchers("/global").authenticated()
 				.anyRequest().denyAll()
 				
 				.and()
