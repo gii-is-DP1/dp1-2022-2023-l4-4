@@ -9,7 +9,6 @@ INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES
 
 
 INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES 
-(1,'1','1','1@gmail.com',null,1,'admin'),
 (2,'2','2','2@gmail.com',null,1,'user'),
 (3,'manuel333','1','user2@gmail.com',null,1,'user'),
 (4,'4','4','user4@gmail.com',null,1,'user');

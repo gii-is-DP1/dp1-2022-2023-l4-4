@@ -45,6 +45,18 @@
 						</li>
 					</ul>
 				</petclinic:menuItem>
+				<petclinic:menuItem active="${name eq 'stadistics'}" url="/stats"
+					title="Statistics" dropdown="${true}">
+					<ul class="dropdown-menu">
+						<li>
+							<a href="<c:url value="/stats"/> ">My statistics</a>
+						</li>
+						<li class="divider"/>
+						<li>
+							<a href="<c:url value="/global" />">Global stadistics<span class="glyphicon glyphicon-certificate" aria-hidden="true"></span></a>
+						</li>
+					</ul>
+				</petclinic:menuItem>
 				<sec:authorize access="hasAuthority('admin')">
 					<petclinic:menuItem active="${name eq 'Admin'}" url="/admin"
 						title="Admin">
