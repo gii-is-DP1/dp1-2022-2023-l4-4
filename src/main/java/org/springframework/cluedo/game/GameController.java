@@ -67,7 +67,7 @@ public class GameController {
     public ModelAndView getAllPastGames(){
         ModelAndView result = new ModelAndView(GAME_PAST_LISTING);
         result.addObject("games", gameService.getAllFinishedGames());
-        result.addObject("admin", userService.getUserDetails().getAuthorities().toArray()[0].equals("admin"));
+        result.addObject("admin", true);
         return result;
     }
     //User
