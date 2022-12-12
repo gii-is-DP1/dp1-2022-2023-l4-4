@@ -47,7 +47,7 @@ public class GameController {
     private final TurnService turnService;
     
     @Autowired
-    public GameController(GameService gameService, TurnService turnService, UserService userService, CeldService celdService){
+    public GameController(GameService gameService, TurnService turnService, UserService userService){
         this.gameService=gameService;
         this.turnService = turnService;
         this.userService=userService;
@@ -100,7 +100,7 @@ public class GameController {
     //H1
     @Transactional(readOnly = true)
     @GetMapping("/new")
-    public ModelAndView createGame(){
+    public ModelAndView initNewGame(){
         User user= userService.getLoggedUser().get();
         Game game = gameService.getMyNotFinishedGame(user);
         if(game != null) {
