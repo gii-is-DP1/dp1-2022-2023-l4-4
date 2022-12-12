@@ -98,7 +98,7 @@ public class GameControllerTest {
 
         lobbyGame.setId(2);
         lobbyGame.setHost(user2);
-        lobbyGame.setLobbySize(5);
+        lobbyGame.setLobbySize(3);
         lobbyGame.setLobby(List.of(user2,user3));
         lobbyGame.setStatus(Status.LOBBY);
         
@@ -204,12 +204,35 @@ public class GameControllerTest {
     public void testGetLobby() throws Exception{
         when(userService.getLoggedUser()).thenReturn(Optional.of(user2));
         when (gameService.getGameById(any(Integer.class))).thenReturn(lobbyGame);
-        mockMvc.perform(post("/"+lobbyGame.getId()+"/new")).
+        mockMvc.perform(get("/games/"+lobbyGame.getId()+"/lobby")).
                 andExpect(status().isOk()).
-                andExpect(view().name("games/createNewGame")).
-                andExpect(model().attributeExists("privateList","nPlayers","game","user"));
+                andExpect(view().name("games/lobby")).
+                andExpect(model().attributeExists("lobby"));
+        
+        when(userService.getLoggedUser()).thenReturn(Optional.of(user1));
+        when (gameService.getGameById(any(Integer.class))).thenReturn(lobbyGame);
+        mockMvc.perform(get("/games/"+lobbyGame.getId()+"/lobby")).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/games"));
+
+        when(userService.getLoggedUser()).thenReturn(Optional.of(user3));
+        when (gameService.getGameById(any(Integer.class))).thenReturn(lobbyGame);
+        mockMvc.perform(get("/games/"+lobbyGame.getId()+"/lobby")).
+                andExpect(status().isOk()).
+                andExpect(view().name("games/lobbyPlayer")).
+                andExpect(model().attributeExists("lobby"));
     }
 
-
+    @WithMockUser
+    @Test
+    public void testLeaveGame() throws Exception{
+        when(userService.getLoggedUser()).thenReturn(Optional.of(user2));
+        when (gameService.getGameById(any(Integer.class))).thenReturn(lobbyGame);
+        mockMvc.perform(get("/games/"+lobbyGame.getId()+"/lobby")).
+                andExpect(status().isOk()).
+                andExpect(view().name("games/lobby")).
+                andExpect(model().attributeExists("lobby"));
+        
+    }
 
 }
