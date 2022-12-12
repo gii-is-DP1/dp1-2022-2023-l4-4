@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.boardGraph.BoardGraph;
+import org.springframework.cluedo.enumerates.CeldType;
 import org.springframework.cluedo.exceptions.DataNotFound;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +26,9 @@ public class CeldService {
         return celdRepository.findAll();
     }
 
-    public BoardGraph init() {
-        return new BoardGraph(getAllCelds(), getAllPairs());
+    public void init() {
+        System.out.println("ESTO ES DEL INIT-------------->"+getAllCelds());
+        board = new BoardGraph(getAllCelds(), getAllPairs());
     }
 
     public List<List<Celd>> getAllPairs() {
@@ -51,6 +53,9 @@ public class CeldService {
         if (board==null){
             init();
         }
+        System.out.println("LOS VÉRTICES-------->"+board.getAllVertex());
+        System.out.println("LAS ARISTAS-------->"+board.getAllEdges());
+        System.out.println("CELDA----------->"+celd);
         return board.possibleMovements(pasos, celd);
     }
 
@@ -61,5 +66,9 @@ public class CeldService {
         }else{
             throw new DataNotFound();
         }
+    }
+
+    public Celd getByCeldType(CeldType celdType){
+        return celdRepository.findByCeldType(celdType);
     }
 }

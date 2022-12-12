@@ -38,12 +38,16 @@ public class TurnService {
             turn.setInitialCeld(celdService.getCenter());
         } 
         turn.setPhase(Phase.DICE);
-        save(turn);
+        saveTurn(turn);
         return turn;
     }
    
     public Optional<Turn> getTurn(UserGame userGame,Integer round){
         return turnRepository.getTurn(userGame.getId(),round);
+    }
+
+    public Optional<Turn> getActualTurn(Game game){
+        return getTurn(game.getActualPlayer(),game.getRound());
     }
 
     public Turn throwDice(Game game) throws WrongPhaseException,CorruptGame{
@@ -56,7 +60,7 @@ public class TurnService {
         result +=ThreadLocalRandom.current().nextInt(6)+1;
         turn.setDiceResult(result);
         turn.setPhase(Phase.MOVEMENT);
-        return save(turn);
+        return saveTurn(turn);
     } 
 
     public Set<Celd> whereCanIMove(Game game) throws CorruptGame{
@@ -64,28 +68,30 @@ public class TurnService {
             if(nrTurn.isPresent()){
                 Turn turn=nrTurn.get();
                 return celdService.getAllPossibleMovements(turn.getDiceResult(), turn.getInitialCeld());
-            }else{
+            }else{ 
                 throw new CorruptGame();
             }
     }
-
+ 
     public Turn moveCharacter(Turn turn,Celd finalCeld) throws WrongPhaseException{
         if(turn.getPhase()!=Phase.MOVEMENT){
             throw new WrongPhaseException();
         }
         //celdController.movement()
         turn.setFinalCeld(finalCeld);
-        turn.setPhase(Phase.ACUSATION);
+        turn.setPhase(Phase.ACCUSATION);
         return (turn);
     }
 
-    public Turn makeAccusation(Turn turn) throws WrongPhaseException{
-        if(turn.getPhase()!=Phase.ACUSATION){
-            throw new WrongPhaseException();
+    public Turn makeAccusation(Game game) throws WrongPhaseException{
+        Optional<Turn> nrTurn=getTurn(game.getActualPlayer(), game.getRound());
+        if(!nrTurn.isPresent() || nrTurn.get().getPhase()!=Phase.ACCUSATION){
+                throw new WrongPhaseException();
         }
+        Turn turn = nrTurn.get();
         //accusationController.makeAccusation();
         turn.setPhase(Phase.FINAL);
-        return save(turn);
+        return saveTurn(turn);
     }
 
     public Turn makeFinalDecision(Turn turn,boolean finalAccusation) throws WrongPhaseException{
@@ -96,11 +102,11 @@ public class TurnService {
             accusationController.makeFinalAcusation();
         }*/ 
         turn.setPhase(Phase.FINISHED);
-        return save(turn);
+        return saveTurn(turn);
     }
 
     @Transactional
-    public Turn save(Turn turn){
+    public Turn saveTurn(Turn turn){
         return turnRepository.save(turn);
-    }
+    } 
 }

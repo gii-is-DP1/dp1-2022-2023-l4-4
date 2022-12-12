@@ -27,11 +27,6 @@
             </tr>
         </c:forEach>
     </table>
-    <form:form  class="form-horizontal">
-        <div class="form-group">
-            <button class="btn btn-default" type="submit">Start Game</button>
-        </div>
-    </form:form>
     <a  href="/games/${lobby.id}/leave" >
         <button class="btn btn-default">
             leave lobby

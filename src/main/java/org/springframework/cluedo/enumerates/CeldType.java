@@ -8,10 +8,10 @@ public enum CeldType {
     SPA,
     HALL,
     OBSERVATORY,
-    GUEST_ROOM,
-    DINNING_HALL,
+    GUESTROOM,
+    DINNINGHALL,
     THEATRE,
-    LIVING_ROOM,
+    LIVINGROOM,
     YARD,
     CENTER
     

@@ -31,6 +31,7 @@ List<Achievement> getAllMyAchievements(@Param("userId") Integer userId);
 
 @Query("SELECT u FROM UserStatistics u WHERE u.user = :user")
 UserStatistics findMyStatistics(@Param("user") User user);
+
 }
 
 
