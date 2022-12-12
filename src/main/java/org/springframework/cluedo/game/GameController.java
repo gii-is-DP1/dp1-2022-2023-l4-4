@@ -173,10 +173,12 @@ public class GameController {
             return "redirect:/games";
         }
         User user= userService.getLoggedUser().get();
-        if(game.getStatus().equals(Status.LOBBY)) {
-            gameService.deleteUserFromLobby(user, game);
-        } else if (game.getStatus().equals(Status.IN_PROGRESS)) {
-            gameService.leaveGameInProgress(user,game);
+        if(game.getLobby().contains(user)){
+            if(game.getStatus().equals(Status.LOBBY)) {
+                gameService.deleteUserFromLobby(user, game);
+            } else if (game.getStatus().equals(Status.IN_PROGRESS)) {
+                gameService.leaveGameInProgress(user,game);
+            }
         }
         return "redirect:/games";
     }

@@ -68,6 +68,7 @@
                 <td>
                     <c:forEach items="${game.lobby}" var="player">
                         <c:out value="${player.username}"/>
+                        <br/>
                     </c:forEach>
                 </td>
                 <td>
