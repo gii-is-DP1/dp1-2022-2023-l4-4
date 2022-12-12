@@ -6,14 +6,13 @@ INSERT INTO achievements(id, achievement_name, metric, badge, goal, description,
 
 
 
-INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (1,'1','1','1@gmail.com','https://www.adslzone.net/app/uploads-adslzone.net/2019/04/borrar-fondo-imagen.jpg',1,'admin');
 
 
-INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES 
-(2,'2','2','2@gmail.com',null,1,'user'),
-(3,'manuel333','1','user2@gmail.com',null,1,'user'),
-(4,'4','4','user4@gmail.com',null,1,'user');
-
+INSERT INTO users(id,username,password,email,image_url,enabled,authority,tag) VALUES 
+(1,'1','1','1@gmail.com','https://www.adslzone.net/app/uploads-adslzone.net/2019/04/borrar-fondo-imagen.jpg',1,'admin','DFSF'),
+(2,'2','2','2@gmail.com',null,1,'user','wwwww'),
+(3,'manuel333','1','user2@gmail.com',null,1,'user','sssss'),
+(4,'4','4','user4@gmail.com',null,1,'user','rrrrr');
 
 INSERT INTO cards(id,card_name,card_type,image_url) VALUES
 (1,'KITCHEN','ROOM',null),
@@ -39,13 +38,6 @@ INSERT INTO cards(id,card_name,card_type,image_url) VALUES
 (21,'POISON','WEAPON',null);
 
 INSERT INTO users_achievements(user_id, achievements_id) VALUES (1, 1);
-INSERT INTO users(id,username,password,email,image_url,enabled,authority,tag) VALUES (1,'1','1','1@gmail.com',null,1,'admin','wwww');
--- One owner user, named owner1 with passwor 0wn3r
-INSERT INTO users(id,username,password,email,image_url,enabled,authority,tag) VALUES (2,'2','2','2@gmail.com',null,1,'user','eeee');
-
--- One vet user, named vet1 with passwor v3t
-INSERT INTO users(id,username,password,email,image_url,enabled,authority,tag) VALUES (3,'3','3','3@gmail.com',null,1,'user','rrrr');
-
 INSERT INTO user_friends(id1,id2) VALUES (1,2);
 INSERT INTO user_friends(id1,id2) VALUES (1,3);
 
@@ -726,13 +718,5 @@ INSERT INTO lobbies(game_id,user_id) VALUES
 (3,2),
 (3,3);
 
-
-
-INSERT INTO players(game_id,user_game_id) VALUES 
-(3,6),
-(3,7),
-(3,8);
-
 INSERT INTO user_statistics(id, xp, total_games, total_time, total_rounds,total_accusations, victories, afk_counter, longest_game_id, shortest_game_id, total_final_accusations, user_id) VALUES (1,100,2,20,20,20,2,0,1,2,2,1),
 (2,100,2,20,20,20,2,0,1,2,2,2), (3,100,2,20,20,20,2,0,1,2,2,3), (4,100,2,20,20,20,2,0,1,2,2,4);
-

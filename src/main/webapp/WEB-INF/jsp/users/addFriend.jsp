@@ -8,29 +8,19 @@
 	uri="http://www.springframework.org/security/tags"%>
 <!--  >%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%-->
 
-<petclinic:layout pageName="users">
+<petclinic:layout pageName="addFriends">
 
     <h2>Find friends</h2>
 
     
-    <form:form modelAttribute="user" action="/users" method="get" class="form-horizontal"
-               id="search-owner-form">
-        <div class="form-group">
-            <div class="control-group" id="tag">
-                <label class="col-sm-2 control-label">Tag </label>
-                <div class="col-sm-10">
-                    <form:input class="form-control" path="tag" size="30" maxlength="10"/>
-                    <span class="help-inline"><form:errors path="*"/></span>
-                </div>
+    <form:form modelAttribute="TagForm" class="form-horizontal">
+            <div class="form-group has-feedback">
+                <cluedo:inputField label="Tag" name="tag" />
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-default">Add Friend</button>
+            <div class="form-group">
+                <button class="btn btn-default" type="submit">Add friend</button>
             </div>
-        </div>
-
-    </form:form>
+        </form:form>
 
     <br/> 
 	

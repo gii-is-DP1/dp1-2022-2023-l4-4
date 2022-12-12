@@ -92,13 +92,15 @@ public class UserController {
 	}
 
 	@Transactional(readOnly=true)
-	@GetMapping(value="/users/friends/add")
+	@GetMapping(value="/users/{userId}/friends/add")
 	public ModelAndView initAddFriendForm() {
-		ModelAndView mav = new ModelAndView(ADD_FRIENDS_FORM);
+		ModelAndView mav = new ModelAndView("users/addFriend");
+		mav.addObject("TagForm", new TagForm());
 		return mav;
 	}
 
-	@PostMapping(value = "/users/friends/add")
+	@Transactional
+	@PostMapping(value = "/users/{userId}/friends/add")
 	public ModelAndView processAddFriendForm(String tag, Map<String, Object> model) {
 		if(tag==null){
 			ModelAndView result= new ModelAndView(ADD_FRIENDS_FORM);

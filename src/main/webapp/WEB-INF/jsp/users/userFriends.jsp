@@ -8,7 +8,7 @@
 
 <petclinic:layout pageName="List of friends">
     <h2>List of friends</h2> 
-    <a href="/users/friends/add"> <button>Add friends</button> </a>
+    <a href="/users/{userId}/friends/add"> <button>Add friends</button> </a>
 
     <table id="gameTable" class="table table-striped">
         <thead>
