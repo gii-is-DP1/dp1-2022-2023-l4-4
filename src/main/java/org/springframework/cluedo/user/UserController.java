@@ -15,9 +15,11 @@
  */
 package org.springframework.cluedo.user;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.validation.Valid;
 
@@ -30,6 +32,7 @@ import org.springframework.cluedo.statistics.GlobalStatistics;
 import org.springframework.cluedo.statistics.UserStatistics;
 import org.springframework.cluedo.statistics.UserStatisticsService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,10 +51,11 @@ public class UserController {
 	private static final String VIEWS_USER_LIST = "users/userList";
 	private final String ACHIEVEMENTS_LISTING = "achievements/myAchievements";
   	private static final String VIEWS_USER_CREATE_OR_UPDATE_FORM = "users/createOrUpdateUserForm";
+
 	private static final String GLOBAL_STATISTICS = "users/globalStatistics";
 	private final String STATISTICS = "users/statistics";
-	
-	
+	private static final String ADD_FRIENDS_FORM = "users/addFriend";
+
 	@Autowired
 	private UserService userService;
 	
@@ -86,7 +90,54 @@ public class UserController {
 		}
 		throw new DataNotFound();
 	}
+
 	@Transactional(readOnly=true)
+	@GetMapping(value="/users/friends/add")
+	public ModelAndView initAddFriendForm() {
+		ModelAndView mav = new ModelAndView(ADD_FRIENDS_FORM);
+		return mav;
+	}
+
+	@PostMapping(value = "/users/friends/add")
+	public ModelAndView processAddFriendForm(String tag, Map<String, Object> model) {
+		if(tag==null){
+			ModelAndView result= new ModelAndView(ADD_FRIENDS_FORM);
+			return result;
+		}else{
+			Optional<User> userByTag = this.userService.findUserByTag(tag);
+			if (userByTag.isEmpty()) {
+				ModelAndView result= new ModelAndView(ADD_FRIENDS_FORM);
+				return result;
+			}
+			else {
+				Optional<User> nrLoggedUser = this.userService.getLoggedUser();
+				User loggedUser = nrLoggedUser.get();
+				loggedUser.addFriend(userByTag.get());
+				userService.saveUser(loggedUser);
+				ModelAndView result= new ModelAndView("users/userFriends");
+				return result;
+			}
+		}
+
+		
+	} 
+
+	@GetMapping(value="/users/{userId}/friends")
+	public ModelAndView showUserFriends(@PathVariable("userId") int userId) throws DataNotFound{
+		ModelAndView mav = new ModelAndView("users/userFriends");
+		List<User> nrUser = userService.findUserFriends(userId);
+		if(nrUser.size()>0){
+			mav.addObject("user", nrUser);
+		return mav;
+		}
+		if(nrUser.size()==0){
+			mav.addObject("user", nrUser);	
+		return mav;
+
+		}
+		throw new DataNotFound();
+	}
+
 	@GetMapping(value="/users/{userId}/edit")
 	public String initUpdateUserForm(@PathVariable("userId") int userId,Model model) throws DataNotFound{
 		Optional<User> nrUser = this.userService.findUserById(userId);
@@ -103,6 +154,7 @@ public class UserController {
 		model.put("user", user);
 		return VIEWS_USER_CREATE_OR_UPDATE_FORM;
 	}
+  
 	@Transactional
 	@PostMapping(value = "/users/new")
 	public String processCreationForm(@Valid User user, BindingResult result) {
@@ -112,6 +164,9 @@ public class UserController {
 		else {
 			user.setAuthority("user");
 			user.setEnabled(1);
+			List emptyFriendList = new ArrayList();
+			user.setFriends(emptyFriendList);
+			user.setTag(generarTag());
 			this.userService.saveUser(user);
 			UserStatistics statistics = new UserStatistics();
 			statistics.setUser(user);
@@ -140,6 +195,7 @@ public class UserController {
 		this.userService.deleteUser(userId);
 		return "redirect:/users/";
 	}
+  
 	@Transactional(readOnly=true)
 	@GetMapping(value = "/profile")
 	public ModelAndView showProfile(Map<String, Object> model) throws DataNotFound{
@@ -205,4 +261,30 @@ public class UserController {
 		result.addObject("stats", stats);
 		return result;
 	}
+
+
+	public static String generarTag(){
+		//La variable palabra almacena el resultado final 
+			String palabra = "#"; 
+		//La variable caracteres es un número aleatorio entre 2 y 20 que define la 
+		//longitud de la palabra. 
+			int caracteres = 4; 
+		//Con un bucle for, que recorreremos las veces que tengamos almacenadas en la 
+		//variable caracteres, que será como mínimo 2, iremos concatenando los 
+		//caracteres aleatorios. 
+				 for (int i=0; i<caracteres; i++){ 
+		//Para generar caracteres aleatorios hay que recurrir al valor numérico de estos 
+		//caracteres en el alfabeto Ascii. En este programa vamos a generar palabras con 
+		//letras minúsculas, que se encuentran en el rango 65-90. El método floor 
+		//devuelve el máximo entero. 
+				 int codigoAscii = (int)Math.floor(Math.random()*(90 -
+				 65)+65); 
+		//para pasar el código a carácter basta con hacer un cast a char 
+				 palabra = palabra + (char)codigoAscii; 
+				 } 
+				 String numero = (ThreadLocalRandom.current().nextInt(8)+1)+"";
+				 return palabra + numero+numero+numero+numero ; 
+			 } 
+
+
 }

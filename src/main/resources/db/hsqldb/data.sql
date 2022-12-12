@@ -1,6 +1,7 @@
 -- CREATE TABLE user_games(id integer, orderPlayer integer ,accusations_number integer ,is_afk boolean ,suspect varchar(60),user_id integer,game_id integer);
 
 
+
 INSERT INTO achievements(id, achievement_name, metric, badge, goal, description, experience, image_url) VALUES (1, 'Gamer', 0,0, 1, 'You`ve won a game.', 100, 'https://audrey-gaune-projets-web.ovh/wp-content/uploads/2016/11/Le-March%C3%A9-des-Consoles-de-Jeux-Vid%C3%A9o.jpg');
 
 
@@ -38,6 +39,15 @@ INSERT INTO cards(id,card_name,card_type,image_url) VALUES
 (21,'POISON','WEAPON',null);
 
 INSERT INTO users_achievements(user_id, achievements_id) VALUES (1, 1);
+INSERT INTO users(id,username,password,email,image_url,enabled,authority,tag) VALUES (1,'1','1','1@gmail.com',null,1,'admin','wwww');
+-- One owner user, named owner1 with passwor 0wn3r
+INSERT INTO users(id,username,password,email,image_url,enabled,authority,tag) VALUES (2,'2','2','2@gmail.com',null,1,'user','eeee');
+
+-- One vet user, named vet1 with passwor v3t
+INSERT INTO users(id,username,password,email,image_url,enabled,authority,tag) VALUES (3,'3','3','3@gmail.com',null,1,'user','rrrr');
+
+INSERT INTO user_friends(id1,id2) VALUES (1,2);
+INSERT INTO user_friends(id1,id2) VALUES (1,3);
 
 INSERT INTO celds(id,celd_type,position) VALUES  
 (1, 'CORRIDOR',7), 

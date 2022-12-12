@@ -50,6 +50,10 @@ public class UserService {
 	public Optional<User> findUserById(int id) {
 		return userRepository.findById(id);
 	}
+
+	public Optional<User> findUserByTag(String tag) {
+		return userRepository.findByTag(tag);
+	}
 	public void deleteUser(int id){
 		userRepository.deleteById(id);
 	}
@@ -57,6 +61,10 @@ public class UserService {
 	public Optional<User> findUserByUsername(String username) {
 		return userRepository.findByUsername(username);
 	}
+	public List<User> findUserFriends(Integer id) {
+		return userRepository.findFriendsById(id);
+	}
+
 
 	public Optional<User> getLoggedUser(){
 		UserDetails userDetails=(UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();

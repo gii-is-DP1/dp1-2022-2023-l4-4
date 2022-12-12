@@ -6,6 +6,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+
+import java.util.Set;
+
+
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -37,13 +43,34 @@ public class User extends BaseEntity{
 	@Email
 	private String email;
 
+
 	@Column(name="image_url")
 	private String imageurl;
+
+	@Column(name="tag",unique=true)
+	@NotEmpty
+	private String tag;
+
+	@ManyToMany
+	@JoinTable(name="user_friends",joinColumns = @JoinColumn(
+       name = "id1", referencedColumnName = "id"),
+    inverseJoinColumns = @JoinColumn(
+       name = "id2", referencedColumnName = "id"))
+    private List<User> friends;
+
+
 
 	private Integer enabled;
 	
 	private String authority;
 
+
 	@ManyToMany
 	private List<Achievement> achievements;
+
+
+	public void addFriend(User friend){
+		this.friends.add(friend);
+	}
+	
 }
