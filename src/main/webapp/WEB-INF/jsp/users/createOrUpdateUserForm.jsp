@@ -23,9 +23,16 @@
             
         </div>
         <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <button class="btn btn-default" type="submit">Update User</button>
-            </div>
+            <c:if test="${!user['new']}">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button class="btn btn-default" type="submit" formaction="/users/${user.id}/edit">Update User</button>
+                </div>
+            </c:if>
+            <c:if test="${user['new']}">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button class="btn btn-default" type="submit" formaction="/users/new">Create User</button>
+                </div>
+            </c:if>
         </div>
     </form:form>
 </cluedo:layout>

@@ -71,7 +71,6 @@ public class GameController {
         return result;
     }
     //User
-
     //H10
     @Transactional(readOnly = true)
     @GetMapping()
