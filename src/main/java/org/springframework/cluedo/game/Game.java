@@ -10,6 +10,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -18,7 +19,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.cluedo.model.BaseEntity;
 import org.springframework.cluedo.user.User;
 import org.springframework.cluedo.user.UserGame;
-import org.springframework.cluedo.accusation.Accusation;
+import org.springframework.cluedo.accusation.CrimeScene;
 import org.springframework.cluedo.enumerates.Status;
 
 import lombok.Getter;
@@ -57,7 +58,7 @@ public class Game extends BaseEntity{
     @JoinTable(name="lobbies",joinColumns = @JoinColumn(
         name = "game_id", referencedColumnName = "id"),
      inverseJoinColumns = @JoinColumn(
-        name = "user_id", referencedColumnName = "id"))
+        name = "user_id", referencedColumnName = "id"),uniqueConstraints = @UniqueConstraint(columnNames={"game_id", "user_id"} ))
     private List<User> lobby;
 
     @ManyToMany
@@ -69,7 +70,7 @@ public class Game extends BaseEntity{
     
     @ManyToOne
     @JoinColumn(name="crime_scene")
-    private Accusation crimeScene;
+    private CrimeScene crimeScene;
 
     @ManyToOne
     @JoinColumn(name="actual_Player")
@@ -77,5 +78,21 @@ public class Game extends BaseEntity{
     
     public Boolean getIsPrivate(){
         return isPrivate;
+    }
+
+    public void addPlayers(List<UserGame> newPlayers){
+        this.players.addAll(newPlayers);
+    }
+
+    public void addPlayers(UserGame newPlayer){
+        this.players.add(newPlayer);
+    }
+
+    public void addLobbyUsers(List<User> lobbyUsers){
+        this.lobby.addAll(lobbyUsers);
+    }
+
+    public void addLobbyUsers(User lobbyUser){
+        this.lobby.add(lobbyUser);
     }
 }

@@ -26,7 +26,7 @@ public class BoardGraph {
 
     public Set<Celd> possibleMovements(Integer distancia, Celd celd) throws NullPointerException{
         Set<Celd> anteriores = new HashSet<Celd>();
-        Optional<Celd> celda=this.getAllVertex().stream().filter(x->x.getId()==celd.getId()).findFirst();
+        Optional<Celd> celda=this.getAllVertex().stream().filter(x->x.getId().equals(celd.getId())).findFirst();
         if(!celda.isPresent()) {
             throw new NullPointerException("Celd has not been found");
         }

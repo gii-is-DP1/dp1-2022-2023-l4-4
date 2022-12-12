@@ -2,7 +2,6 @@ package org.springframework.cluedo.user;
 
 
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -30,12 +29,12 @@ public class UserServiceTest {
     UserRepository repo;
 
     User user;
-    
+    List<User> users = new ArrayList<>();
 
     @BeforeEach
     public void config(){
         
-        List<User> users = new ArrayList<>();
+        
         user=new User();
         user.setUsername("user1");
         user.setPassword("user1");
@@ -56,45 +55,43 @@ public class UserServiceTest {
         user.setEnabled(1);
         users.add(user);
 
-        when(repo.findAll()).thenReturn(users);
-        when(repo.findById(any(Integer.class))).thenReturn(Optional.of(user));
-        when(repo.findByUsername(any(String.class))).thenReturn(Optional.of(user));
+        
     }
-
+    
     @Test
     void getAllUsers() {
+        when(repo.findAll()).thenReturn(users);
         List<User> allUsers=repo.findAll();
         assertFalse(allUsers.isEmpty());
-        assertTrue(allUsers.size()==1);
+        assertTrue(allUsers.size()==2);
     }
 
 
     @Test
-    void findUserById(int id) {
+    void findUserById() {
+        when(repo.findById(any(Integer.class))).thenReturn(Optional.of(user));
+   
         Optional<User> user = repo.findById(1);
         assertNotNull(user);
         assertTrue(user.get().getUsername().equals("user2"));
         assertTrue(user.get().getPassword().equals("user2"));
         assertTrue(user.get().getEmail().equals("user2@gmail.com"));
-        assertTrue(user.get().getAuthority().equals("user"));
+        assertTrue(user.get().getAuthority().equals("admin"));
         assertFalse(user.get().getImageurl().isEmpty());
     }
 
     @Test
-    void findUserByUsername(String username) {
+    void findUserByUsername() {
+        when(repo.findByUsername(any(String.class))).thenReturn(Optional.of(user));
         Optional<User> user = repo.findByUsername("user2");
         assertNotNull(user);
         assertTrue(user.get().getUsername().equals("user2"));
         assertTrue(user.get().getPassword().equals("user2"));
         assertTrue(user.get().getEmail().equals("user2@gmail.com"));
-        assertTrue(user.get().getAuthority().equals("user"));
+        assertTrue(user.get().getAuthority().equals("admin"));
         assertFalse(user.get().getImageurl().isEmpty());
     }
     
-    @Test
-    void getLoggedUser() {
-        
-    }
 
 }
 
