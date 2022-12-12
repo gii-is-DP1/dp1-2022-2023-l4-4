@@ -20,6 +20,8 @@ Optional<User> findById(Integer id);
 
 void deleteById(Integer id);
 
+Optional<User> findByTag(String tag);
+
 @Query("SELECT u.friends FROM User u where u.id=:id ")
 List<User> findFriendsById(@Param("id")Integer id);
 

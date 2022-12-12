@@ -58,5 +58,9 @@ public class User extends BaseEntity{
 	
 	private String authority;
 
+
+	public void addFriend(User friend){
+		this.friends.add(friend);
+	}
 	
 }

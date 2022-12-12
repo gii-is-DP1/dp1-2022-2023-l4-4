@@ -7,7 +7,8 @@
 
 
 <petclinic:layout pageName="List of friends">
-    <h2>List of friends</h2>
+    <h2>List of friends</h2> 
+    <a href="/users/friends/add"> <button>Add friends</button> </a>
 
     <table id="gameTable" class="table table-striped">
         <thead>
@@ -19,9 +20,11 @@
         <tbody>
         <c:forEach items="${user}" var="user">
             <tr>
+
                 <td>
                     <c:out value="${user.username}"/>
                 </td>
+               
             </tr>
         </c:forEach>
         </tbody>

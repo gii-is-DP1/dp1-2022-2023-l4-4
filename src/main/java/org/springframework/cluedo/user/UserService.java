@@ -35,6 +35,10 @@ public class UserService {
 	public Optional<User> findUserById(int id) {
 		return userRepository.findById(id);
 	}
+
+	public Optional<User> findUserByTag(String tag) {
+		return userRepository.findByTag(tag);
+	}
 	public void deleteUser(int id){
 		userRepository.deleteById(id);
 	}
