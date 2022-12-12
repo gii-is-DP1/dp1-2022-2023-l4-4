@@ -278,7 +278,7 @@ INSERT INTO celds(id,celd_type,position) VALUES
 (236, 'THEATRE',59), 
 (237, 'LIVINGROOM',65), 
 (238, 'OBSERVATORY',71), 
-(239, 'YARD ',291), 
+(239, 'YARD',291), 
 (240, 'HALL',310), 
 (241, 'KITCHEN',555), 
 (242, 'DINNINGHALL',541), 
@@ -715,13 +715,6 @@ INSERT INTO lobbies(game_id,user_id) VALUES
 (3,1),
 (3,2),
 (3,3);
-
-
-
-INSERT INTO players(game_id,user_game_id) VALUES 
-(3,6),
-(3,7),
-(3,8);
 
 INSERT INTO user_statistics(id, xp, total_games, total_time, total_rounds,total_accusations, victories, afk_counter, longest_game_id, shortest_game_id, total_final_accusations, user_id) VALUES (1,100,2,20,20,20,2,0,1,2,2,1),
 (2,100,2,20,20,20,2,0,1,2,2,2), (3,100,2,20,20,20,2,0,1,2,2,3), (4,100,2,20,20,20,2,0,1,2,2,4);

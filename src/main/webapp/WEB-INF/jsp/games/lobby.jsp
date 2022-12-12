@@ -30,11 +30,13 @@
     <form:form  class="form-horizontal">
         <div class="form-group">
             <button class="btn btn-default" type="submit">Start Game</button>
+        
+            <a  href="/games/${lobby.id}/leave" >
+                <button class="btn btn-default">
+                    Leave lobby
+                </button>
+            </a>
         </div>
     </form:form>
-    <a  href="/games/${lobby.id}/leave" >
-        <button class="btn btn-default">
-            leave lobby
-        </button>
-    </a>
+    
 </cluedo:layout>
