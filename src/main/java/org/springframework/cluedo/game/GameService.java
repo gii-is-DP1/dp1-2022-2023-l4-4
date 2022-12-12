@@ -65,7 +65,7 @@ public class GameService {
 	public List<Game> getMyFinishedGames(User user) {
 		return gameRepository.findMyFinishedGames(user);
 	}
-
+	
 	public void initGame(Game copy){
         copy.setStatus(Status.IN_PROGRESS);
         copy.setDuration(Duration.ofMinutes(0));
