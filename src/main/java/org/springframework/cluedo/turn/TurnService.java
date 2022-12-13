@@ -33,6 +33,7 @@ public class TurnService {
         turn.setRound(round);
         Optional<Turn> previousTurn = turnRepository.getTurn(userGame.getId(),round-1);
         if(previousTurn.isPresent()){
+            
             turn.setInitialCeld(previousTurn.get().getFinalCeld());
         } else{
             turn.setInitialCeld(celdService.getCenter());
@@ -50,8 +51,8 @@ public class TurnService {
         return getTurn(game.getActualPlayer(),game.getRound());
     }
 
-    public Turn throwDice(Game game) throws WrongPhaseException,CorruptGame{
-        Optional<Turn> nrTurn=getTurn(game.getActualPlayer(), game.getRound());
+    public Turn throwDice(Game game) throws WrongPhaseException{
+        Optional<Turn> nrTurn=getActualTurn(game);
         if(!nrTurn.isPresent() || nrTurn.get().getPhase()!=Phase.DICE){
                 throw new WrongPhaseException();
         }
