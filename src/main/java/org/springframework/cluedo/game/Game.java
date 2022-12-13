@@ -92,7 +92,15 @@ public class Game extends BaseEntity{
         this.lobby.addAll(lobbyUsers);
     }
 
-    public void addLobbyUsers(User lobbyUser){
+    public void addLobbyUser(User lobbyUser){
         this.lobby.add(lobbyUser);
+    }
+
+    public void removeLobbyUsers(List<User> lobbyUsers){
+        this.lobby.removeAll(lobbyUsers);
+    }
+
+    public void removeLobbyUser(User lobbyUser){
+        this.lobby.remove(lobbyUser);
     }
 }

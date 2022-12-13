@@ -200,20 +200,18 @@ public class GameController {
         if(game.getStatus()!=Status.LOBBY){
             result.addObject("message", "The game is started");
             return result;
-        } else if(game.getLobby().size()==game.getLobbySize()) {
-            result.addObject("message", "The lobby is full");
-            return result;
         } else if(game.getLobby().contains(loggedUser.get())) {
             result= new ModelAndView("redirect:/games/"+game.getId()+"/lobby");
             result.addObject("lobby", game);
+            return result;
+        } else if(game.getLobby().size()==game.getLobbySize()) {
+            result.addObject("message", "The lobby is full");
             return result;
         } else {
             result = new ModelAndView(LOBBY_HOST);
             Game copy = new Game();
             BeanUtils.copyProperties(game, copy);
-            List<User> ul=copy.getLobby();
-            ul.add(loggedUser.get());
-            copy.setLobby(ul);
+            copy.addLobbyUser(loggedUser.get());
             gameService.saveGame(copy);
             result= new ModelAndView("redirect:/games/"+copy.getId()+"/lobby");
             result.addObject("lobby", copy);
@@ -235,7 +233,7 @@ public class GameController {
         }
         Optional<User> loggedUser = userService.getLoggedUser();
         if (game.getHost()!=loggedUser.get()){
-            ModelAndView result = new ModelAndView(LOBBY_HOST);
+            ModelAndView result = new ModelAndView(LOBBY_PLAYER);
             result.addObject("lobby",game);
             result.addObject("message", "The host is incorrect");
             return result;
@@ -267,6 +265,7 @@ public class GameController {
         }
         
         if(!gameService.isGameInProgress(game)) {
+            System.out.println("AQUI");
             return wrongStatus(game);
         }
 
@@ -283,10 +282,10 @@ public class GameController {
             case ACCUSATION:return new ModelAndView("redirect:/games/"+gameId+"/play/accusation");
             case FINAL:return new ModelAndView("redirect:/games/"+gameId+"/play/finish");
             default: {
-                    ModelAndView result = new ModelAndView(ON_GAME);
-                    result.addObject("game", game);
-                    return result;
-                }
+                ModelAndView result = new ModelAndView(ON_GAME);
+                result.addObject("game", game);
+                return result;
+            }
         }
     }
 
