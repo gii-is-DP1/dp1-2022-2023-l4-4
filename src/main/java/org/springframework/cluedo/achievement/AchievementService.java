@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AchievementService {
     
     private AchievementRepository repo;
+    
     @Autowired
     public AchievementService(AchievementRepository repo){
         this.repo = repo;

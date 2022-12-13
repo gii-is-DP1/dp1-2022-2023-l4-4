@@ -33,8 +33,6 @@ public class UserServiceTest {
 
     @BeforeEach
     public void config(){
-        
-        
         user=new User();
         user.setUsername("user1");
         user.setPassword("user1");
@@ -53,9 +51,7 @@ public class UserServiceTest {
         user.setImageurl("https://i0.wp.com/www.kukyflor.com/blog/wp-content/uploads/2018/04/6820517-tulip-fields.jpg?fit=1280%2C800&ssl=1");
         user.setAuthority("admin");
         user.setEnabled(1);
-        users.add(user);
-
-        
+        users.add(user); 
     }
     
     @Test
