@@ -27,7 +27,6 @@ public class CeldService {
     }
 
     public void init() {
-        System.out.println("ESTO ES DEL INIT-------------->"+getAllCelds());
         board = new BoardGraph(getAllCelds(), getAllPairs());
     }
 
@@ -53,9 +52,6 @@ public class CeldService {
         if (board==null){
             init();
         }
-        System.out.println("LOS VÉRTICES-------->"+board.getAllVertex());
-        System.out.println("LAS ARISTAS-------->"+board.getAllEdges());
-        System.out.println("CELDA----------->"+celd);
         return board.possibleMovements(pasos, celd);
     }
 
