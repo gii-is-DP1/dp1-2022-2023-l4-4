@@ -9,6 +9,7 @@
 
 <cluedo:layout pageName="achievements">
     <h2>All achievements</h2>
+    <sec:authorize access="hasAuthority('admin')">
     <h2>
         <a  href="/achievements/new" >
             <button class="btn btn-default">
@@ -16,6 +17,7 @@
             </button>
         </a>
     </h2>
+    </sec:authorize>
     <table id="achievementTable" class="table table-striped">
         <thead>
         <tr>
@@ -58,11 +60,13 @@
                             <img class="img-responsive" src="${achievement.imageUrl}" style="width: 100px !important; height: 100px !important;"/>
                         </c:if>
                     </td>
+                    <sec:authorize access="hasAuthority('admin')">
                     <td>
                         <a href="/achievements/${achievement.id}/edit">
                             <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                         </a>
                     </td>
+                    </sec:authorize>
                 </tr>
             </c:forEach>
         </tbody>
