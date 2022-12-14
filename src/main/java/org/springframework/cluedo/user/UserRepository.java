@@ -32,7 +32,7 @@ List<User> findFriendsById(@Param("id")Integer id);
 Optional<User> findByUsername(@Param("username") String username);
 
 @Query("SELECT u.achievements FROM User u WHERE u.id = :userId")
-List<Achievement> getAllMyAchievements(@Param("userId") Integer userId);
+List<Achievement> findAllMyAchievements(@Param("userId") Integer userId);
 
 @Query("SELECT u FROM UserStatistics u WHERE u.user = :user")
 UserStatistics findMyStatistics(@Param("user") User user);

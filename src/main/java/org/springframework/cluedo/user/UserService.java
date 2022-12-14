@@ -36,21 +36,23 @@ public class UserService {
 		this.userRepository = userRepository;
 		this.userGameService = userGameService;
 	}
+
 	@Transactional
 	public List<User> getAllUsers(){
 		return userRepository.findAll();
 	}
 
-
 	@Transactional
 	public void saveUser(User user) throws DataAccessException {
 		userRepository.save(user);
 	}
-	
+
+	@Transactional(readOnly = true)
 	public Optional<User> findUserById(int id) {
 		return userRepository.findById(id);
 	}
 
+	@Transactional(readOnly = true)
 	public Optional<User> findUserByTag(String tag) {
 		return userRepository.findByTag(tag);
 	}
@@ -58,6 +60,7 @@ public class UserService {
 		userRepository.deleteById(id);
 	}
 
+	@Transactional(readOnly = true)
 	public Optional<User> findUserByUsername(String username) {
 		return userRepository.findByUsername(username);
 	}
@@ -66,25 +69,30 @@ public class UserService {
 	}
 
 
+	@Transactional(readOnly = true)
 	public Optional<User> getLoggedUser(){
 		UserDetails userDetails=(UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return userRepository.findByUsername(userDetails.getUsername());
 	}
 
+	@Transactional(readOnly = true)
 	public UserDetails getUserDetails(){
 		return(UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 
+	@Transactional(readOnly = true)
 	public List<Achievement> findAllMyAchievements(){
 		User loggedUser = getLoggedUser().get();
-		return userRepository.getAllMyAchievements(loggedUser.getId());
+		return userRepository.findAllMyAchievements(loggedUser.getId());
 	}
 
+	@Transactional(readOnly = true)
 	public UserStatistics getMyStatistics(){
 		User loggedUser = getLoggedUser().get();
 		return userRepository.findMyStatistics(loggedUser);
 	}
 
+	@Transactional
     public void initializePlayers(List<User> lobby, Game copy) { 
 		List<SuspectType> suspects= new ArrayList<>(Arrays.asList(SuspectType.values()));
 		List<Integer> orderList= IntStream.rangeClosed(1, lobby.size())
