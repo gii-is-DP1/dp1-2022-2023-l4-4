@@ -6,7 +6,7 @@
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
 
-<petclinic:layout pageName="games">
+<petclinic:layout pageName="gameListing">
     <h2>
         Active games
     </h2>
@@ -68,6 +68,7 @@
                 <td>
                     <c:forEach items="${game.lobby}" var="player">
                         <c:out value="${player.username}"/>
+                        <br/>
                     </c:forEach>
                 </td>
                 <td>

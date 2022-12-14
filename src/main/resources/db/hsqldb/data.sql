@@ -280,7 +280,7 @@ INSERT INTO celds(id,celd_type,position) VALUES
 (236, 'THEATRE',59), 
 (237, 'LIVINGROOM',65), 
 (238, 'OBSERVATORY',71), 
-(239, 'YARD ',291), 
+(239, 'YARD',291), 
 (240, 'HALL',310), 
 (241, 'KITCHEN',555), 
 (242, 'DINNINGHALL',541), 
