@@ -6,13 +6,11 @@ INSERT INTO achievements(id, achievement_name, metric, badge, goal, description,
 
 
 
-INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES (1,'1','1','1@gmail.com','https://www.adslzone.net/app/uploads-adslzone.net/2019/04/borrar-fondo-imagen.jpg',1,'admin');
-
-
-INSERT INTO users(id,username,password,email,image_url,enabled,authority) VALUES 
-(2,'2','2','2@gmail.com',null,1,'user'),
-(3,'manuel333','1','user2@gmail.com',null,1,'user'),
-(4,'4','4','user4@gmail.com',null,1,'user');
+INSERT INTO users(id,username,password,email,image_url,enabled,authority,tag) VALUES
+(1,'1','1','1@gmail.com','https://www.adslzone.net/app/uploads-adslzone.net/2019/04/borrar-fondo-imagen.jpg',1,'admin','wwww'),
+(2,'2','2','2@gmail.com',null,1,'user','eeee'),
+(3,'manuel333','1','user2@gmail.com',null,1,'user','rrrr'),
+(4,'4','4','user4@gmail.com',null,1,'user','were');
 
 
 INSERT INTO cards(id,card_name,card_type,image_url) VALUES
@@ -39,12 +37,6 @@ INSERT INTO cards(id,card_name,card_type,image_url) VALUES
 (21,'POISON','WEAPON',null);
 
 INSERT INTO users_achievements(user_id, achievements_id) VALUES (1, 1);
-INSERT INTO users(id,username,password,email,image_url,enabled,authority,tag) VALUES (1,'1','1','1@gmail.com',null,1,'admin','wwww');
--- One owner user, named owner1 with passwor 0wn3r
-INSERT INTO users(id,username,password,email,image_url,enabled,authority,tag) VALUES (2,'2','2','2@gmail.com',null,1,'user','eeee');
-
--- One vet user, named vet1 with passwor v3t
-INSERT INTO users(id,username,password,email,image_url,enabled,authority,tag) VALUES (3,'3','3','3@gmail.com',null,1,'user','rrrr');
 
 INSERT INTO user_friends(id1,id2) VALUES (1,2);
 INSERT INTO user_friends(id1,id2) VALUES (1,3);
