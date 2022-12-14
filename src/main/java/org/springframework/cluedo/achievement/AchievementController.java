@@ -1,6 +1,5 @@
 package org.springframework.cluedo.achievement;
 
-import java.text.Bidi;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +8,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cluedo.accusation.AccusationService;
 import org.springframework.cluedo.enumerates.Badge;
 import org.springframework.cluedo.enumerates.Metric;
 import org.springframework.stereotype.Controller;

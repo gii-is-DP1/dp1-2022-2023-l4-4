@@ -8,13 +8,14 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.card.CardService;
 import org.springframework.cluedo.celd.Celd;
-import org.springframework.cluedo.enumerates.Status;
-import org.springframework.cluedo.exceptions.CorruptGame;
-import org.springframework.cluedo.exceptions.DataNotFound;
+import org.springframework.cluedo.enumerates.Phase;
+import org.springframework.cluedo.enumerates.Status;import org.springframework.cluedo.exceptions.DataNotFound;
 import org.springframework.cluedo.exceptions.WrongPhaseException;
 import org.springframework.cluedo.turn.Turn;
 import org.springframework.cluedo.turn.TurnService;
 import org.springframework.cluedo.user.User;
+import org.springframework.cluedo.user.UserGame;
+import org.springframework.cluedo.user.UserGameService;
 import org.springframework.cluedo.user.UserService;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -27,13 +28,15 @@ public class GameService {
 	private TurnService turnService;
 	private CardService cardService;
 	private UserService userService;
+	private UserGameService userGameService;
 
 	@Autowired
-	public GameService(GameRepository gameRepository, TurnService turnService, CardService cardService, UserService userService) {
+	public GameService(GameRepository gameRepository, TurnService turnService, CardService cardService, UserService userService, UserGameService userGameService) {
 		this.gameRepository = gameRepository;
 		this.turnService = turnService;
 		this.cardService = cardService;
 		this.userService = userService;
+		this.userGameService = userGameService;
 	}
     //Admin
 	//H12
@@ -66,34 +69,19 @@ public class GameService {
         copy.setDuration(Duration.ofMinutes(0));
         copy.setRound(1);
 		userService.initializePlayers(copy.getLobby(), copy);
+		copy.setActualPlayer(copy.getPlayers().get(0));
 		cardService.initCards(copy);
+		
 	} 
 
 	public void initTurn(Game game){
-        Integer playerCount;
-        if(game.getActualPlayer()==null){
-            playerCount= -1; 
-        }else{
-            playerCount = game.getPlayers().indexOf(game.getActualPlayer());
-        }
-         if (game.getPlayers().size()-1 == playerCount){
-             game.setActualPlayer(game.getPlayers().get(0));
-             game.setRound(game.getRound()+1);
-        }else{
-            game.setActualPlayer(game.getPlayers().get(playerCount+1));
-        }
-        saveGame(game);
-        turnService.createTurn(game.getActualPlayer(),game.getRound());
+		turnService.createTurn(game.getActualPlayer(),game.getRound());
 	}
 
-	public void moveTo(Game game,Celd finalCeld) throws CorruptGame,WrongPhaseException{
-		Optional<Turn> nrTurn=turnService.getTurn(game.getActualPlayer(), game.getRound());
-        if(nrTurn.isPresent()){
-			Turn turn=nrTurn.get();
-			turnService.moveCharacter(turn, finalCeld);
-		}else{
-            throw new CorruptGame();
-        }
+
+	public void moveTo(Game game,Celd finalCeld) throws WrongPhaseException{
+		Turn turn=turnService.getTurn(game.getActualPlayer(), game.getRound()).get();
+		turnService.moveCharacter(turn, finalCeld);
 	}
 
 	//H1
@@ -111,5 +99,52 @@ public class GameService {
 		return game.get();
 	}
 
-}
+	public void finishTurn(Game game){
+		Turn actualTurn=turnService.getActualTurn(game).get();
+		actualTurn.setPhase(Phase.FINISHED);
+		turnService.saveTurn(actualTurn);
+		do{
+			if(actualTurn.getUserGame()==game.getPlayers().get(game.getPlayers().size()-1)){
+				game.setRound(game.getRound()+1);
+				game.setActualPlayer(userGameService.getFirstUsergame(game)); 
+			}else{
+				game.setActualPlayer(userGameService.getNextUsergame(game).get());  
+			}
+		}while(game.getActualPlayer().getIsEliminated()==true);
+		saveGame(game);
+		turnService.createTurn(game.getActualPlayer(),game.getRound());
+	}
+
+	public boolean isUserTurn(Optional<User> user, Game game) {
+		if (!user.isPresent() || !user.get().equals(game.getActualPlayer().getUser())){
+			return false;
+		}
+		return true;
+	}
+
+	public boolean isGameInProgress(Game game) {
+		if(game.getStatus().equals(Status.IN_PROGRESS)) {
+			return true;
+		}
+		return false;
+	}
+	public Game getMyNotFinishedGame(User user) {
+		return gameRepository.getMyNotFinishedGame(user);
+	}
+	public void deleteUserFromLobby(User user, Game game) {
+		List<User> users = game.getLobby();
+		users.remove(user);
+		game.setLobby(users);
+		saveGame(game);
+	}
+	public void leaveGameInProgress(User user, Game game) {
+		List<UserGame> ugs = game.getPlayers();
+		UserGame ug = ugs.stream().filter(x->x.getUser().equals(user)).findAny().orElse(null);
+		if(ug!=null){
+			ug.setIsEliminated(true);
+			userGameService.saveUserGame(ug);
+		}
+	}
+} 
+
 	

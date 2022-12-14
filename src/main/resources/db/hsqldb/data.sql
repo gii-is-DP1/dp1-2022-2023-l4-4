@@ -1,6 +1,7 @@
 -- CREATE TABLE user_games(id integer, orderPlayer integer ,accusations_number integer ,is_afk boolean ,suspect varchar(60),user_id integer,game_id integer);
 
 
+
 INSERT INTO achievements(id, achievement_name, metric, badge, goal, description, experience, image_url) VALUES (1, 'Gamer', 0,0, 1, 'You`ve won a game.', 100, 'https://audrey-gaune-projets-web.ovh/wp-content/uploads/2016/11/Le-March%C3%A9-des-Consoles-de-Jeux-Vid%C3%A9o.jpg');
 
 
@@ -19,10 +20,10 @@ INSERT INTO cards(id,card_name,card_type,image_url) VALUES
 (2,'SPA','ROOM',null),
 (3,'HALL','ROOM',null),
 (4,'OBSERVATORY','ROOM',null),
-(5,'GUESS_ROOM','ROOM',null),
-(6,'DINNING_HALL','ROOM',null),
+(5,'GUESSROOM','ROOM',null),
+(6,'DINNINGHALL','ROOM',null),
 (7,'THEATRE','ROOM',null),
-(8,'LIVING_ROOM','ROOM',null),
+(8,'LIVINGROOM','ROOM',null),
 (9,'YARD','ROOM',null),
 (10,'GREEN','SUSPECT',null),
 (11,'RED','SUSPECT',null),
@@ -38,6 +39,15 @@ INSERT INTO cards(id,card_name,card_type,image_url) VALUES
 (21,'POISON','WEAPON',null);
 
 INSERT INTO users_achievements(user_id, achievements_id) VALUES (1, 1);
+INSERT INTO users(id,username,password,email,image_url,enabled,authority,tag) VALUES (1,'1','1','1@gmail.com',null,1,'admin','wwww');
+-- One owner user, named owner1 with passwor 0wn3r
+INSERT INTO users(id,username,password,email,image_url,enabled,authority,tag) VALUES (2,'2','2','2@gmail.com',null,1,'user','eeee');
+
+-- One vet user, named vet1 with passwor v3t
+INSERT INTO users(id,username,password,email,image_url,enabled,authority,tag) VALUES (3,'3','3','3@gmail.com',null,1,'user','rrrr');
+
+INSERT INTO user_friends(id1,id2) VALUES (1,2);
+INSERT INTO user_friends(id1,id2) VALUES (1,3);
 
 INSERT INTO celds(id,celd_type,position) VALUES  
 (1, 'CORRIDOR',7), 
@@ -276,13 +286,13 @@ INSERT INTO celds(id,celd_type,position) VALUES
 (234, 'CORRIDOR',692), 
 (235, 'SPA',51), 
 (236, 'THEATRE',59), 
-(237, 'LIVING_ROOM ',65), 
+(237, 'LIVINGROOM',65), 
 (238, 'OBSERVATORY',71), 
-(239, 'YARD ',291), 
+(239, 'YARD',291), 
 (240, 'HALL',310), 
 (241, 'KITCHEN',555), 
-(242, 'DINNING_HALL',541), 
-(243, 'GUEST_ROOM',575), 
+(242, 'DINNINGHALL',541), 
+(243, 'GUESTROOM',575), 
 (244, 'CENTER',326);  
 
 INSERT INTO connected_celds(id2,id1) VALUES
@@ -675,9 +685,9 @@ INSERT INTO lobbies(game_id,user_id) VALUES
 (1,1),
 (1,2);
 
-INSERT INTO user_games(id,order_user, accusations_number, is_afk,suspect,user_id,game_id) VALUES 
-(1,0,1,1,1,1,1),
-(2,1,1,1,2,2,1);
+INSERT INTO user_games(id,order_user, accusations_number, is_afk,is_eliminated,suspect,user_id,game_id) VALUES 
+(1,0,1,1,0,1,1,1),
+(2,1,1,1,0,2,2,1);
 
 INSERT INTO turns(user_game_id, round, dice_result, initial_celd_id,phase) VALUES (1,1,5,1,3);
 
@@ -693,10 +703,10 @@ INSERT INTO lobbies(game_id,user_id) VALUES
 (2,2),
 (2,3);
 
-INSERT INTO user_games(id,order_user, accusations_number, is_afk,suspect,user_id,game_id) VALUES
-(3,0,1,1,1,1,2),
-(4,1,1,0,2,2,2),
-(5,2,1,0,3,3,2);
+INSERT INTO user_games(id,order_user, accusations_number, is_afk, is_eliminated,suspect,user_id,game_id) VALUES
+(3,0,1,1,0,1,1,2),
+(4,1,1,0,0,2,2,2),
+(5,2,1,0,0,3,3,2);
 
 INSERT INTO turns(user_game_id, round, dice_result, initial_celd_id,phase) VALUES (3,1,5,1,5);
 
@@ -715,21 +725,6 @@ INSERT INTO lobbies(game_id,user_id) VALUES
 (3,1),
 (3,2),
 (3,3);
-
-INSERT INTO user_games(id,order_user, accusations_number, is_afk,suspect,user_id,game_id) VALUES
-(6,2,1,0,1,1,3),
-(7,1,1,1,2,2,3),
-(8,0,0,0,3,3,3);
-
-INSERT INTO turns(user_game_id, round, dice_result, initial_celd_id,phase) VALUES
-(8,1,5,1,5),
-(8,1,11,1,4);
-
-
-INSERT INTO players(game_id,user_game_id) VALUES 
-(3,6),
-(3,7),
-(3,8);
 
 INSERT INTO user_statistics(id, xp, total_games, total_time, total_rounds,total_accusations, victories, afk_counter, longest_game_id, shortest_game_id, total_final_accusations, user_id) VALUES (1,100,2,20,20,20,2,0,1,2,2,1),
 (2,100,2,20,20,20,2,0,1,2,2,2), (3,100,2,20,20,20,2,0,1,2,2,3), (4,100,2,20,20,20,2,0,1,2,2,4);

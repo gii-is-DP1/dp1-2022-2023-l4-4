@@ -4,10 +4,14 @@ package org.springframework.cluedo.user;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.achievement.Achievement;
@@ -48,7 +52,10 @@ public class UserService {
 		return userRepository.findById(id);
 	}
 
-	@Transactional
+	@Transactional(readOnly = true)
+	public Optional<User> findUserByTag(String tag) {
+		return userRepository.findByTag(tag);
+	}
 	public void deleteUser(int id){
 		userRepository.deleteById(id);
 	}
@@ -57,6 +64,10 @@ public class UserService {
 	public Optional<User> findUserByUsername(String username) {
 		return userRepository.findByUsername(username);
 	}
+	public List<User> findUserFriends(Integer id) {
+		return userRepository.findFriendsById(id);
+	}
+
 
 	@Transactional(readOnly = true)
 	public Optional<User> getLoggedUser(){
@@ -83,8 +94,9 @@ public class UserService {
 
 	@Transactional
     public void initializePlayers(List<User> lobby, Game copy) { 
-		
 		List<SuspectType> suspects= new ArrayList<>(Arrays.asList(SuspectType.values()));
+		List<Integer> orderList= IntStream.rangeClosed(1, lobby.size())
+		.boxed().collect(Collectors.toList()); 
 		for (User user : lobby) {
 			Integer available = suspects.size();
 			UserGame userGame = new UserGame();
@@ -92,13 +104,18 @@ public class UserService {
 			userGame.setGame(copy);
 			userGame.setUser(user);
 			userGame.setIsAfk(false);
-			Integer randomInt = ThreadLocalRandom.current().nextInt(available);
-			userGame.setSuspect(suspects.get(randomInt));
-			suspects.remove(suspects.get(randomInt));
+			userGame.setIsEliminated(false);
+			Integer suspect = ThreadLocalRandom.current().nextInt(available);
+			userGame.setSuspect(suspects.get(suspect));
+			suspects.remove(suspects.get(suspect));
 			userGame.setCards(new HashSet<Card>());
+			Integer order = ThreadLocalRandom.current().nextInt(orderList.size());
+			userGame.setOrderUser(orderList.get(order));
+			orderList.remove(orderList.get(order));
 			userGameService.saveUserGame(userGame);
 			copy.addPlayers(userGame);
 		}
+		copy.setPlayers(copy.getPlayers().stream().sorted(Comparator.comparing(x->x.getOrderUser())).collect(Collectors.toList()));
     }
 
 }

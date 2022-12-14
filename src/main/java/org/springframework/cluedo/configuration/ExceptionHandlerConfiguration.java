@@ -18,7 +18,7 @@ public class ExceptionHandlerConfiguration
 	private BasicErrorController errorController;
     // add any exceptions/validations/binding problems
 
-   //@ExceptionHandler(Exception.class)
+   @ExceptionHandler(Exception.class)
    public String defaultErrorHandler(HttpServletRequest request,  Exception ex)  {
         request.setAttribute("javax.servlet.error.request_uri", request.getPathInfo());
         request.setAttribute("javax.servlet.error.status_code", 400);
