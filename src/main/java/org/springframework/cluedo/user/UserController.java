@@ -55,6 +55,7 @@ public class UserController {
 	private static final String GLOBAL_STATISTICS = "users/globalStatistics";
 	private final String STATISTICS = "users/statistics";
 	private static final String ADD_FRIENDS_FORM = "users/addFriend";
+	private static final String DELETE_FRIENDS_FORM = "users/deleteFriend";
 
 	@Autowired
 	private UserService userService;
@@ -90,7 +91,53 @@ public class UserController {
 		}
 		throw new DataNotFound();
 	}
+	@Transactional(readOnly=true)
+	@GetMapping(value="/users/friends")
+	public ModelAndView redirectFriends() {
+		ModelAndView mav = new ModelAndView("redirect:/users/"+userService.getLoggedUser().get().getId()+"/friends");
+		return mav;
+	}
+	
+	@Transactional(readOnly=true)
+	@GetMapping(value="/users/{userId}/friends/delete")
+	public ModelAndView initDeleteFriendForm() {
+		ModelAndView mav = new ModelAndView("users/deleteFriend");
+		mav.addObject("UsernameForm", new UsernameForm());
+		return mav;
+	}
+	@Transactional
+	@PostMapping(value = "/users/{userId}/friends/delete")
+	public ModelAndView processDeleteFriendForm(String username, Map<String, Object> model) {
+		if(username==null){
+			ModelAndView result= new ModelAndView(DELETE_FRIENDS_FORM);
+			return result;
+		}else{
+			Optional<User> userByUsername = this.userService.findUserByUsername(username);
+			if (userByUsername.isEmpty()) {
+				ModelAndView result= new ModelAndView(DELETE_FRIENDS_FORM);
+				return result;
+			}
+			else {
+				Optional<User> nrLoggedUser = this.userService.getLoggedUser();
+				User loggedUser = nrLoggedUser.get();
+				if(loggedUser.getFriends().contains(userByUsername.get())){
+					User deleteUser= userByUsername.get();
+					loggedUser.getFriends().remove(deleteUser);
+					userService.saveUser(loggedUser);
+					ModelAndView result= new ModelAndView("redirect:/users/"+loggedUser.getId()+"/friends");
+					result.addObject("user", loggedUser);
+					return result;
+				}
+				else{
+				ModelAndView result= new ModelAndView("redirect:/users/"+loggedUser.getId()+"/friends");
+				return result;
+				}
+		
+			}
+		}
 
+		
+	} 
 	@Transactional(readOnly=true)
 	@GetMapping(value="/users/{userId}/friends/add")
 	public ModelAndView initAddFriendForm() {
@@ -114,10 +161,18 @@ public class UserController {
 			else {
 				Optional<User> nrLoggedUser = this.userService.getLoggedUser();
 				User loggedUser = nrLoggedUser.get();
-				loggedUser.addFriend(userByTag.get());
+				if(loggedUser.getFriends().contains(userByTag.get())){
+					ModelAndView result= new ModelAndView("redirect:/users/"+loggedUser.getId()+"/friends");
+					return result;
+				}
+				else{
+					loggedUser.addFriend(userByTag.get());
 				userService.saveUser(loggedUser);
-				ModelAndView result= new ModelAndView("users/userFriends");
+				ModelAndView result= new ModelAndView("redirect:/users/"+loggedUser.getId()+"/friends");
+				result.addObject("user", loggedUser);
 				return result;
+				}
+		
 			}
 		}
 

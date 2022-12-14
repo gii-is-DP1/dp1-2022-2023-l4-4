@@ -13,12 +13,12 @@
     <h2>Find friends</h2>
 
     
-    <form:form modelAttribute="TagForm" class="form-horizontal">
+    <form:form modelAttribute="UsernameForm" class="form-horizontal">
             <div class="form-group has-feedback">
-                <cluedo:inputField label="Tag" name="tag" />
+                <cluedo:inputField label="Username" name="username" />
             </div>
             <div class="form-group">
-                <button class="btn btn-default" type="submit">Add friend</button> 
+                <button class="btn btn-default" type="submit">Delete friend</button> 
             </div>
         </form:form>
 
