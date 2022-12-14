@@ -1,8 +1,5 @@
 package org.springframework.cluedo.user;
 
-
-
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.cluedo.achievement.Achievement;
 import org.springframework.cluedo.statistics.UserStatistics;
 import org.springframework.data.jpa.repository.Query;

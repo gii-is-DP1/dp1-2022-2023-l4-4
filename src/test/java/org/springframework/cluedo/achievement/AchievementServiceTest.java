@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.cluedo.achievement.AchievementService;
 import org.springframework.context.annotation.ComponentScan;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
