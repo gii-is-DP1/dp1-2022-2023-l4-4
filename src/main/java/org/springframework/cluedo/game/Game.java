@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.cluedo.model.BaseEntity;
 import org.springframework.cluedo.user.User;
 import org.springframework.cluedo.user.UserGame;
-import org.springframework.cluedo.accusation.Accusation;
+import org.springframework.cluedo.accusation.CrimeScene;
 import org.springframework.cluedo.enumerates.Status;
 
 import lombok.Getter;
@@ -70,7 +70,7 @@ public class Game extends BaseEntity{
     
     @ManyToOne
     @JoinColumn(name="crime_scene")
-    private Accusation crimeScene;
+    private CrimeScene crimeScene;
 
     @ManyToOne
     @JoinColumn(name="actual_Player")
@@ -78,5 +78,29 @@ public class Game extends BaseEntity{
     
     public Boolean getIsPrivate(){
         return isPrivate;
+    }
+
+    public void addPlayers(List<UserGame> newPlayers){
+        this.players.addAll(newPlayers);
+    }
+
+    public void addPlayers(UserGame newPlayer){
+        this.players.add(newPlayer);
+    }
+
+    public void addLobbyUsers(List<User> lobbyUsers){
+        this.lobby.addAll(lobbyUsers);
+    }
+
+    public void addLobbyUser(User lobbyUser){
+        this.lobby.add(lobbyUser);
+    }
+
+    public void removeLobbyUsers(List<User> lobbyUsers){
+        this.lobby.removeAll(lobbyUsers);
+    }
+
+    public void removeLobbyUser(User lobbyUser){
+        this.lobby.remove(lobbyUser);
     }
 }

@@ -37,6 +37,9 @@ public class UserGame extends BaseEntity{
     private Boolean isAfk;
     
     @NotNull
+    private Boolean isEliminated;
+    
+    @NotNull
     private SuspectType suspect;
 
     @ManyToOne
@@ -50,4 +53,8 @@ public class UserGame extends BaseEntity{
     @ManyToMany
     @JoinTable(name="user_cards")
     private Set<Card> cards;
+
+    public void addCard(Card card){
+        cards.add(card);
+    }
 }

@@ -11,14 +11,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class AccusationService {
     private AccusationRepository accusationRepository;
+    private CrimeSceneRepository crimeSceneRepository;
 
     @Autowired
-    public AccusationService(AccusationRepository accusationRepository) {
+    public AccusationService(AccusationRepository accusationRepository, CrimeSceneRepository crimeSceneRepository) {
         this.accusationRepository = accusationRepository;
+        this.crimeSceneRepository = crimeSceneRepository;
     }
     
     public Accusation saveAccusation(Accusation accusation) {
         return accusationRepository.save(accusation);
+    }
+
+    public CrimeScene saveCrimeScene(CrimeScene crimeScene) {
+        return crimeSceneRepository.save(crimeScene);
     }
 
     public List<Card> getMatchingCardsFromUser(Accusation accusation, UserGame user) {

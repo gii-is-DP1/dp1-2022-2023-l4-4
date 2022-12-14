@@ -6,20 +6,20 @@
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
 
-<petclinic:layout pageName="games">
+<petclinic:layout pageName="gameListing">
     <h2>
         Active games
     </h2>
     <div class="container">
     <h2>
-        <a href="games/new">
+        <a href="/games/new">
             <button class="btn btn-default">
             New Game
             </button>
         </a>
     </h2>
     <h2>
-        <a href="games/past">
+        <a href="/games/past">
             <button class="btn btn-default">
             Finished games
             </button>
@@ -68,6 +68,7 @@
                 <td>
                     <c:forEach items="${game.lobby}" var="player">
                         <c:out value="${player.username}"/>
+                        <br/>
                     </c:forEach>
                 </td>
                 <td>

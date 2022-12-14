@@ -11,7 +11,7 @@
 	<div class="container">
 		<div class="navbar-header">
 			<a class="navbar-brand"
-				href="<spring:url value="/" htmlEscape="true" />"><span></span></a>
+				href="<spring:url value="/" htmlEscape="true" />"></a>
 			<button type="button" class="navbar-toggle" data-toggle="collapse"
 				data-target="#main-navbar">
 				<span class="sr-only"><os-p>Toggle navigation</os-p></span> <span
@@ -32,6 +32,35 @@
 					title="Games">
 					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 					<span>Games</span>
+				</petclinic:menuItem>
+				<petclinic:menuItem active="${name eq 'achievements'}" url="/achievements"
+					title="Achievements" dropdown="${true}">
+					<ul class="dropdown-menu">
+						<li>
+							<a href="<c:url value="/achievements"/> ">Achievements listing</a>
+						</li>
+						<li class="divider"/>
+						<li>
+							<a href="<c:url value="/myAchievements" />">My achievements <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span></a>
+						</li>
+					</ul>
+				</petclinic:menuItem>
+				<petclinic:menuItem active="${name eq 'stadistics'}" url="/stats"
+					title="Statistics" dropdown="${true}">
+					<ul class="dropdown-menu">
+						<li>
+							<a href="<c:url value="/stats"/> ">My statistics</a>
+						</li>
+						<li class="divider"/>
+						<li>
+							<a href="<c:url value="/global" />">Global stadistics<span class="glyphicon glyphicon-certificate" aria-hidden="true"></span></a>
+						</li>
+					</ul>
+				</petclinic:menuItem>
+				<petclinic:menuItem active="${name eq 'friends'}" url="users/friends"
+					title="Friends">
+					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+					<span>Friends</span>
 				</petclinic:menuItem>
 				<sec:authorize access="hasAuthority('admin')">
 					<petclinic:menuItem active="${name eq 'Admin'}" url="/admin"

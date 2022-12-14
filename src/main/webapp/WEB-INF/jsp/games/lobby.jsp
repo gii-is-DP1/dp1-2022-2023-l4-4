@@ -16,12 +16,27 @@
                 <th>
                     Player <c:out value="${player.username}"/>
                 </th>
-            </tr>
-            <tr>
-                <td>
-                    <img class="img-responsive" src="${player.imageurl}"/>  
-                </td>
+                <th>
+                    <c:if test="${player.imageurl != null}">
+                        <img class="img-responsive" src="${player.imageurl}" style="width: 50px !important; height: 50px !important;"/>
+                    </c:if>
+                    <c:if test="${player.imageurl == null}">
+                        <img class="img-responsive" src="https://www.softzone.es/app/uploads/2018/04/guest.png" style="width: 50px !important; height: 50px !important;"/>
+                    </c:if>
+                </th>
             </tr>
         </c:forEach>
     </table>
+    <form:form  class="form-horizontal">
+        <div class="form-group">
+            <button class="btn btn-default" type="submit">Start Game</button>
+        
+            <a  href="/games/${lobby.id}/leave" >
+                <button class="btn btn-default">
+                    Leave lobby
+                </button>
+            </a>
+        </div>
+    </form:form>
+    
 </cluedo:layout>
