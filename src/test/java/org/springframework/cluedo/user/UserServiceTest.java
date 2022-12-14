@@ -18,6 +18,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.cluedo.achievement.Achievement;
+import org.springframework.cluedo.enumerates.Badge;
+import org.springframework.cluedo.enumerates.Metric;
+import org.springframework.cluedo.statistics.UserStatistics;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 
@@ -30,11 +34,21 @@ public class UserServiceTest {
 
     User user;
     List<User> users = new ArrayList<>();
-
+    List<Achievement> achievements = new ArrayList<>();
+    UserStatistics stats = new UserStatistics();
     @BeforeEach
     public void config(){
-        
-        
+
+        Achievement achievement = new Achievement();
+        achievement.setId(1);
+        achievement.setName("achievement1");
+        achievement.setXp(100);
+        achievement.setMetric(Metric.EXPERIENCE);
+        achievement.setDescription("Achievement for test");
+        achievement.setGoal(1000);
+        achievement.setBadgeType(Badge.BRONZE);
+        achievements.add(achievement);
+
         user=new User();
         user.setUsername("user1");
         user.setPassword("user1");
@@ -44,8 +58,7 @@ public class UserServiceTest {
         user.setAuthority("user");
         user.setEnabled(1);
         users.add(user);
-        
-        
+
         user.setUsername("user2");
         user.setPassword("user2");
         user.setId(2);
@@ -53,9 +66,12 @@ public class UserServiceTest {
         user.setImageurl("https://i0.wp.com/www.kukyflor.com/blog/wp-content/uploads/2018/04/6820517-tulip-fields.jpg?fit=1280%2C800&ssl=1");
         user.setAuthority("admin");
         user.setEnabled(1);
-        users.add(user);
+        users.add(user); 
 
-        
+        stats.setId(1);
+        stats.setUser(user);
+        stats.setVictories(20);
+
     }
     
     @Test
@@ -92,29 +108,24 @@ public class UserServiceTest {
         assertFalse(user.get().getImageurl().isEmpty());
     }
     
+    @Test
+    void findAllMyAchievements(){
+        when(repo.findAllMyAchievements(any(Integer.class))).thenReturn(achievements);
+        List<Achievement> achievements = repo.findAllMyAchievements(2);
+        assertNotNull(achievements);
+        assertTrue(achievements.size()==1);
+        assertTrue(achievements.get(0).getName().equals("achievement1"));
+    }
+
+    @Test
+    void getMyStatistics(){
+        when(repo.findMyStatistics(any(User.class))).thenReturn(stats);
+        UserStatistics stats = repo.findMyStatistics(user);
+        assertNotNull(stats);
+        assertTrue(stats.getUser().equals(user));
+        assertTrue(stats.getVictories()==20);
+        assertTrue(stats.getUser().getId()==2);
+        assertTrue(stats.getId()==1);
+    }
 
 }
-
-
-/*@Transactional
-	public List<User> getAllUsers(){
-		return userRepository.findAll();
-	}
-
-
-	@Transactional
-	public void saveUser(User user) throws DataAccessException {
-		userRepository.save(user);
-	}
-	
-	public Optional<User> findUserById(int id) {
-		return userRepository.findById(id);
-	}
-
-	public Optional<User> findUserByUsername(String username) {
-		return userRepository.findByUsername(username);
-	}
-
-	public Optional<User> getLoggedUser(){
-		UserDetails a=(UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return userRepository.findByUsername(a.getUsername());*/

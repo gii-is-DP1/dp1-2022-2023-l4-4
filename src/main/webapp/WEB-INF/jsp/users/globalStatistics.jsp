@@ -67,7 +67,7 @@
                                 <td><c:out value="${stats.top3Wins().get(1).getUsername()}"></c:out></td>
                             </tr>
                             <tr>
-                                <th>1. </th>
+                                <th>3. </th>
                                 <td><c:out value="${stats.top3Wins().get(2).getUsername()}"></c:out></td>
                             </tr>
                         </tbody>
