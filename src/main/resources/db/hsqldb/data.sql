@@ -4,14 +4,11 @@
 
 INSERT INTO achievements(id, achievement_name, metric, badge, goal, description, experience, image_url) VALUES (1, 'Gamer', 0,0, 1, 'You`ve won a game.', 100, 'https://audrey-gaune-projets-web.ovh/wp-content/uploads/2016/11/Le-March%C3%A9-des-Consoles-de-Jeux-Vid%C3%A9o.jpg');
 
-
-
-INSERT INTO users(id,username,password,email,image_url,enabled,authority,tag) VALUES
-(1,'1','1','1@gmail.com','https://www.adslzone.net/app/uploads-adslzone.net/2019/04/borrar-fondo-imagen.jpg',1,'admin','wwww'),
-(2,'2','2','2@gmail.com',null,1,'user','eeee'),
-(3,'manuel333','1','user2@gmail.com',null,1,'user','rrrr'),
-(4,'4','4','user4@gmail.com',null,1,'user','were');
-
+INSERT INTO users(id,username,password,email,image_url,enabled,authority,tag) VALUES 
+(1,'1','1','1@gmail.com','https://www.adslzone.net/app/uploads-adslzone.net/2019/04/borrar-fondo-imagen.jpg',1,'admin','DFSF'),
+(2,'2','2','2@gmail.com',null,1,'user','wwwww'),
+(3,'manuel333','1','user2@gmail.com',null,1,'user','sssss'),
+(4,'4','4','user4@gmail.com',null,1,'user','rrrrr');
 
 INSERT INTO cards(id,card_name,card_type,image_url) VALUES
 (1,'KITCHEN','ROOM',null),
@@ -720,4 +717,3 @@ INSERT INTO lobbies(game_id,user_id) VALUES
 
 INSERT INTO user_statistics(id, xp, total_games, total_time, total_rounds,total_accusations, victories, afk_counter, longest_game_id, shortest_game_id, total_final_accusations, user_id) VALUES (1,100,2,20,20,20,2,0,1,2,2,1),
 (2,100,2,20,20,20,2,0,1,2,2,2), (3,100,2,20,20,20,2,0,1,2,2,3), (4,100,2,20,20,20,2,0,1,2,2,4);
-
