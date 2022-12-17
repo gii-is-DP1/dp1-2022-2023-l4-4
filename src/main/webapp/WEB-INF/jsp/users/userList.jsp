@@ -7,6 +7,9 @@
 
 <petclinic:layout pageName="users">
     <h2>Users</h2>
+    <a href="/users/back"> <button>Last page</button> </a>
+    <a href="/users/next"> <button>Next page</button> </a>
+    
 
     <table id="usersTable" class="table table-striped">
         <thead>

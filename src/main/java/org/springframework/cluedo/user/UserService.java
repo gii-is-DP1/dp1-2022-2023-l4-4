@@ -38,9 +38,30 @@ public class UserService {
 
 	@Transactional
 	public List<User> getAllUsers(){
+		
 		return userRepository.findAll();
 	}
+	public List<User> getXUsers(int page){
+		Integer normal =3;
+		Integer min= normal*page;
+		Integer max= min + normal;
 
+		if(page>=0){
+			if(min >= userRepository.findAll().size()){
+				min= userRepository.findAll().size();
+				max= userRepository.findAll().size();
+			}
+			if(max >= userRepository.findAll().size()){
+				max= userRepository.findAll().size();
+			}
+		List<User> users = userRepository.findAll().subList(min, max);
+			return users;
+		}
+		else{
+			return null;
+		}
+		
+	}
 	@Transactional
 	public void saveUser(User user) throws DataAccessException {
 		userRepository.save(user);
