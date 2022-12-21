@@ -42,20 +42,7 @@
                     <c:if test="${user.imageurl == null}">
                         <img class="img-responsive" src="https://www.softzone.es/app/uploads/2018/04/guest.png" style="width: 50px !important; height: 50px !important;"/>
                     </c:if>
-                </td>
-
-            
-                         
-      
-<!--
-                <td> 
-                    <c:out value="${owner.user.username}"/> 
-                </td>
-                <td> 
-                   <c:out value="${owner.user.password}"/> 
-                </td> 
--->
-                
+                </td>             
             </tr>
         </c:forEach>
         </tbody>
