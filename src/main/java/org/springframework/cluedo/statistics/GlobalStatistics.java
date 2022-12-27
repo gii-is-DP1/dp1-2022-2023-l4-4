@@ -1,5 +1,6 @@
 package org.springframework.cluedo.statistics;
 
+import java.time.Duration;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,11 +32,15 @@ public class GlobalStatistics {
         return globalStatistics.stream().mapToInt(UserStatistics::getTotalFinalAccusations).sum();
     }
     public Double averageDuration(){
-        return 0.;
+        List<Duration> gamesDurationNotNull = allGames.stream().map(Game::getDuration)
+        .filter(x -> x!=null).collect(Collectors.toList());
+        if(gamesDurationNotNull.isEmpty()) return 0.;
+        return gamesDurationNotNull.stream().mapToLong(Duration::toMinutes).average().getAsDouble();
     }
     public List<User> top3Wins(){
         return globalStatistics.stream()
-        .sorted(Comparator.comparing(UserStatistics::getVictories))
+        .sorted(Comparator.comparing(UserStatistics::getVictories).reversed())
+        .limit(3)
         .map(UserStatistics::getUser)
         .collect(Collectors.toList());
     }

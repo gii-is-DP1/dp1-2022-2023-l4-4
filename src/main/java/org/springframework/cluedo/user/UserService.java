@@ -117,5 +117,11 @@ public class UserService {
 		}
 		copy.setPlayers(copy.getPlayers().stream().sorted(Comparator.comparing(x->x.getOrderUser())).collect(Collectors.toList()));
     }
-
+	
+	@Transactional
+	public void obtainAchievement(Achievement achievement){
+		User loggedUser = getLoggedUser().get();
+		loggedUser.addAchievement(achievement);
+		userRepository.save(loggedUser);
+	}
 }

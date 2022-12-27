@@ -9,42 +9,41 @@
     <table class="table table-striped" style="border:0;">
         <tbody>
             <tr>
-                <td style="width: 50%; vertical-align: top;">
+                <td style="width: 70%; vertical-align: top;">
                     <table class="table table-striped">
                         <thead>
-                            <th>Global Statistics</th>
-                            <th></th>
+                            <th colspan="2" style = "font-size: 120%; text-align: center;">Global Statistics</th>
                         </thead>
                         <tbody>
                             <tr>
-                                <th>
+                                <th style="font-size:120%">
                                     Total played games
                                 </th>
-                                <td>
+                                <td style="font-size:120%">
                                     <c:out value="${stats.totalGames()}"/>
                                 </td>
                             </tr>
                             <tr>
-                                <th>
+                                <th style="font-size:120%">
                                     Total accusations
                                 </th>
-                                <td>
+                                <td style="font-size:120%">
                                     <c:out value="${stats.totalAccusations()}"/>
                                 </td>
                             </tr>
                             <tr>
-                                <th>
+                                <th style="font-size:120%">
                                     Total final accusations
                                 </th>
-                                <td>
+                                <td style="font-size:120%">
                                     <c:out value="${stats.totalFinalAccusations()}"/>
                                 </td>
                             </tr>
                             <tr>
-                                <th>
-                                    Total time
+                                <th style="font-size:120%">
+                                    Average minutes
                                 </th>
-                                <td>
+                                <td style="font-size:120%">
                                     <c:out value="${stats.averageDuration()}"/>
                                 </td>
                             </tr>
@@ -54,21 +53,20 @@
                 <td>
                     <table class="table table-striped">
                         <thead>
-                            <th>Ranking</th>
-                            <th></th>
+                            <th colspan="2" style = "font-size: 120%; text-align: center;">Ranking</th>
                         </thead>
                         <tbody>
                             <tr>
-                                <th>1. </th>
-                                <td><c:out value="${stats.top3Wins().get(0).getUsername()}"></c:out></td>
+                                <th style="font-size:120%">1. </th>
+                                <td style="font-size: 120%; text-align: center"><c:out value="${stats.top3Wins().get(0).getUsername()}"></c:out></td>
                             </tr>
                             <tr>
-                                <th>2. </th>
-                                <td><c:out value="${stats.top3Wins().get(1).getUsername()}"></c:out></td>
+                                <th style="font-size:120%">2. </th>
+                                <td style="font-size: 120%; text-align: center"><c:out value="${stats.top3Wins().get(1).getUsername()}"></c:out></td>
                             </tr>
                             <tr>
-                                <th>3. </th>
-                                <td><c:out value="${stats.top3Wins().get(2).getUsername()}"></c:out></td>
+                                <th style="font-size:120%">3. </th>
+                                <td style="font-size: 120%; text-align: center"><c:out value="${stats.top3Wins().get(2).getUsername()}"></c:out></td>
                             </tr>
                         </tbody>
                     </table>

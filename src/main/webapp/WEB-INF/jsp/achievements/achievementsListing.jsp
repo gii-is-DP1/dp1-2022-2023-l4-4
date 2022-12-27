@@ -8,10 +8,10 @@
 	uri="http://www.springframework.org/security/tags"%>
 
 <cluedo:layout pageName="achievements">
-    <h2>All achievements</h2>
+    <h2 style = "font-size: 150%;">All achievements</h2>
     <h2>
-        <a  href="/achievements/new" >
-            <button class="btn btn-default">
+        <a  href="/achievements/new" style="float: right; padding: 5px; ">
+            <button class="btn btn-default" style="font-size:95%">
                 Create achievement
             </button>
         </a>
@@ -19,48 +19,48 @@
     <table id="achievementTable" class="table table-striped">
         <thead>
         <tr>
-            <th style="width: 150px;">Name</th>
-            <th style="width: 200px;">Metric</th>
-            <th style="width: 200px;">Type</th>
-            <th style="width: 120px">Goal</th>
-            <th style="width: 120px">Description</th>
-            <th style="width: 120px">Experience</th>
-            <th style="width: 120px">Badge</th>
-            <th></th>
+            <th style="width: 150px; font-size:130%; text-align: center;">Name</th>
+            <th style="width: 200px; font-size:130%; text-align: center;">Metric</th>
+            <th style="width: 200px; font-size:130%; text-align: center;">Type</th>
+            <th style="width: 120px; font-size:130%; text-align: center;">Goal</th>
+            <th style="width: 120px; font-size:130%; text-align: center;">Description</th>
+            <th style="width: 120px; font-size:130%; text-align: center;">Experience</th>
+            <th style="width: 120px; font-size:130%; text-align: center;">Badge</th>
+            <th style="width: 50px; font-size:130%;"></th>
         </tr>
         </thead>
         <tbody>
             <c:forEach items="${achievements}" var="achievement">
                 <tr>
-                    <td>
+                    <td style="font-size:115%; text-align: center;">
                         <c:out value="${achievement.name}"/>
                     </td>
-                    <td>
-                        <c:out value="${achievement.metric}"/>
+                    <td style="font-size:115%; text-align: center;">
+                        <c:out value="${achievement.metric}" />
                     </td>
-                    <td>
+                    <td style="font-size:115%; text-align: center;">
                         <c:out value="${achievement.badgeType}"/>
                     </td>
-                    <td>
+                    <td style="font-size:115%; text-align: center;">
                         <c:out value="${achievement.goal}"/>
                     </td>
-                    <td>
+                    <td style="font-size:115%; text-align: center;">
                         <c:out value="${achievement.description}"/>
                     </td>
-                    <td>
+                    <td style="font-size:115%; text-align: center;">
                         <c:out value="${achievement.xp}"/>
                     </td>
                     <td>
                         <c:if test="${achievement.imageUrl == null}">
-                            <img class="img-responsive" src="https://www.shutterstock.com/image-vector/achievement-icon-logo-modern-line-260nw-551572915.jpg" style="width: 100px !important; height: 100px !important;"/>
+                            <img class="img-responsive" src="https://www.shutterstock.com/image-vector/achievement-icon-logo-modern-line-260nw-551572915.jpg" style="width: 100px !important; height: 100px !important;margin-left: auto; margin-right: auto;"/>
                         </c:if>
                         <c:if test="${achievement.imageUrl != null}">
-                            <img class="img-responsive" src="${achievement.imageUrl}" style="width: 100px !important; height: 100px !important;"/>
+                            <img class="img-responsive" src="${achievement.imageUrl}" style="width: 100px !important; height: 100px !important; margin-left: auto; margin-right: auto;"/>
                         </c:if>
                     </td>
-                    <td>
+                    <td style="font-size:130%;">
                         <a href="/achievements/${achievement.id}/edit">
-                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true" style="color: grey;"></span>
                         </a>
                     </td>
                 </tr>
