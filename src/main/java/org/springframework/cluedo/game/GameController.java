@@ -51,8 +51,7 @@ public class GameController {
         this.turnService = turnService;
         this.userService=userService;
     }
-    //Admin
-    //H12
+    
     @Transactional(readOnly = true)
     @GetMapping(value = "/admin/active")
     public ModelAndView getAllActiveGames() {
@@ -60,7 +59,7 @@ public class GameController {
         result.addObject("games", gameService.getAllNotFinishedGames());
         return result;
     }
-    //H13
+    
     @Transactional(readOnly = true)
     @GetMapping("/admin/past")
     public ModelAndView getAllPastGames(){
@@ -69,8 +68,7 @@ public class GameController {
         result.addObject("admin", true);
         return result;
     }
-    //User
-    //H10
+    
     @Transactional(readOnly = true)
     @GetMapping()
     public ModelAndView getAllPublicLobbies(){
@@ -87,7 +85,8 @@ public class GameController {
         result.addObject("games", gameService.getAllPublicLobbies());
         return result;
     }
-    //H11
+    
+    @Transactional(readOnly = true)
     @GetMapping("/past")
     public ModelAndView getAllPastUserGames(){
         User user= userService.getLoggedUser().get();
@@ -96,7 +95,6 @@ public class GameController {
         return result;
     }
     
-    //H1
     @Transactional(readOnly = true)
     @GetMapping("/new")
     public ModelAndView initNewGame(){
@@ -111,9 +109,7 @@ public class GameController {
         }
         game = new Game();
     	ModelAndView result = new ModelAndView(CREATE_NEW_GAME);
-        List<Boolean> bool = new ArrayList<>();
-        bool.add(true);
-        bool.add(false);
+        List<Boolean> bool = List.of(true,false);
         result.addObject("privateList", bool);
         result.addObject("nPlayers", List.of(3,4,5,6));
         result.addObject("game", game);
@@ -162,7 +158,7 @@ public class GameController {
         return result;
     }
 
-    @Transactional
+    @Transactional()
     @GetMapping("/{gameId}/leave")
     public String leaveGame(@PathVariable("gameId") Integer gameId) {
         Game game = null;
@@ -182,7 +178,6 @@ public class GameController {
         return "redirect:/games";
     }
     
-    // H2
     @Transactional
     @GetMapping("/{gameId}")
     public ModelAndView joinGame(@PathVariable("gameId") Integer gameId) throws DataNotFound{
@@ -218,7 +213,6 @@ public class GameController {
         }
     }
 
-    // H3
     @Transactional
     @PostMapping("/{gameId}/lobby")
     public ModelAndView startGame(@PathVariable("gameId") Integer gameId){

@@ -51,7 +51,6 @@ public class AchievementController {
         return result;
     }
 
-    // H?? - Listar todos los logros
     @Transactional(readOnly=true)
     @GetMapping()
     public ModelAndView getAllAchievements(){
@@ -61,7 +60,6 @@ public class AchievementController {
         return result;
     }
 
-    //H24 - Creacion de logros
     @Transactional(readOnly=true)
     @GetMapping("/new")
     public ModelAndView createAchievement(){
@@ -101,6 +99,7 @@ public class AchievementController {
         }
         return result;
     }
+    
     @Transactional
     @PostMapping("/{id}/edit")
     public ModelAndView saveEditedAchievement(@Valid Achievement achievement, BindingResult br, RedirectAttributes attributes){
