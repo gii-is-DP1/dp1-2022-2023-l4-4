@@ -30,6 +30,7 @@ public class UserService {
 
 	private UserRepository userRepository;
 	private UserGameService userGameService;
+	
 
 	@Autowired
 	public UserService(UserRepository userRepository,UserGameService userGameService) {
@@ -119,9 +120,48 @@ public class UserService {
     }
 	
 	@Transactional
-	public void obtainAchievement(Achievement achievement){
+	private void obtainAchievement(Achievement achievement){
 		User loggedUser = getLoggedUser().get();
 		loggedUser.addAchievement(achievement);
 		userRepository.save(loggedUser);
+	}
+
+	@Transactional
+	public void checkToObtainAchievement(Achievement achievement){
+		User loggedUser = getLoggedUser().get();
+		UserStatistics stats = userRepository.findMyStatistics(loggedUser);
+		if(!loggedUser.getAchievements().contains(achievement)){
+			switch(achievement.getMetric()){
+				case VICTORIES:
+					if(stats.getVictories()>=achievement.getGoal()){
+						obtainAchievement(achievement);
+					}
+				case EXPERIENCE:
+					if(stats.getXp()>=achievement.getGoal()){
+						obtainAchievement(achievement);
+					}
+				case TOTAL_GAMES:
+					if(stats.getTotalGames()>=achievement.getGoal()){
+						obtainAchievement(achievement);
+					}
+				case TOTAL_ROUNDS:
+					if(stats.getTotalRounds()>=achievement.getGoal()){
+						obtainAchievement(achievement);
+					}
+				case TOTAL_TIME:
+					if(stats.getTotalTime()>=achievement.getGoal()){
+						obtainAchievement(achievement);
+					}
+				case TOTAL_ACUSATIONS:
+					if(stats.getTotalAccusations()>=achievement.getGoal()){
+						obtainAchievement(achievement);
+					}
+				case TOTAL_FINAL_ACUSATIONS:
+					if(stats.getTotalFinalAccusations()>=achievement.getGoal()){
+						obtainAchievement(achievement);
+					}
+			}
+		}
+		
 	}
 }
