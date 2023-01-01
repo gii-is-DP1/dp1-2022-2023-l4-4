@@ -17,6 +17,7 @@
                 </button>
             </a>
         </h2>
+
     </sec:authorize>
     <table id="achievementTable" class="table table-striped">
         <thead>

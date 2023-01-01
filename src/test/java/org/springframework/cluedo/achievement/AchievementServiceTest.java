@@ -20,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.cluedo.achievement.AchievementService;
 import org.springframework.cluedo.enumerates.Badge;
 import org.springframework.cluedo.enumerates.Metric;
+
 import org.springframework.context.annotation.ComponentScan;
 
 @ExtendWith(MockitoExtension.class)

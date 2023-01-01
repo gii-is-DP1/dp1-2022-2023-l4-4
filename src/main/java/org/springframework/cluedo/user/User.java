@@ -5,18 +5,13 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
-
-import java.util.Set;
-
 
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cluedo.achievement.Achievement;
 import org.springframework.cluedo.model.BaseEntity;
 

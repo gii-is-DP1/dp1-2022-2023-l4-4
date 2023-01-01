@@ -57,6 +57,11 @@
 						</li>
 					</ul>
 				</petclinic:menuItem>
+				<petclinic:menuItem active="${name eq 'friends'}" url="users/friends"
+					title="Friends">
+					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+					<span>Friends</span>
+				</petclinic:menuItem>
 				<sec:authorize access="hasAuthority('admin')">
 					<petclinic:menuItem active="${name eq 'Admin'}" url="/admin"
 						title="Admin">
