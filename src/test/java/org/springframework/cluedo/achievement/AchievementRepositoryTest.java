@@ -20,7 +20,7 @@ public class AchievementRepositoryTest {
     
 
     @Autowired 
-    public AchievementRepository repo;
+    protected AchievementRepository repo;
 
     @Test
     public void testFindAll(){
