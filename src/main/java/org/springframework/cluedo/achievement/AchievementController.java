@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/achievements")
@@ -50,7 +51,6 @@ public class AchievementController {
         return result;
     }
 
-    // H?? - Listar todos los logros
     @Transactional(readOnly=true)
     @GetMapping()
     public ModelAndView getAllAchievements(){
@@ -60,7 +60,6 @@ public class AchievementController {
         return result;
     }
 
-    //H24 - Creacion de logros
     @Transactional(readOnly=true)
     @GetMapping("/new")
     public ModelAndView createAchievement(){
@@ -73,7 +72,7 @@ public class AchievementController {
 
     @Transactional
     @PostMapping("/new")
-    public ModelAndView saveCreatedAchievement(@Valid Achievement achievement, BindingResult br) {
+    public ModelAndView saveCreatedAchievement(@Valid Achievement achievement, BindingResult br,RedirectAttributes attributes) {
         if(br.hasErrors()) {
             System.out.println(br.getAllErrors().toString());
             return new ModelAndView(CREATE_EDIT_ACHIEVEMENT, br.getModel());
@@ -81,8 +80,8 @@ public class AchievementController {
             String imagen = "/resources/images/" + achievement.getBadgeType().toString().toLowerCase() + ".jpg";
             achievement.setImageUrl(imagen);
             achievementService.saveAchievement(achievement);
-            ModelAndView result = getAllAchievements();
-            result.addObject("message", "The achievement was created successfully");
+            ModelAndView result = new ModelAndView("redirect:/achievements");
+            attributes.addFlashAttribute("message", "The achievement was created successfully");
             return result;
         }
     }
@@ -100,18 +99,19 @@ public class AchievementController {
         }
         return result;
     }
+    
     @Transactional
     @PostMapping("/{id}/edit")
-    public ModelAndView saveEditedAchievement(@Valid Achievement achievement, BindingResult br){
+    public ModelAndView saveEditedAchievement(@Valid Achievement achievement, BindingResult br, RedirectAttributes attributes){
         if(br.hasErrors()){
             return new ModelAndView(CREATE_EDIT_ACHIEVEMENT,br.getModel());
         } else {
-            ModelAndView result = getAllAchievements();
+            ModelAndView result = new ModelAndView("redirect:/achievements");
             Achievement achievementToEdit = achievementService.getAchievementById(achievement.getId());
             BeanUtils.copyProperties(achievement, achievementToEdit, "id","image_url");
             achievementToEdit.setImageUrl("/resources/images/" + achievement.getBadgeType().toString().toLowerCase() + ".jpg");
             achievementService.saveAchievement(achievementToEdit);
-            result.addObject("message", "The achievement was edited successfully");
+            attributes.addFlashAttribute("message", "The achievement was edited successfully");
             return result;
         }
     }

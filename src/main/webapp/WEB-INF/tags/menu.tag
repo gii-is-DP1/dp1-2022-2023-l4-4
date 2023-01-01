@@ -45,7 +45,7 @@
 						</li>
 					</ul>
 				</petclinic:menuItem>
-				<petclinic:menuItem active="${name eq 'stadistics'}" url="/stats"
+				<petclinic:menuItem active="${name eq 'statistics'}" url="/stats"
 					title="Statistics" dropdown="${true}">
 					<ul class="dropdown-menu">
 						<li>

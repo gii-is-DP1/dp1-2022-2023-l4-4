@@ -18,7 +18,7 @@
                 <cluedo:selectField name = "lobbySize" label="Number of players" names="${nPlayers}" size="4"></cluedo:selectField>
             </div>
             <div class="form-group">
-                <button class="btn btn-default" type="submit">Add game</button>
+                <button class="btn btn-default" type="submit" formaction="/games/new">Add game</button>
             </div>
         </form:form>
     </jsp:body>

@@ -218,8 +218,8 @@ public class UserController {
 		else {
 			user.setAuthority("user");
 			user.setEnabled(1);
-			List emptyFriendList = new ArrayList();
-			user.setFriends(emptyFriendList);
+			user.setFriends(new ArrayList<>());
+			user.setAchievements(new ArrayList<>());
 			user.setTag(generarTag());
 			this.userService.saveUser(user);
 			UserStatistics statistics = new UserStatistics();

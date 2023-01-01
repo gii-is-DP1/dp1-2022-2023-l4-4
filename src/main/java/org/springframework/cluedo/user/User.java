@@ -42,8 +42,8 @@ public class User extends BaseEntity{
 	@Column(name="image_url")
 	private String imageurl;
 
-	@Column(name="tag",unique=true)
-	@NotEmpty
+	
+	
 	private String tag;
 
 	@ManyToMany
@@ -68,4 +68,9 @@ public class User extends BaseEntity{
 		this.friends.add(friend);
 	}
 	
+
+
+	public void addAchievement(Achievement achievement){
+		this.achievements.add(achievement);
+	}
 }

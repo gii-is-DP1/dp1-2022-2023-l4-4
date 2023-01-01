@@ -7,13 +7,13 @@
 
 <cluedo:layout pageName="New Achievement">
     <jsp:body>
-        <h2>
+        <h2 style = "font-size: 150%;">
             <c:if test="${achievement['new']}">New achievement</c:if>
             <c:if test="${!achievement['new']}">Edit achievement</c:if>
         </h2>
         <form:form modelAttribute="achievement" class="form-horizontal">
             <input type="hidden" name="id" value="${achievement.id}">
-            <div class="form-group has-feedback">
+            <div class="form-group has-feedback" style="font-size:115%">
                 <cluedo:inputField label="Name" name="name"></cluedo:inputField>
                 <cluedo:inputField label="Description " name="description"></cluedo:inputField>
                 <cluedo:inputField label="Experience " name="xp"></cluedo:inputField>
@@ -22,7 +22,7 @@
                 <cluedo:selectField name = "badgeType" label="Type" names="${badge}" size="${badge.size()}"></cluedo:selectField>
             </div>
             <div class="form-group">
-                <button class="btn btn-default" type="submit">Save achievement</button>
+                <button class="btn btn-default" type="submit"  style="font-size:130%;">Save achievement</button>
             </div>
         </form:form>
     </jsp:body>

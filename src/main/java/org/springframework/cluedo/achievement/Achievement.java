@@ -44,6 +44,7 @@ public class Achievement extends BaseEntity{
     @Column(name="description")
     private String description;
 
+    @NotNull
     @Min(0)
     @Column(name="experience")
     private Integer xp;

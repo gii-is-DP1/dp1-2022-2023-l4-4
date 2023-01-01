@@ -7,10 +7,13 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 
+<style type="text/css">
+    th,td {font-size:110%}
+</style>
 <cluedo:layout pageName="Finished games">
-    <h2>
+    <h2 style="font-size: 150%;">
         <c:if test="${admin}">Past games</c:if>
-        <c:if test="-${admin}">My past games</c:if>
+        <c:if test="${!admin}">My past games</c:if>
     </h2>
 
     <table id="gameTable" class="table table-striped">

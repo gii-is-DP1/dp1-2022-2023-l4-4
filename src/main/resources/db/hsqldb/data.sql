@@ -4,11 +4,13 @@
 
 INSERT INTO achievements(id, achievement_name, metric, badge, goal, description, experience, image_url) VALUES (1, 'Gamer', 0,0, 1, 'You`ve won a game.', 100, 'https://audrey-gaune-projets-web.ovh/wp-content/uploads/2016/11/Le-March%C3%A9-des-Consoles-de-Jeux-Vid%C3%A9o.jpg');
 
+
 INSERT INTO users(id,username,password,email,image_url,enabled,authority,tag) VALUES 
-(1,'1','1','1@gmail.com','https://www.adslzone.net/app/uploads-adslzone.net/2019/04/borrar-fondo-imagen.jpg',1,'admin','DFSF'),
-(2,'2','2','2@gmail.com',null,1,'user','wwwww'),
-(3,'manuel333','1','user2@gmail.com',null,1,'user','sssss'),
-(4,'4','4','user4@gmail.com',null,1,'user','rrrrr');
+(1,'1','1','1@gmail.com','https://www.adslzone.net/app/uploads-adslzone.net/2019/04/borrar-fondo-imagen.jpg',1,'admin','#WADS1111'),
+(2,'2','2','2@gmail.com',null,1,'user','#DADW3333'),
+(3,'manuel333','1','user2@gmail.com',null,1,'user','#PODT1111'),
+(4,'4','4','user4@gmail.com',null,1,'user','#PIGO9999');
+
 
 INSERT INTO cards(id,card_name,card_type,image_url) VALUES
 (1,'KITCHEN','ROOM',null),
