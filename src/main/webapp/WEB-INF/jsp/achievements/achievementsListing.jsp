@@ -9,13 +9,15 @@
 
 <cluedo:layout pageName="achievements">
     <h2 style = "font-size: 150%;">All achievements</h2>
-    <h2>
-        <a  href="/achievements/new" style="float: right; padding: 5px; ">
-            <button class="btn btn-default" style="font-size:95%">
-                Create achievement
-            </button>
-        </a>
-    </h2>
+    <sec:authorize access="hasAuthority('admin')">
+        <h2>
+            <a  href="/achievements/new" style="float: right; padding: 5px; ">
+                <button class="btn btn-default" style="font-size:95%">
+                    Create achievement
+                </button>
+            </a>
+        </h2>
+    </sec:authorize>
     <table id="achievementTable" class="table table-striped">
         <thead>
         <tr>
@@ -58,11 +60,13 @@
                             <img class="img-responsive" src="${achievement.imageUrl}" style="width: 100px !important; height: 100px !important; margin-left: auto; margin-right: auto;"/>
                         </c:if>
                     </td>
-                    <td style="font-size:130%;">
-                        <a href="/achievements/${achievement.id}/edit">
-                            <span class="glyphicon glyphicon-pencil" aria-hidden="true" style="color: grey;"></span>
-                        </a>
-                    </td>
+                    <sec:authorize access="hasAuthority('admin')">
+                        <td style="font-size:130%;">
+                            <a href="/achievements/${achievement.id}/edit">
+                                <span class="glyphicon glyphicon-pencil" aria-hidden="true" style="color: grey;"></span>
+                            </a>
+                        </td>
+                    </sec:authorize>
                 </tr>
             </c:forEach>
         </tbody>
