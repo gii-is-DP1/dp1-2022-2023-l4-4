@@ -10,15 +10,15 @@
 
 <cluedo:layout pageName="addFriends">
 
-    <h2>Find friends</h2>
+    <h2 style="font-size:150%">Find friends</h2>
 
     
     <form:form modelAttribute="UsernameForm" class="form-horizontal">
-            <div class="form-group has-feedback">
+            <div class="form-group has-feedback" style="font-size:120%">
                 <cluedo:inputField label="Username" name="username" />
             </div>
             <div class="form-group">
-                <button class="btn btn-default" type="submit">Delete friend</button> 
+                <button class="btn btn-default" type="submit" style="font-size:110%">Delete friend</button> 
             </div>
         </form:form>
 
