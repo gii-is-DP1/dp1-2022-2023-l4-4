@@ -48,19 +48,16 @@ public class UserController {
 	private static final String VIEWS_USER_LIST = "users/userList";
 	private final String ACHIEVEMENTS_LISTING = "achievements/myAchievements";
   	private static final String VIEWS_USER_CREATE_OR_UPDATE_FORM = "users/createOrUpdateUserForm";
-
+	private static final String UPDATE_OTHER_USER_FORM_ADMIN = "users/updateOtherUserForm";
 	private static final String GLOBAL_STATISTICS = "users/globalStatistics";
 	private final String STATISTICS = "users/statistics";
 	private static final String ADD_FRIENDS_FORM = "users/addFriend";
 	private static final String DELETE_FRIENDS_FORM = "users/deleteFriend";
 
-	@Autowired
 	private UserService userService;
-	
-	@Autowired
+
 	private UserStatisticsService statisticsService;
 
-	@Autowired
 	private GameService gameService;
 
 	@Autowired
@@ -98,43 +95,38 @@ public class UserController {
 	@Transactional(readOnly=true)
 	@GetMapping(value="/users/{userId}/friends/delete")
 	public ModelAndView initDeleteFriendForm() {
-		ModelAndView mav = new ModelAndView("users/deleteFriend");
+		ModelAndView mav = new ModelAndView(DELETE_FRIENDS_FORM);
 		mav.addObject("UsernameForm", new UsernameForm());
 		return mav;
 	}
+
 	@Transactional
 	@PostMapping(value = "/users/{userId}/friends/delete")
-	public ModelAndView processDeleteFriendForm(String username, Map<String, Object> model) {
-		if(username==null){
-			ModelAndView result= new ModelAndView(DELETE_FRIENDS_FORM);
-			return result;
+	public ModelAndView processDeleteFriendForm(@Valid UsernameForm username, BindingResult br) {
+		ModelAndView result= new ModelAndView(DELETE_FRIENDS_FORM);
+		result.addObject("UsernameForm", new UsernameForm());
+		if(br.hasErrors()){
+			result.addObject("message","Username must not be empty. Please try again.");
 		}else{
-			Optional<User> userByUsername = this.userService.findUserByUsername(username);
-			if (userByUsername.isEmpty()) {
-				ModelAndView result= new ModelAndView(DELETE_FRIENDS_FORM);
-				return result;
+			Optional<User> userByUsername = this.userService.findUserByUsername(username.getUsername());
+			if (!userByUsername.isPresent()) {
+				result.addObject("message", "Username not found. Please try again");
 			}
 			else {
-				Optional<User> nrLoggedUser = this.userService.getLoggedUser();
-				User loggedUser = nrLoggedUser.get();
-				if(loggedUser.getFriends().contains(userByUsername.get())){
-					User deleteUser= userByUsername.get();
-					loggedUser.getFriends().remove(deleteUser);
-					userService.saveUser(loggedUser);
-					ModelAndView result= new ModelAndView("redirect:/users/"+loggedUser.getId()+"/friends");
+				User loggedUser = this.userService.getLoggedUser().get();
+				User friendToDelete = userByUsername.get();
+				if(!loggedUser.getFriends().contains(friendToDelete)){
+					result.addObject("message", "This user is not on your list of friends. Please try again");
+				} else {
+					userService.deleteFriend(friendToDelete);
+					result= new ModelAndView("redirect:/users/"+loggedUser.getId()+"/friends");
 					result.addObject("user", loggedUser);
-					return result;
 				}
-				else{
-				ModelAndView result= new ModelAndView("redirect:/users/"+loggedUser.getId()+"/friends");
-				return result;
-				}
-		
 			}
 		}
+		return result;	
+	}
 
-		
-	} 
 	@Transactional(readOnly=true)
 	@GetMapping(value="/users/{userId}/friends/add")
 	public ModelAndView initAddFriendForm() {
@@ -145,49 +137,32 @@ public class UserController {
 
 	@Transactional
 	@PostMapping(value = "/users/{userId}/friends/add")
-	public ModelAndView processAddFriendForm(String tag, Map<String, Object> model) {
-		if(tag==null){
-			ModelAndView result= new ModelAndView(ADD_FRIENDS_FORM);
-			return result;
+	public ModelAndView processAddFriendForm(@Valid TagForm tagForm, BindingResult br) {
+		ModelAndView result= new ModelAndView(ADD_FRIENDS_FORM);
+		result.addObject("TagForm", new TagForm());
+		if(br.hasErrors()){
+			result.addObject("message","Tag must not be empty. Please try again");
 		}else{
-			Optional<User> userByTag = this.userService.findUserByTag(tag);
-			if (userByTag.isEmpty()) {
-				ModelAndView result= new ModelAndView(ADD_FRIENDS_FORM);
-				return result;
+			User userByTag = this.userService.findUserByTag(tagForm.getTag());
+			if (userByTag==null) {
+				result.addObject("message","User not found. Please try again");	
 			}
 			else {
-				Optional<User> nrLoggedUser = this.userService.getLoggedUser();
-				User loggedUser = nrLoggedUser.get();
-				if(loggedUser.getFriends().contains(userByTag.get())){
-					ModelAndView result= new ModelAndView("redirect:/users/"+loggedUser.getId()+"/friends");
-					return result;
-				}
-				else{
-					loggedUser.addFriend(userByTag.get());
-				userService.saveUser(loggedUser);
-				ModelAndView result= new ModelAndView("redirect:/users/"+loggedUser.getId()+"/friends");
-				result.addObject("user", loggedUser);
-				return result;
-				}
-		
+				User loggedUser = this.userService.getLoggedUser().get();
+				userService.addFriend(userByTag);
+				result= new ModelAndView("redirect:/users/"+loggedUser.getId()+"/friends");
 			}
 		}
-
-		
+		return result;
 	} 
 
 	@GetMapping(value="/users/{userId}/friends")
 	public ModelAndView showUserFriends(@PathVariable("userId") int userId) throws DataNotFound{
 		ModelAndView mav = new ModelAndView("users/userFriends");
 		List<User> nrUser = userService.findUserFriends(userId);
-		if(nrUser.size()>0){
+		if(nrUser.size()>=0){
 			mav.addObject("user", nrUser);
-		return mav;
-		}
-		if(nrUser.size()==0){
-			mav.addObject("user", nrUser);	
-		return mav;
-
+			return mav;
 		}
 		throw new DataNotFound();
 	}
@@ -197,7 +172,7 @@ public class UserController {
 		Optional<User> nrUser = this.userService.findUserById(userId);
 		if(nrUser.isPresent()){
 			model.addAttribute(nrUser.get());
-		return VIEWS_USER_CREATE_OR_UPDATE_FORM;
+			return UPDATE_OTHER_USER_FORM_ADMIN;
 		}
 		throw new DataNotFound();
 	}
@@ -233,7 +208,7 @@ public class UserController {
 	public String processUpdateForm(@Valid User user, BindingResult result,@PathVariable("userId") int userId){
 		User userToChange = userService.findUserById(userId).get();
 		if(result.hasErrors()){
-			return VIEWS_USER_CREATE_OR_UPDATE_FORM;
+			return UPDATE_OTHER_USER_FORM_ADMIN;
 		}else{
 			userToChange.setUsername(user.getUsername());
 			userToChange.setPassword(user.getPassword());
@@ -243,6 +218,7 @@ public class UserController {
 			return "redirect:/users/{userId}";
 		}
 	} 
+
 	@Transactional(readOnly=true)
 	@GetMapping(value = "/users/{userId}/delete")
 	public String deleteUser(@PathVariable("userId") int userId){
@@ -275,9 +251,9 @@ public class UserController {
 	}
 	@Transactional
 	@PostMapping(value= "/profile/edit")
-	public String processUpdateFormProfile(@Valid User user, BindingResult result){
+	public String processUpdateFormProfile(@Valid User user, BindingResult br){
 		Optional<User> nrUser = userService.getLoggedUser();
-		if(result.hasErrors()){
+		if(br.hasErrors()){
 			return VIEWS_USER_CREATE_OR_UPDATE_FORM;
 		}else{
 			User userToChange = nrUser.get();
@@ -286,7 +262,7 @@ public class UserController {
 			userToChange.setEmail(user.getEmail());
 			userToChange.setImageurl(user.getImageurl());
 			this.userService.saveUser(userToChange);
-			return "users/profile";
+			return "redirect:/profile";
 		}
 	} 
 	@Transactional(readOnly=true)
