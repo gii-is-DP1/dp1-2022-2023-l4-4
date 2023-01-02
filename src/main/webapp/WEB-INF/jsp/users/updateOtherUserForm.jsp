@@ -25,7 +25,7 @@
         <div class="form-group">
             <c:if test="${!user['new']}">
                 <div class="col-sm-offset-2 col-sm-10">
-                    <button class="btn btn-default" type="submit" formaction="/profile/edit">Update User</button>
+                    <button class="btn btn-default" type="submit" formaction="/users/${user.id}/edit">Update User</button>
                 </div>
             </c:if>
             <c:if test="${user['new']}">

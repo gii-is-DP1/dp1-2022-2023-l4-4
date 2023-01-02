@@ -43,7 +43,6 @@
     <spring:url value="/profile/edit" var="editUrl">
     </spring:url>
     <a href="${fn:escapeXml(editUrl)}" class="btn btn-default" style="font-size:110%">Edit Profile</a>
-
     <br/>
     <br/>
     <br/>

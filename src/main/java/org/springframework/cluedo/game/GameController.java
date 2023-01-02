@@ -23,10 +23,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/games")
@@ -41,9 +43,9 @@ public class GameController {
     private final String DICE_VIEW="games/diceView"; 
     private final String MOVE_VIEW = "games/selectCeld";
     private final String ACCUSATION_VIEW="games/makeAccusation";
-    private final GameService gameService;
-    private final UserService userService;
-    private final TurnService turnService;
+    private GameService gameService;
+    private UserService userService;
+    private TurnService turnService;
     
     @Autowired
     public GameController(GameService gameService, TurnService turnService, UserService userService){
@@ -52,6 +54,16 @@ public class GameController {
         this.userService=userService;
     }
     
+    @ModelAttribute("privateList")
+    private List<Boolean> privateList(){
+        return List.of(true,false);
+    }
+
+    @ModelAttribute("nPlayers")
+    private List<Integer> nPlayers(){
+        return List.of(3,4,5,6);
+    }
+
     @Transactional(readOnly = true)
     @GetMapping(value = "/admin/active")
     public ModelAndView getAllActiveGames() {
@@ -109,11 +121,9 @@ public class GameController {
         }
         game = new Game();
     	ModelAndView result = new ModelAndView(CREATE_NEW_GAME);
-        List<Boolean> bool = List.of(true,false);
-        result.addObject("privateList", bool);
-        result.addObject("nPlayers", List.of(3,4,5,6));
         result.addObject("game", game);
         result.addObject("user", user);
+        result.addObject("status", Status.LOBBY);
         return result;
     }
     
@@ -127,7 +137,7 @@ public class GameController {
             game.setStatus(Status.LOBBY);
             game.setLobby(new ArrayList<>(List.of(userService.getLoggedUser().get())));
             gameService.saveGame(game);
-    		ModelAndView result = new ModelAndView("redirect:"+game.getId()+"/lobby");
+    		ModelAndView result = new ModelAndView("redirect:/games/"+game.getId()+"/lobby");
     		return result;
     	}
     }

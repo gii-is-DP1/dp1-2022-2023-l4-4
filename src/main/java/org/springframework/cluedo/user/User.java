@@ -65,12 +65,17 @@ public class User extends BaseEntity{
 
 
 	public void addFriend(User friend){
-		this.friends.add(friend);
+		if(!this.friends.contains(friend)){
+			this.friends.add(friend);
+		}
 	}
-	
+	public void deleteFriend(User friend){
+		this.friends.remove(friend);
+	}
 
 
 	public void addAchievement(Achievement achievement){
 		this.achievements.add(achievement);
 	}
+
 }

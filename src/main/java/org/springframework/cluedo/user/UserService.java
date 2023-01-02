@@ -53,7 +53,7 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
-	public Optional<User> findUserByTag(String tag) {
+	public User findUserByTag(String tag) {
 		return userRepository.findByTag(tag);
 	}
 	public void deleteUser(int id){
@@ -161,6 +161,18 @@ public class UserService {
 					}
 			}
 		}
-		
+	}
+
+	@Transactional
+		public void addFriend(User user) {
+			User loggedUser = this.getLoggedUser().get();
+			loggedUser.addFriend(user);
+			this.saveUser(loggedUser);
+	}
+	@Transactional
+		public void deleteFriend(User user) {
+			User loggedUser = this.getLoggedUser().get();
+			loggedUser.deleteFriend(user);
+			this.saveUser(loggedUser);
 	}
 }

@@ -4,6 +4,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
+<style type="text/css">
+    th { font-size: 111%;}
+    td { font-size: 110%;}
+</style>
+
 <petclinic:layout pageName="users">
 
     <h2>User Information</h2>
@@ -21,6 +26,17 @@
         <tr>
             <th>Tag</th>
             <td><c:out value="${user.tag}"/></td>
+        </tr>
+        <tr>
+            <th>Profile image</th>
+            <td>
+                <c:if test="${user.imageurl != null}">
+                        <img class="img-responsive" src="${user.imageurl}" style="width: 75px !important; height: 75px !important;"/>
+                    </c:if>
+                    <c:if test="${user.imageurl == null}">
+                        <img class="img-responsive" src="https://www.softzone.es/app/uploads/2018/04/guest.png" style="width: 75px !important; height: 75px !important;"/>
+                    </c:if>
+            </td>
         </tr>
       
     </table>
