@@ -2,6 +2,7 @@ package org.springframework.cluedo.card;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -13,6 +14,7 @@ import org.springframework.cluedo.game.Game;
 import org.springframework.cluedo.user.UserGame;
 import org.springframework.cluedo.user.UserGameService;
 import org.springframework.stereotype.Service;
+import org.springframework.cluedo.enumerates.CardName;
 
 @Service
 public class CardService {
@@ -30,6 +32,26 @@ public class CardService {
 
     public List<Card> getAllCards() {
         return cardRepository.findAll();
+    }
+
+    public List<Card> getAllWeapons() {
+        return cardRepository.findWeapons();
+    }
+
+    public List<Card> getAllRooms() {
+        return cardRepository.findRooms();
+    }
+
+    public List<Card> getAllSuspects() {
+        return cardRepository.findSuspects();
+    }
+
+    public Optional<Card> getCardById(Integer cardId) {
+        return cardRepository.findById(cardId);
+    }
+
+    public Card getCardByCardName(CardName cardName) {
+        return cardRepository.findByCardName(cardName);
     }
 
     

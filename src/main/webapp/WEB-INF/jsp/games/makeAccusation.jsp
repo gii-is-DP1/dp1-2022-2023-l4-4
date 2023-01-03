@@ -8,13 +8,17 @@
 <cluedo:layout pageName="Throw Dices">
     <jsp:body>
         <div class="container">
-            <h2>
-                <form:form  class="form-horizontal">
-                    <div class="form-group">
-                        <button class="btn btn-default" type="submit">Make Accusation</button>
-                    </div>
-                </form:form>
-            </h2>
+            <form:form  modelAttribute="accusation" class="form-horizontal">
+                <input type="hidden" name="turn" value=${accusation.turn.id}>
+                <input type="hidden" name="roomCard" value=${room.cardName}>
+                <div class="form-group has-feedback" style="font-size:120%">
+                    <cluedo:selectField name = "suspectCard" label="Suspect" names="${suspects}" size="6"></cluedo:selectField>
+                    <cluedo:selectField name = "weaponCard" label="Weapons" names="${weapons}" size="6"></cluedo:selectField>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-default" type="submit">Make Accusation</button>
+                </div>
+            </form:form>
         </div>
     </jsp:body>
 </cluedo:layout>

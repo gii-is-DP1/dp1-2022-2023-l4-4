@@ -7,6 +7,11 @@ import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cluedo.accusation.Accusation;
+import org.springframework.cluedo.accusation.AccusationService;
+import org.springframework.cluedo.card.Card;
+import org.springframework.cluedo.card.CardRepository;
+import org.springframework.cluedo.card.CardService;
 import org.springframework.cluedo.enumerates.CeldType;
 import org.springframework.cluedo.enumerates.Phase;
 import org.springframework.cluedo.enumerates.Status;
@@ -29,6 +34,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.cluedo.enumerates.CardName;
 
 @Controller
 @RequestMapping("/games")
@@ -46,12 +52,16 @@ public class GameController {
     private GameService gameService;
     private UserService userService;
     private TurnService turnService;
+    private CardService cardService;
+    private AccusationService accusationService;
     
     @Autowired
-    public GameController(GameService gameService, TurnService turnService, UserService userService){
+    public GameController(GameService gameService, TurnService turnService, UserService userService, CardService cardService, AccusationService accusationService ){
         this.gameService=gameService;
         this.turnService = turnService;
         this.userService=userService;
+        this.cardService = cardService;
+        this.accusationService = accusationService;
     }
     
     @ModelAttribute("privateList")
@@ -465,14 +475,19 @@ public class GameController {
         ModelAndView result=checkPhase(game,Phase.ACCUSATION); 
         if (result==null){
             result = new ModelAndView(ACCUSATION_VIEW);
-            result.addObject("gameId", gameId);
+            Accusation accusation = new Accusation();
+            accusation.setTurn(turnService.getActualTurn(game).get());
+            result.addObject("suspects", cardService.getAllSuspects());
+            result.addObject("weapons", cardService.getAllWeapons());
+            result.addObject("room", cardService.getCardByCardName(CardName.valueOf(accusation.getTurn().getFinalCeld().getCeldType().toString())));
+            result.addObject("accusation", accusation);
         }
         return result;
     } 
 
     @Transactional(rollbackFor = {WrongPhaseException.class,DataNotFound.class})
     @PostMapping("/{gameId}/play/accusation")
-    public ModelAndView makeAccusation(@PathVariable("gameId") Integer gameId) throws WrongPhaseException,DataNotFound,CorruptGame{
+    public ModelAndView makeAccusation(@PathVariable("gameId") Integer gameId, @Valid Accusation accusation) throws WrongPhaseException,DataNotFound,CorruptGame{
         Game game = null;
         try{
             game = gameService.getGameById(gameId);
@@ -491,6 +506,7 @@ public class GameController {
             return notYourTurn(game);
         }
         try{
+            accusationService.saveAccusation(accusation);
             turnService.makeAccusation(game);
         } catch(Exception e) {
             ModelAndView result = new ModelAndView(ON_GAME);
