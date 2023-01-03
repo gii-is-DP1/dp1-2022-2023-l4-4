@@ -181,7 +181,7 @@ public class GameController {
         if(game.getLobby().contains(user)){
             if(game.getStatus().equals(Status.LOBBY)) {
                 gameService.deleteUserFromLobby(user, game);
-            } else if (game.getStatus().equals(Status.IN_PROGRESS)) {
+            } else if (game.getStatus().equals(Status.IN_PROGRESS)) { 
                 gameService.leaveGameInProgress(user,game);
             }
         }

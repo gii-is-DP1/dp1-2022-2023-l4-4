@@ -2,6 +2,7 @@ package org.springframework.cluedo.achievement;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
@@ -62,4 +63,12 @@ public class AchievementServiceTest {
         assertTrue(achievement.get().getId()==1);
     }
 
+    @Test
+    void findAllMyAchievements(){
+        when(repo.findAllMyAchievements(any(Integer.class))).thenReturn(achievements);
+        List<Achievement> achievements = repo.findAllMyAchievements(2);
+        assertNotNull(achievements);
+        assertTrue(achievements.size()==1);
+        assertTrue(achievements.get(0).getName().equals("Test"));
+    }
 }
