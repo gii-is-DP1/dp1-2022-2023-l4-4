@@ -143,8 +143,12 @@ public class UserController {
 			}
 			else {
 				User loggedUser = this.userService.getLoggedUser().get();
+				if(loggedUser.getTag().equals(userByTag.getTag())) {
+					result.addObject("message","You cannot be your own friend. Please try again.");
+				} else {
 				userService.addFriend(userByTag);
 				result= new ModelAndView("redirect:/users/"+loggedUser.getId()+"/friends");
+				}
 			}
 		}
 		return result;

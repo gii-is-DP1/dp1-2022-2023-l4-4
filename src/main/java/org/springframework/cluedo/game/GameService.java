@@ -84,6 +84,11 @@ public class GameService {
 		gameRepository.save(game);
 	}
 
+	@Transactional
+	public void deleteGame(Game game){
+		gameRepository.delete(game);
+	}
+
 	@Transactional(readOnly=true)
 	public Game getGameById(Integer gameId) throws DataNotFound{
 		Optional<Game> game = gameRepository.findById(gameId);
@@ -126,10 +131,15 @@ public class GameService {
 		return gameRepository.getMyNotFinishedGame(user);
 	}
 	public void deleteUserFromLobby(User user, Game game) {
-		List<User> users = game.getLobby();
-		users.remove(user);
-		game.setLobby(users);
-		saveGame(game);
+		if(!game.getHost().equals(user)){
+			List<User> users = game.getLobby();
+			users.remove(user);
+			game.setLobby(users);
+			saveGame(game);
+		} else {
+			deleteGame(game);
+		}
+		
 	}
 	public void leaveGameInProgress(User user, Game game) {
 		List<UserGame> ugs = game.getPlayers();
