@@ -151,19 +151,17 @@ public class GameController {
         List<Message> nrMessages = messageService.getAllMessageByGameId(gameId);
         if(nrMessages.size()>0){
             mav.addObject("message", nrMessages);
-            
             mav.addObject("userNow", userNow);
             return mav;
         }
         if(nrMessages.size()==0){
-            mav.addObject("userNow", userNow);
             return mav;
         }
         throw new DataNotFound();
 
     }
-    @PostMapping("/chat/{gameId}")
-    public ModelAndView newMessage(@PathVariable("id") Integer gameId, BindingResult br, @Valid @ModelAttribute Message message) throws DataNotFound{
+    /*@PostMapping("/chat/{gameId}")
+    public ModelAndView newMessage(@Valid Message message, BindingResult br, @PathVariable("id") Integer gameId) throws DataNotFound{
         if(br.hasErrors()){
             return new ModelAndView("games/chat", br.getModel());
         }
@@ -175,26 +173,9 @@ public class GameController {
         message.setGame(gameService.getGameById(gameId));
         this.messageService.saveMessage(message);
         ModelAndView result = new ModelAndView("redirect:/chat/{id}");
-        result.addObject("userNow", userNow);
-        result.addObject("message", new Message());
+        result.addObject("message", message);
         return result;}
-    }
-
-   /*  @GetMapping(value="/users/{userId}/friends")
-	public ModelAndView showUserFriends(@PathVariable("userId") int userId) throws DataNotFound{
-		ModelAndView mav = new ModelAndView("users/userFriends");
-		List<User> nrUser = userService.findUserFriends(userId);
-		if(nrUser.size()>0){
-			mav.addObject("user", nrUser);
-		return mav;
-		}
-		if(nrUser.size()==0){
-			mav.addObject("user", nrUser);	
-		return mav;
-
-		}
-		throw new DataNotFound();
-	}*/
+    } */
 
 
     @Transactional(readOnly = true)
