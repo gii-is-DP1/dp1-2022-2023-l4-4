@@ -75,7 +75,6 @@ public class AchievementController {
     @PostMapping("/achievements/new")
     public ModelAndView saveCreatedAchievement(@Valid Achievement achievement, BindingResult br,RedirectAttributes attributes) {
         if(br.hasErrors()) {
-            System.out.println(br.getAllErrors().toString());
             return new ModelAndView(CREATE_EDIT_ACHIEVEMENT, br.getModel());
         } else {
             String imagen = "/resources/images/" + achievement.getBadgeType().toString().toLowerCase() + ".jpg";
