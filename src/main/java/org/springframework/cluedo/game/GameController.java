@@ -17,16 +17,21 @@ import java.util.List;
 import org.springframework.cluedo.exceptions.CorruptGame;
 import org.springframework.cluedo.exceptions.DataNotFound;
 import org.springframework.cluedo.exceptions.WrongPhaseException;
+import org.springframework.cluedo.message.Message;
+import org.springframework.cluedo.message.MessageService;
 import org.springframework.cluedo.turn.Turn;
 import org.springframework.cluedo.turn.TurnService;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import javassist.expr.NewArray;
 
 @Controller
 @RequestMapping("/games")
@@ -44,12 +49,14 @@ public class GameController {
     private final GameService gameService;
     private final UserService userService;
     private final TurnService turnService;
+    private final MessageService messageService;
     
     @Autowired
-    public GameController(GameService gameService, TurnService turnService, UserService userService){
+    public GameController(GameService gameService, TurnService turnService, UserService userService, MessageService messageService){
         this.gameService=gameService;
         this.turnService = turnService;
         this.userService=userService;
+        this.messageService=messageService;
     }
     //Admin
     //H12
@@ -135,6 +142,60 @@ public class GameController {
     		return result;
     	}
     }
+
+    @Transactional(readOnly = true)
+    @GetMapping("/chat/{gameId}")
+    public ModelAndView getChat(@PathVariable("gameId") Integer gameId)throws DataNotFound{
+        ModelAndView mav = new ModelAndView("games/chat");
+        User userNow = userService.getLoggedUser().get();
+        List<Message> nrMessages = messageService.getAllMessageByGameId(gameId);
+        if(nrMessages.size()>0){
+            mav.addObject("message", nrMessages);
+            
+            mav.addObject("userNow", userNow);
+            return mav;
+        }
+        if(nrMessages.size()==0){
+            mav.addObject("userNow", userNow);
+            return mav;
+        }
+        throw new DataNotFound();
+
+    }
+    @PostMapping("/chat/{gameId}")
+    public ModelAndView newMessage(@PathVariable("id") Integer gameId, BindingResult br, @Valid @ModelAttribute Message message) throws DataNotFound{
+        if(br.hasErrors()){
+            return new ModelAndView("games/chat", br.getModel());
+        }
+        else{
+
+        User userNow = userService.getLoggedUser().get();
+        message.setPlayer(userNow);
+        message.setText(userNow.getUsername()+": "+message);
+        message.setGame(gameService.getGameById(gameId));
+        this.messageService.saveMessage(message);
+        ModelAndView result = new ModelAndView("redirect:/chat/{id}");
+        result.addObject("userNow", userNow);
+        result.addObject("message", new Message());
+        return result;}
+    }
+
+   /*  @GetMapping(value="/users/{userId}/friends")
+	public ModelAndView showUserFriends(@PathVariable("userId") int userId) throws DataNotFound{
+		ModelAndView mav = new ModelAndView("users/userFriends");
+		List<User> nrUser = userService.findUserFriends(userId);
+		if(nrUser.size()>0){
+			mav.addObject("user", nrUser);
+		return mav;
+		}
+		if(nrUser.size()==0){
+			mav.addObject("user", nrUser);	
+		return mav;
+
+		}
+		throw new DataNotFound();
+	}*/
+
 
     @Transactional(readOnly = true)
     @GetMapping("/{gameId}/lobby")

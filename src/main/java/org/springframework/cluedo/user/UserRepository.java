@@ -2,6 +2,7 @@ package org.springframework.cluedo.user;
 
 import org.springframework.cluedo.achievement.Achievement;
 import org.springframework.cluedo.statistics.UserStatistics;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -18,6 +19,8 @@ List<User> findAll();
 
 Optional<User> findById(Integer id);
 
+@Modifying
+@Query("DELETE User u WHERE u.id = ?1")
 void deleteById(Integer id);
 
 Optional<User> findByTag(String tag);

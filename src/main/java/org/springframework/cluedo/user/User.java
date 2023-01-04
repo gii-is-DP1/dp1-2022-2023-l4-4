@@ -2,6 +2,7 @@ package org.springframework.cluedo.user;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
@@ -46,7 +47,7 @@ public class User extends BaseEntity{
 	@NotEmpty
 	private String tag;
 
-	@ManyToMany
+	@ManyToMany(cascade=CascadeType.ALL)
 	@JoinTable(name="user_friends",joinColumns = @JoinColumn(
        name = "id1", referencedColumnName = "id"),
     inverseJoinColumns = @JoinColumn(
@@ -60,7 +61,7 @@ public class User extends BaseEntity{
 	private String authority;
 
 
-	@ManyToMany
+	@ManyToMany(cascade=CascadeType.ALL)
 	private List<Achievement> achievements;
 
 

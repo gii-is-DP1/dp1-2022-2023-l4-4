@@ -75,7 +75,6 @@ public class UserController {
 	@GetMapping(value ="/users/paginable/{page}")
     public ModelAndView showUserList(@PathVariable("page") int page) {
         ModelAndView mav = new ModelAndView(VIEWS_USER_LIST);
-	
         mav.addObject("users", userService.getXUsers(page));
         return mav;
     }
@@ -281,8 +280,8 @@ public class UserController {
 	@Transactional(readOnly=true)
 	@GetMapping(value = "/users/{userId}/delete")
 	public String deleteUser(@PathVariable("userId") int userId){
-		this.userService.deleteUser(userId);
-		return "redirect:/users/";
+		userService.deleteUser(userId);
+		return "redirect:/users/paginable/0";
 	}
   
 	@Transactional(readOnly=true)

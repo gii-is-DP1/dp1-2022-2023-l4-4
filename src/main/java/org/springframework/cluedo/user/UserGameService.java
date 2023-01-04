@@ -33,4 +33,8 @@ public class UserGameService {
         return userGameRepository.remainingPlayersNotEliminated(game);
     }
 
+    public UserGame getUserGameByUserId(Integer id){
+        return userGameRepository.getUserGameByUserId(id);
+    }
+
 }
