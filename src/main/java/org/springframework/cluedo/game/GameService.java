@@ -39,27 +39,22 @@ public class GameService {
 		this.userService = userService;
 		this.userGameService = userGameService;
 	}
-    //Admin
-	//H12
+    
     @Transactional(readOnly = true)
 	public List<Game> getAllNotFinishedGames() throws DataAccessException {
 		return gameRepository.findAllNotFinishedGames();
 	}
-	//H13
+	
 	@Transactional(readOnly=true)
 	public List<Game> getAllFinishedGames(){
 		return gameRepository.findAllFinishedGames();
 	}
 
-	
-	
-	//User
-	//H10
 	@Transactional(readOnly=true)
 	public List<Game> getAllPublicLobbies(){
 		return gameRepository.findAllPublicLobbies();
 	}
-	//H11
+	
 	@Transactional(readOnly=true)
 	public List<Game> getMyFinishedGames(User user) {
 		return gameRepository.findMyFinishedGames(user);
@@ -85,7 +80,6 @@ public class GameService {
 		turnService.moveCharacter(turn, finalCeld);
 	}
 
-	//H1
 	@Transactional
 	public void saveGame(Game game){
 		gameRepository.save(game);

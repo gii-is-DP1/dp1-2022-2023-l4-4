@@ -23,7 +23,7 @@ Optional<User> findById(Integer id);
 @Query("DELETE User u WHERE u.id = ?1")
 void deleteById(Integer id);
 
-Optional<User> findByTag(String tag);
+User findByTag(String tag);
 
 @Query("SELECT u.friends FROM User u where u.id=:id ")
 List<User> findFriendsById(@Param("id")Integer id);
@@ -31,12 +31,8 @@ List<User> findFriendsById(@Param("id")Integer id);
 @Query("SELECT u FROM User u WHERE u.username=:username")
 Optional<User> findByUsername(@Param("username") String username);
 
-@Query("SELECT u.achievements FROM User u WHERE u.id = :userId")
-List<Achievement> findAllMyAchievements(@Param("userId") Integer userId);
-
-@Query("SELECT u FROM UserStatistics u WHERE u.user = :user")
-UserStatistics findMyStatistics(@Param("user") User user);
-
+@Query("SELECT u.tag FROM User u")
+List<String> findAllTags();
 }
 
 

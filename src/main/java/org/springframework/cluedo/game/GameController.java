@@ -26,12 +26,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javassist.expr.NewArray;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/games")
@@ -46,9 +48,9 @@ public class GameController {
     private final String DICE_VIEW="games/diceView"; 
     private final String MOVE_VIEW = "games/selectCeld";
     private final String ACCUSATION_VIEW="games/makeAccusation";
-    private final GameService gameService;
-    private final UserService userService;
-    private final TurnService turnService;
+    private GameService gameService;
+    private UserService userService;
+    private TurnService turnService;
     private final MessageService messageService;
     
     @Autowired
@@ -58,8 +60,17 @@ public class GameController {
         this.userService=userService;
         this.messageService=messageService;
     }
-    //Admin
-    //H12
+    
+    @ModelAttribute("privateList")
+    private List<Boolean> privateList(){
+        return List.of(true,false);
+    }
+
+    @ModelAttribute("nPlayers")
+    private List<Integer> nPlayers(){
+        return List.of(3,4,5,6);
+    }
+
     @Transactional(readOnly = true)
     @GetMapping(value = "/admin/active")
     public ModelAndView getAllActiveGames() {
@@ -67,7 +78,7 @@ public class GameController {
         result.addObject("games", gameService.getAllNotFinishedGames());
         return result;
     }
-    //H13
+    
     @Transactional(readOnly = true)
     @GetMapping("/admin/past")
     public ModelAndView getAllPastGames(){
@@ -76,8 +87,7 @@ public class GameController {
         result.addObject("admin", true);
         return result;
     }
-    //User
-    //H10
+    
     @Transactional(readOnly = true)
     @GetMapping()
     public ModelAndView getAllPublicLobbies(){
@@ -94,7 +104,8 @@ public class GameController {
         result.addObject("games", gameService.getAllPublicLobbies());
         return result;
     }
-    //H11
+    
+    @Transactional(readOnly = true)
     @GetMapping("/past")
     public ModelAndView getAllPastUserGames(){
         User user= userService.getLoggedUser().get();
@@ -103,7 +114,6 @@ public class GameController {
         return result;
     }
     
-    //H1
     @Transactional(readOnly = true)
     @GetMapping("/new")
     public ModelAndView initNewGame(){
@@ -118,13 +128,9 @@ public class GameController {
         }
         game = new Game();
     	ModelAndView result = new ModelAndView(CREATE_NEW_GAME);
-        List<Boolean> bool = new ArrayList<>();
-        bool.add(true);
-        bool.add(false);
-        result.addObject("privateList", bool);
-        result.addObject("nPlayers", List.of(3,4,5,6));
         result.addObject("game", game);
         result.addObject("user", user);
+        result.addObject("status", Status.LOBBY);
         return result;
     }
     
@@ -138,7 +144,7 @@ public class GameController {
             game.setStatus(Status.LOBBY);
             game.setLobby(new ArrayList<>(List.of(userService.getLoggedUser().get())));
             gameService.saveGame(game);
-    		ModelAndView result = new ModelAndView("redirect:"+game.getId()+"/lobby");
+    		ModelAndView result = new ModelAndView("redirect:/games/"+game.getId()+"/lobby");
     		return result;
     	}
     }
@@ -204,7 +210,7 @@ public class GameController {
         return result;
     }
 
-    @Transactional
+    @Transactional()
     @GetMapping("/{gameId}/leave")
     public String leaveGame(@PathVariable("gameId") Integer gameId) {
         Game game = null;
@@ -217,14 +223,13 @@ public class GameController {
         if(game.getLobby().contains(user)){
             if(game.getStatus().equals(Status.LOBBY)) {
                 gameService.deleteUserFromLobby(user, game);
-            } else if (game.getStatus().equals(Status.IN_PROGRESS)) {
+            } else if (game.getStatus().equals(Status.IN_PROGRESS)) { 
                 gameService.leaveGameInProgress(user,game);
             }
         }
         return "redirect:/games";
     }
     
-    // H2
     @Transactional
     @GetMapping("/{gameId}")
     public ModelAndView joinGame(@PathVariable("gameId") Integer gameId) throws DataNotFound{
@@ -260,7 +265,6 @@ public class GameController {
         }
     }
 
-    // H3
     @Transactional
     @PostMapping("/{gameId}/lobby")
     public ModelAndView startGame(@PathVariable("gameId") Integer gameId){

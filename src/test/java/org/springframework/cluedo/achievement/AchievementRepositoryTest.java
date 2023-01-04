@@ -16,7 +16,7 @@ public class AchievementRepositoryTest {
     
 
     @Autowired 
-    public AchievementRepository repo;
+    protected AchievementRepository repo;
 
     @Test
     public void testFindAll(){
@@ -31,5 +31,12 @@ public class AchievementRepositoryTest {
         assertTrue(achievementOpt.isPresent());
         achievementOpt = repo.findById(0);
         assertFalse(achievementOpt.isPresent());
+    }
+    @Test
+    public void testFindAllMyAchievements(){
+        List<Achievement> myAchievements = repo.findAllMyAchievements(1);
+        assertFalse(myAchievements.isEmpty());
+        myAchievements=repo.findAllMyAchievements(2);
+        assertTrue(myAchievements.isEmpty());
     }
 }

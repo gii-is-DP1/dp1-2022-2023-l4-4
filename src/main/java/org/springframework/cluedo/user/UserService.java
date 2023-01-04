@@ -29,6 +29,7 @@ public class UserService {
 
 	private UserRepository userRepository;
 	private UserGameService userGameService;
+	
 
 	@Autowired
 	public UserService(UserRepository userRepository,UserGameService userGameService) {
@@ -73,7 +74,7 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
-	public Optional<User> findUserByTag(String tag) {
+	public User findUserByTag(String tag) {
 		return userRepository.findByTag(tag);
 	}
 	public void deleteUser(int id){
@@ -98,18 +99,6 @@ public class UserService {
 	@Transactional(readOnly = true)
 	public UserDetails getUserDetails(){
 		return(UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	}
-
-	@Transactional(readOnly = true)
-	public List<Achievement> findAllMyAchievements(){
-		User loggedUser = getLoggedUser().get();
-		return userRepository.findAllMyAchievements(loggedUser.getId());
-	}
-
-	@Transactional(readOnly = true)
-	public UserStatistics getMyStatistics(){
-		User loggedUser = getLoggedUser().get();
-		return userRepository.findMyStatistics(loggedUser);
 	}
 
 	@Transactional
@@ -137,5 +126,48 @@ public class UserService {
 		}
 		copy.setPlayers(copy.getPlayers().stream().sorted(Comparator.comparing(x->x.getOrderUser())).collect(Collectors.toList()));
     }
+	
+	
 
+	@Transactional
+	public void addFriend(User user) {
+		User loggedUser = this.getLoggedUser().get();
+		loggedUser.addFriend(user);
+		this.saveUser(loggedUser);
+	}
+	@Transactional
+	public void deleteFriend(User user) {
+		User loggedUser = this.getLoggedUser().get();
+		loggedUser.deleteFriend(user);
+		this.saveUser(loggedUser);
+	}
+
+	@Transactional(readOnly = true)
+	public String generarTag(){
+		//La variable palabra almacena el resultado final 
+			String palabra = "#"; 
+		//La variable caracteres es un número aleatorio entre 2 y 20 que define la 
+		//longitud de la palabra. 
+			int caracteres = 4; 
+		//Con un bucle for, que recorreremos las veces que tengamos almacenadas en la 
+		//variable caracteres, que será como mínimo 2, iremos concatenando los 
+		//caracteres aleatorios. 
+				 for (int i=0; i<caracteres; i++){ 
+		//Para generar caracteres aleatorios hay que recurrir al valor numérico de estos 
+		//caracteres en el alfabeto Ascii. En este programa vamos a generar palabras con 
+		//letras minúsculas, que se encuentran en el rango 65-90. El método floor 
+		//devuelve el máximo entero. 
+				 int codigoAscii = (int)Math.floor(Math.random()*(90 -
+				 65)+65); 
+		//para pasar el código a carácter basta con hacer un cast a char 
+				 palabra = palabra + (char)codigoAscii; 
+				 } 
+				 String numero = (ThreadLocalRandom.current().nextInt(8)+1)+"";
+				 String result = palabra + numero+numero+numero+numero;
+				 List<String> allTags = userRepository.findAllTags();
+				 if(allTags.contains(result)){
+					result = generarTag();
+				 }
+				 return result; 
+			 } 
 }

@@ -5,26 +5,32 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
-
+<style type="text/css">
+    th {font-size: 110%;}
+    td {font-size:105%}
+</style>
 <petclinic:layout pageName="gameListing">
-    <h2>
+    <h2 style="font-size: 150%">
         Active games
     </h2>
-    <div class="container">
-    <h2>
-        <a href="/games/new">
-            <button class="btn btn-default">
-            New Game
-            </button>
-        </a>
-    </h2>
-    <h2>
-        <a href="/games/past">
-            <button class="btn btn-default">
-            Finished games
-            </button>
-        </a>
-    </h2>
+    <div >
+        <table class="table">
+            <th style="border:none">
+                <a href="/games/new">
+                    <button class="btn btn-default" style="font-size: 105%">
+                    New Game
+                    </button>
+                </a>
+            </th>
+            <th style="border:none">
+                <a href="/games/past">
+                    <button class="btn btn-default" style="float: right;font-size: 105%">
+                    Finished games
+                    </button>
+                </a>
+            </th>
+        </table>
+    
     </div>
     <table id="gameTable" class="table table-striped">
         <thead>
@@ -73,9 +79,9 @@
                 </td>
                 <td>
                     <a  href="/games/${game.id}" >
-                    <button class="btn btn-default">
-                        Join Game
-                    </button>
+                        <button class="btn btn-default" style="font-size:105%">
+                            Join Game
+                        </button>
                     </a>
                 </td>
             </tr>

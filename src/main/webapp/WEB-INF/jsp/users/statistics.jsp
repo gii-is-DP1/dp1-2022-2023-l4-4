@@ -6,49 +6,49 @@
 
 <cluedo:layout pageName="statistics">
 
-    <h2>User Statistics</h2>
+    <h2 style = "font-size: 150%;">User Statistics</h2>
 
 
     <table class="table table-striped">
         <tr>
-            <th>Total experience</th>
-            <td><c:out value="${stats.xp} "/></td>
+            <th style = "font-size: 120%;">Total experience</th>
+            <td style = "font-size: 120%;"><c:out value="${stats.xp} "/></td>
         </tr>
         <tr>
-            <th>Total Games</th>
-            <td><c:out value="${stats.totalGames}"/></td>
+            <th style = "font-size: 120%;">Total Games</th>
+            <td style = "font-size: 120%;"><c:out value="${stats.totalGames}"/></td>
         </tr>
         <tr>
-            <th>Total Time</th>
-            <td><c:out value="${stats.totalTime} "/></td>
+            <th style = "font-size: 120%;">Total Time</th>
+            <td style = "font-size: 120%;"><c:out value="${stats.totalTime} "/></td>
         </tr>
         <tr>
-            <th>Total Games</th>
-            <td><c:out value="${stats.totalAccusations}"/></td>
+            <th style = "font-size: 120%;">Total Games</th>
+            <td style = "font-size: 120%;"><c:out value="${stats.totalAccusations}"/></td>
         </tr>
         <tr>
-            <th>Victories</th>
-            <td><c:out value="${stats.victories} "/></td>
+            <th style = "font-size: 120%;">Victories</th>
+            <td style = "font-size: 120%;"><c:out value="${stats.victories} "/></td>
         </tr>
         <tr>
-            <th>Afk counter</th>
-            <td><c:out value="${stats.afkCounter}"/></td>
+            <th style = "font-size: 120%;">Afk counter</th>
+            <td style = "font-size: 120%;"><c:out value="${stats.afkCounter}"/></td>
         </tr>
         <c:if test="${stats.longestGame != null}">
             <tr>
-                <th>Longest Game</th>
-                <td><c:out value="${stats.longestGame.duration}"/></td>
+                <th style = "font-size: 120%;">Longest Game</th>
+                <td style = "font-size: 120%;"><c:out value="${stats.longestGame.duration}"/></td>
             </tr>
         </c:if>
         <c:if test="${stats.shortestGame != null}">
             <tr>
-                <th>Shortest Game</th>
-                <td><c:out value="${stats.shortestGame.duration}"/></td>
+                <th style = "font-size: 120%;">Shortest Game</th>
+                <td style = "font-size: 120%;"><c:out value="${stats.shortestGame.duration}"/></td>
             </tr>
         </c:if>
         <tr>
-            <th>Total Final Accusations</th>
-            <td><c:out value="${stats.totalFinalAccusations}"/></td>
+            <th style = "font-size: 120%;">Total Final Accusations</th>
+            <td style = "font-size: 120%;"><c:out value="${stats.totalFinalAccusations}"/></td>
         </tr>
     </table>
   

@@ -107,25 +107,4 @@ public class UserServiceTest {
         assertTrue(user.get().getAuthority().equals("admin"));
         assertFalse(user.get().getImageurl().isEmpty());
     }
-    
-    @Test
-    void findAllMyAchievements(){
-        when(repo.findAllMyAchievements(any(Integer.class))).thenReturn(achievements);
-        List<Achievement> achievements = repo.findAllMyAchievements(2);
-        assertNotNull(achievements);
-        assertTrue(achievements.size()==1);
-        assertTrue(achievements.get(0).getName().equals("achievement1"));
-    }
-
-    @Test
-    void getMyStatistics(){
-        when(repo.findMyStatistics(any(User.class))).thenReturn(stats);
-        UserStatistics stats = repo.findMyStatistics(user);
-        assertNotNull(stats);
-        assertTrue(stats.getUser().equals(user));
-        assertTrue(stats.getVictories()==20);
-        assertTrue(stats.getUser().getId()==2);
-        assertTrue(stats.getId()==1);
-    }
-
 }
