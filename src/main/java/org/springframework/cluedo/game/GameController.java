@@ -291,7 +291,7 @@ public class GameController {
             result.addObject("game", game);
             return result;
         }
-        //TODO: implementar pantalla final
+        
         switch(turnService.getActualTurn(game).get().getPhase()){
             case DICE:return new ModelAndView("redirect:/games/"+gameId+"/play/dice");
             case MOVEMENT:return new ModelAndView("redirect:/games/"+gameId+"/play/move");
