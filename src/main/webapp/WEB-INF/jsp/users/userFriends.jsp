@@ -10,14 +10,15 @@
 </style>
 
 <petclinic:layout pageName="List of friends">
+    
     <h2 style="font-size: 150%">List of friends</h2> 
     <a href="/users/{userId}/friends/add"> <button style="font-size: 110%">Add friends</button> </a>
     <a href="/users/{userId}/friends/delete"> <button style="font-size: 110%">Delete friends</button> </a>
-
+   
     <table id="gameTable" class="table table-striped">
         <thead>
         <tr>
-            <th style="width: 120px;">Username and tag</th>  
+            <th style="width: 120px; height: 1px;"></th>  
         </tr>
         </thead>
         <tbody>
@@ -25,7 +26,8 @@
             <tr>
                 <td>
                     <c:out value="${user.username}"/>
-                    <span style="color:grey"><c:out value="${user.tag}"/></span>              
+                    <span style="color:grey"><c:out value="${user.tag}"/></span>  
+                    <a href="/users/{userId}/friends/delete"> <button style="font-size: 40%">X</button> </a>            
                 </td>          
             </tr>
         </c:forEach>

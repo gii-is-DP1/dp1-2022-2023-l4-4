@@ -150,38 +150,30 @@ public class GameController {
     }
 
     @Transactional(readOnly = true)
-    @GetMapping("/chat/{gameId}")
+    @GetMapping("/{gameId}/chat")
     public ModelAndView getChat(@PathVariable("gameId") Integer gameId)throws DataNotFound{
         ModelAndView mav = new ModelAndView("games/chat");
         User userNow = userService.getLoggedUser().get();
         List<Message> nrMessages = messageService.getAllMessageByGameId(gameId);
-        if(nrMessages.size()>0){
-            mav.addObject("message", nrMessages);
-            mav.addObject("userNow", userNow);
+        if(nrMessages.size()>=0){
+            mav.addObject("messages", nrMessages);
+            mav.addObject("gameId",gameId);
+            mav.addObject("chatMessage", new Message());
+            mav.addObject("userNowId", userNow.getId());
             return mav;
         }
-        if(nrMessages.size()==0){
-            return mav;
-        }
+        
         throw new DataNotFound();
 
     }
-    /*@PostMapping("/chat/{gameId}")
-    public ModelAndView newMessage(@Valid Message message, BindingResult br, @PathVariable("id") Integer gameId) throws DataNotFound{
-        if(br.hasErrors()){
-            return new ModelAndView("games/chat", br.getModel());
+    @PostMapping("/{gameId}/chat")
+    public ModelAndView newMessage(@Valid Message message, BindingResult br, @PathVariable("gameId") Integer gameId) throws DataNotFound{
+        if(!br.hasErrors()){
+            this.messageService.saveMessage(message);
         }
-        else{
-
-        User userNow = userService.getLoggedUser().get();
-        message.setPlayer(userNow);
-        message.setText(userNow.getUsername()+": "+message);
-        message.setGame(gameService.getGameById(gameId));
-        this.messageService.saveMessage(message);
-        ModelAndView result = new ModelAndView("redirect:/chat/{id}");
-        result.addObject("message", message);
-        return result;}
-    } */
+        ModelAndView result = new ModelAndView("redirect:chat");
+        return result;
+    } 
 
 
     @Transactional(readOnly = true)

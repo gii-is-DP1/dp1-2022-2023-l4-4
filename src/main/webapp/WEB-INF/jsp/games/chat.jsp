@@ -8,27 +8,33 @@
 
 <cluedo:layout pageName="chat">
     <jsp:body>
-        <c:forEach items="${message}" var="m">
+        <c:forEach items="${messages}" var="m">
             <c:choose>
-                <c:when test="${m.player.id==userNow.id}">
+                <c:when test="${m.player.id==userNowId}">
                     <div style="text-align: right;">
+                        
                         <c:out value="${m.text}"/>
                     </div>
                 </c:when>
                 <c:otherwise>
                     <div style="text-align: left;">
-                         <c:out value="${m.text}"/>
+                         <c:out value="${m.player.username}: ${m.text}"/>
                     </div>
                  </c:otherwise>
             </c:choose>
         </c:forEach>
-        <form:form modelAttribute="message" class="form-horizontal">
+        <form:form modelAttribute="chatMessage" class="form-horizontal">
             <div class="form-group has-feedback">                
-                <cluedo:inputField label="Message" name="text"/>
+                <cluedo:inputFieldLimited label="message" name="text" limit="100"/>
             </div>
+            <input type="hidden" name="player" value="${userNowId}">
+            <input type="hidden" name="game" value="${gameId}">
+
+
             <div class="form-group">
                 <button class="btn btn-default"  type="submit">Enviar</button>
             </div>
     </form:form>   
     </jsp:body>
 </cluedo:layout>
+

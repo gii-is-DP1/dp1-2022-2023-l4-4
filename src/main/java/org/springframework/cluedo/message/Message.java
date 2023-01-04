@@ -25,7 +25,7 @@ import lombok.Setter;
 public class Message extends BaseEntity{
     
     @NotBlank
-    @Size(min=1, max = 150)
+    @Size(min=1, max = 100)
     @JoinColumn(name= "text")
     private String text;
 
