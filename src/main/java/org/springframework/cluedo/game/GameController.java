@@ -9,6 +9,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.accusation.Accusation;
 import org.springframework.cluedo.accusation.AccusationService;
+import org.springframework.cluedo.accusation.FinalAccusation;
 import org.springframework.cluedo.card.Card;
 import org.springframework.cluedo.card.CardRepository;
 import org.springframework.cluedo.card.CardService;
@@ -49,6 +50,8 @@ public class GameController {
     private final String DICE_VIEW="games/diceView"; 
     private final String MOVE_VIEW = "games/selectCeld";
     private final String ACCUSATION_VIEW="games/makeAccusation";
+    private final String FINAL_DECISION_VIEW="games/makeFinalDecision";
+    private final String FINAL_ACCUSATION_VIEW="games/makeFinalAccusation";
     private GameService gameService;
     private UserService userService;
     private TurnService turnService;
@@ -520,8 +523,102 @@ public class GameController {
 
     @GetMapping("/{gameId}/play/finish")
     @Transactional(rollbackFor = {WrongPhaseException.class,DataNotFound.class})
-    public ModelAndView finishTurn(@PathVariable("gameId") Integer gameId) throws WrongPhaseException,DataNotFound,CorruptGame{
+    public ModelAndView initFinishTurn(@PathVariable("gameId") Integer gameId) throws WrongPhaseException,DataNotFound,CorruptGame{
+        Game game = null;
+        try{
+            game = gameService.getGameById(gameId);
+        } catch(DataNotFound e) {
+            ModelAndView result = new ModelAndView(GAME_LISTING);
+            result.addObject("message", "The game doesn't exist");
+            return result;
+        }
+
+        if(!gameService.isGameInProgress(game)) {
+            return wrongStatus(game);
+        }
+
+        Optional<User> nrLoggedUser=userService.getLoggedUser();
         
+        if(!gameService.isUserTurn(nrLoggedUser, game)){
+            return notYourTurn(game);
+        }
+        ModelAndView result=checkPhase(game,Phase.FINAL); 
+        if (result==null){
+            result = new ModelAndView(FINAL_DECISION_VIEW);
+            result.addObject("game", game);
+            return result;
+        }
+        return result;
+    }
+
+    @GetMapping("/{gameId}/play/finalAccusation")
+    @Transactional(rollbackFor = {WrongPhaseException.class,DataNotFound.class})
+    public ModelAndView initFinalAccusation(@PathVariable("gameId") Integer gameId) throws WrongPhaseException,DataNotFound,CorruptGame{
+        Game game = null;
+        
+        try{
+            game = gameService.getGameById(gameId);
+        } catch(DataNotFound e) {
+            ModelAndView result = new ModelAndView(GAME_LISTING);
+            result.addObject("message", "The game doesn't exist");
+            return result;
+        }
+
+        if(!gameService.isGameInProgress(game)) {
+            return wrongStatus(game);
+        }
+
+        Optional<User> nrLoggedUser=userService.getLoggedUser();
+        
+        if(!gameService.isUserTurn(nrLoggedUser, game)){
+            return notYourTurn(game);
+        }
+        ModelAndView result=checkPhase(game,Phase.FINAL); 
+        if (result==null){
+            result=new ModelAndView(FINAL_ACCUSATION_VIEW); 
+            FinalAccusation finalAccusation = new FinalAccusation();
+            finalAccusation.setTurn(turnService.getActualTurn(game).get());
+            result.addObject("suspects", cardService.getAllSuspects());
+            result.addObject("weapons", cardService.getAllWeapons());
+            result.addObject("rooms", cardService.getAllRooms());
+            result.addObject("finalAccusation", finalAccusation);
+        }
+        return result;
+    }
+
+
+    @PostMapping("/{gameId}/play/finalAccusation")
+    @Transactional(rollbackFor = {WrongPhaseException.class,DataNotFound.class})
+    public ModelAndView makeFinalAccusation(@PathVariable("gameId") Integer gameId, @Valid FinalAccusation finalAccusation) throws WrongPhaseException,DataNotFound,CorruptGame{
+        Game game = null;
+        try{
+            game = gameService.getGameById(gameId);
+        } catch(DataNotFound e) {
+            ModelAndView result = new ModelAndView(GAME_LISTING);
+            result.addObject("message", "The game doesn't exist");
+            return result;
+        }
+
+        if(!gameService.isGameInProgress(game)) {
+            return wrongStatus(game);
+        }
+
+        Optional<User> nrLoggedUser=userService.getLoggedUser();
+        
+        if(!gameService.isUserTurn(nrLoggedUser, game)){
+            return notYourTurn(game);
+        }
+        ModelAndView result=checkPhase(game,Phase.FINAL); 
+        if (result==null){
+            gameService.makeFinalAccusation(game, finalAccusation);
+            return new ModelAndView("redirect:/games/"+game.getId()+"/play");
+        }
+        return result; 
+    }
+    
+    @PostMapping("/{gameId}/play/finish")
+    @Transactional(rollbackFor = {WrongPhaseException.class,DataNotFound.class})
+    public ModelAndView finishTurn(@PathVariable("gameId") Integer gameId) throws WrongPhaseException,DataNotFound,CorruptGame{
         Game game = null;
         try{
             game = gameService.getGameById(gameId);

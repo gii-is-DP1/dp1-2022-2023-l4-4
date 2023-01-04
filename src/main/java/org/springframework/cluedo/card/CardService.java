@@ -63,6 +63,7 @@ public class CardService {
         crimeScene.setWeaponCard(weapons.get(ThreadLocalRandom.current().nextInt(weapons.size())));
         crimeScene.setSuspectCard(suspects.get(ThreadLocalRandom.current().nextInt(suspects.size())));
         crimeScene.setRoomCard(rooms.get(ThreadLocalRandom.current().nextInt(rooms.size())));
+        crimeScene.setGame(game);
         accusationService.saveCrimeScene(crimeScene);
         game.setCrimeScene(crimeScene);
         List<Card> crimeSceneCards = crimeScene.getCards();

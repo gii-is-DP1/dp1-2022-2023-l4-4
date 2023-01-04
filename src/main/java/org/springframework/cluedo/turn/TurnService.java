@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cluedo.accusation.FinalAccusation;
 import org.springframework.cluedo.celd.Celd;
 import org.springframework.cluedo.celd.CeldService;
 import org.springframework.cluedo.enumerates.Phase;
@@ -95,13 +96,10 @@ public class TurnService {
         return saveTurn(turn);
     }
 
-    public Turn makeFinalDecision(Turn turn,boolean finalAccusation) throws WrongPhaseException{
+    public Turn makeFinalDecision(Turn turn,FinalAccusation finalAccusation) throws WrongPhaseException{
         if(turn.getPhase()!=Phase.FINAL){
             throw new WrongPhaseException();
         }
-       /* if(finalAccusation){
-            accusationController.makeFinalAcusation();
-        }*/ 
         turn.setPhase(Phase.FINISHED);
         return saveTurn(turn);
     }

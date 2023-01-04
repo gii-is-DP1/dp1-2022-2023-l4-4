@@ -8,10 +8,10 @@
 <cluedo:layout pageName="Accusation">
     <jsp:body>
         <div class="container">
-            <form:form  modelAttribute="accusation" class="form-horizontal">
-                <input type="hidden" name="turn" value=${accusation.turn.id}>
-                <input type="hidden" name="roomCard" value=${room.cardName}>
+            <form:form  modelAttribute="finalAccusation" class="form-horizontal">
+                <input type="hidden" name="turn" value=${finalAccusation.turn.id}>
                 <div class="form-group has-feedback" style="font-size:120%">
+                    <cluedo:selectField name = "roomCard" label="Room" names="${rooms}" size="6"></cluedo:selectField>
                     <cluedo:selectField name = "suspectCard" label="Suspect" names="${suspects}" size="6"></cluedo:selectField>
                     <cluedo:selectField name = "weaponCard" label="Weapons" names="${weapons}" size="6"></cluedo:selectField>
                 </div>

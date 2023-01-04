@@ -25,4 +25,6 @@ public class Accusation extends BaseAccusation{
     @ManyToOne
     @JoinColumn(name = "shown_card_id")
     private Card shownCard;
+
+    private Integer playerToShown;
 }
