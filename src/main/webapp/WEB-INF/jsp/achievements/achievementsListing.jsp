@@ -8,7 +8,12 @@
 	uri="http://www.springframework.org/security/tags"%>
 
 <cluedo:layout pageName="achievements">
-    <h2 style = "font-size: 150%;">All achievements</h2>
+    <c:if test="${canCreateAndEdit}">
+        <h2 style = "font-size: 150%;">All achievements</h2>
+    </c:if>
+    <c:if test="${!canCreateAndEdit}">
+        <h2 style = "font-size: 150%;">My achievements</h2>
+    </c:if>
     <sec:authorize access="hasAuthority('admin')">
         <c:if test="${canCreateAndEdit}">
             <h2>

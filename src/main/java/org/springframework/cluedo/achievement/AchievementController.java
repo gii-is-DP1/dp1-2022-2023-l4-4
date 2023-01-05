@@ -10,7 +10,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.enumerates.Badge;
 import org.springframework.cluedo.enumerates.Metric;
-import org.springframework.cluedo.user.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -77,7 +75,6 @@ public class AchievementController {
     @PostMapping("/achievements/new")
     public ModelAndView saveCreatedAchievement(@Valid Achievement achievement, BindingResult br,RedirectAttributes attributes) {
         if(br.hasErrors()) {
-            System.out.println(br.getAllErrors().toString());
             return new ModelAndView(CREATE_EDIT_ACHIEVEMENT, br.getModel());
         } else {
             String imagen = "/resources/images/" + achievement.getBadgeType().toString().toLowerCase() + ".jpg";

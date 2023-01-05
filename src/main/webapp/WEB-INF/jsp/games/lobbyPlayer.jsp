@@ -9,7 +9,15 @@
     <h2 style="font-size:150%">
         Lobby
     </h2>
-
+    <div>
+        <c:if test="${isHost}">
+            <form:form  class="form-horizontal" style="padding-bottom: 45px"> 
+                <button class="btn btn-default" type="submit" style="font-size:110%;float: right; ">
+                    Start Game
+                </button>
+            </form:form>
+        </c:if>
+    </div>
     <table id="gameTable" class="table table-striped">
         <c:forEach items="${lobby.lobby}" var="player">
             <tr>
@@ -27,9 +35,11 @@
             </tr>
         </c:forEach>
     </table>
-    <a  href="/games/${lobby.id}/leave" >
-        <button class="btn btn-default" style="font-size:110%">
-            Leave lobby
-        </button>
-    </a>
+    <div>
+        <a  href="/games/${lobby.id}/leave" >
+            <button class="btn btn-default" style="font-size:110%;">
+                Leave lobby
+            </button>
+        </a>
+    </div>
 </cluedo:layout>
