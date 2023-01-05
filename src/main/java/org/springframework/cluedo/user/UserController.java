@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,12 +63,45 @@ public class UserController {
     }
 
 	@Transactional(readOnly=true)
-	@GetMapping(value ="/users")
-    public ModelAndView showUserList() {
+	@GetMapping(value ="/users/paginable/{page}")
+    public ModelAndView showUserList(@PathVariable("page") int page) {
         ModelAndView mav = new ModelAndView(VIEWS_USER_LIST);
-        mav.addObject("users", userService.getAllUsers());
+        mav.addObject("users", userService.getXUsers(page));
         return mav;
     }
+	@Transactional(readOnly=true)
+	@GetMapping(value="/users/next")
+	public ModelAndView nextPage(HttpServletRequest request) {
+		String test = request.getHeader("Referer");
+		String[] parts = test.split("/");
+		String part5 = parts[5];
+		Integer page= Integer.parseInt(part5)+1;
+		if(page>0 && page<=(userService.getAllUsers().size())%3){
+			ModelAndView mav = new ModelAndView("redirect:/users/paginable/"+page);
+			return mav;
+		}
+		else{
+			ModelAndView mav = new ModelAndView("redirect:/users/paginable/"+(userService.getAllUsers().size()%3));
+			return mav;
+		}
+	
+	}
+	@Transactional(readOnly=true)
+	@GetMapping(value="/users/back")
+	public ModelAndView backPage(HttpServletRequest request) {
+		String test = request.getHeader("Referer");
+		String[] parts = test.split("/");
+		String part5 = parts[5];
+		Integer page= Integer.parseInt(part5)-1;
+		if(page <0){
+			ModelAndView mav = new ModelAndView("redirect:/users/paginable/0");
+			return mav;
+		}
+		else{
+			ModelAndView mav = new ModelAndView("redirect:/users/paginable/"+page);
+		return mav;
+	}
+	}
 	@Transactional(readOnly=true)
 	@GetMapping(value="/users/{userId}")
 	public ModelAndView showUser(@PathVariable("userId") int userId) throws DataNotFound{
@@ -220,8 +254,8 @@ public class UserController {
 	@Transactional(readOnly=true)
 	@GetMapping(value = "/users/{userId}/delete")
 	public String deleteUser(@PathVariable("userId") int userId){
-		this.userService.deleteUser(userId);
-		return "redirect:/users/";
+		userService.deleteUser(userId);
+		return "redirect:/users/paginable/0";
 	}
   
 	@Transactional(readOnly=true)

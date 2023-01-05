@@ -17,7 +17,7 @@
     <table id="gameTable" class="table table-striped">
         <thead>
         <tr>
-            <th style="width: 120px;">Username and tag</th>  
+            <th style="width: 120px;">Username</th>  
         </tr>
         </thead>
         <tbody>
