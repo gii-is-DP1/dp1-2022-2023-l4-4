@@ -19,16 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ThreadLocalRandom;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.exceptions.DataNotFound;
-import org.springframework.cluedo.game.Game;
-import org.springframework.cluedo.game.GameService;
-import org.springframework.cluedo.statistics.GlobalStatistics;
 import org.springframework.cluedo.statistics.UserStatistics;
 import org.springframework.cluedo.statistics.UserStatisticsService;
 import org.springframework.stereotype.Controller;

@@ -1,7 +1,5 @@
 package org.springframework.cluedo.user;
 
-import org.springframework.cluedo.achievement.Achievement;
-import org.springframework.cluedo.statistics.UserStatistics;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
