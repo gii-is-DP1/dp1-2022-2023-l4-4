@@ -96,7 +96,7 @@ public class TurnService {
         return saveTurn(turn);
     }
 
-    public Turn makeFinalDecision(Turn turn,FinalAccusation finalAccusation) throws WrongPhaseException{
+    public Turn makeFinalDecision(Turn turn) throws WrongPhaseException{
         if(turn.getPhase()!=Phase.FINAL){
             throw new WrongPhaseException();
         }

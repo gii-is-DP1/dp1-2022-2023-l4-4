@@ -99,14 +99,17 @@ public class GameService {
 	}
 
 	public void finishTurn(Game game){
-		Turn actualTurn=turnService.getActualTurn(game).get();
+		Turn actualTurn=turnService.getActualTurn(game).get(); 
 		actualTurn.setPhase(Phase.FINISHED);
 		turnService.saveTurn(actualTurn);
+		UserGame last=userGameService.getLastUsergame(game);
+		System.out.println("Último---------->"+last);
 		do{
-			if(actualTurn.getUserGame()==game.getPlayers().get(game.getPlayers().size()-1)){
+			System.out.println("Actual------------->"+game.getActualPlayer());
+			if(game.getActualPlayer().getOrderUser()==game.getPlayers().size()){
 				game.setRound(game.getRound()+1);
 				game.setActualPlayer(userGameService.getFirstUsergame(game)); 
-			}else{
+			}else{ 
 				game.setActualPlayer(userGameService.getNextUsergame(game).get());  
 			}
 		}while(game.getActualPlayer().getIsEliminated()==true);
@@ -114,7 +117,7 @@ public class GameService {
 		turnService.createTurn(game.getActualPlayer(),game.getRound());
 	}
 
-	/*public void makeAccusation(Game game, Accusation accusation ){
+	/*public void makeAccusation(Game game, Accusation accusation){
 		accusationService.saveAccusation(accusation);
         turnService.makeAccusation(game);
 	}*/
@@ -122,7 +125,8 @@ public class GameService {
 	public void makeFinalAccusation(Game game, FinalAccusation finalAccusation) throws WrongPhaseException {
 		try{
 			Turn actualTurn=turnService.getActualTurn(game).get();
-			turnService.makeFinalDecision(actualTurn,finalAccusation);
+			turnService.makeFinalDecision(actualTurn);
+			accusationService.saveFinalAccusation(finalAccusation);
 			finalAccusation.setCorrect(accusationService.isFinalAccusationCorrect(actualTurn));
 			accusationService.saveFinalAccusation(finalAccusation);
 			if (finalAccusation.isCorrect()) {
@@ -133,10 +137,11 @@ public class GameService {
 				userGameService.saveUserGame(usergame);
 				if(userGameService.remainingPlayersNotEliminated(game).size()==0){
 					finishGame(finalAccusation);
+				}else{
+					finishTurn(game);
 				}
 			}
-			actualTurn.setPhase(Phase.FINISHED);
-			turnService.saveTurn(actualTurn);
+			
 		}catch(WrongPhaseException e){
 			throw e;
 		}
@@ -181,6 +186,10 @@ public class GameService {
 			ug.setIsEliminated(true);
 			userGameService.saveUserGame(ug);
 		}
+	}
+
+	public void showAccusationCard(User loggedUser, Game game, Accusation accusation) {
+		
 	}
 } 
 

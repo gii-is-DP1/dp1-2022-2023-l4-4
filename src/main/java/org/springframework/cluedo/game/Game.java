@@ -103,4 +103,8 @@ public class Game extends BaseEntity{
     public void removeLobbyUser(User lobbyUser){
         this.lobby.remove(lobbyUser);
     }
+
+    public UserGame lastPlayer(){
+        return players.get(players.size()-1);
+    }
 }

@@ -2,6 +2,7 @@ package org.springframework.cluedo.accusation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,10 @@ public class AccusationService {
         }else{
             return false;
         }
+    }
+
+    public Optional<Accusation> thisTurnAccusation(Turn turn){
+        return accusationRepository.findByTurn(turn);
     }
 
     public FinalAccusation saveFinalAccusation(FinalAccusation finalAccusation) {
