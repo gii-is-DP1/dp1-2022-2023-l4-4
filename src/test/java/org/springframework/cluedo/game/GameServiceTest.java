@@ -111,7 +111,7 @@ public class GameServiceTest {
         mockGames.add(game2);
         mockGames.add(game3);
 
-        gameService = new GameService(gameRepository, null, cardService, userService, null);
+        gameService = new GameService(gameRepository, null, cardService, userService, null, null);
     }
 
     @Test
