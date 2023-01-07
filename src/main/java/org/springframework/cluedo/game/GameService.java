@@ -6,6 +6,9 @@ import java.util.Optional;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cluedo.accusation.Accusation;
+import org.springframework.cluedo.accusation.AccusationService;
+import org.springframework.cluedo.accusation.FinalAccusation;
 import org.springframework.cluedo.card.CardService;
 import org.springframework.cluedo.celd.Celd;
 import org.springframework.cluedo.enumerates.Phase;
@@ -30,14 +33,16 @@ public class GameService {
 	private CardService cardService;
 	private UserService userService;
 	private UserGameService userGameService;
+	private AccusationService accusationService;
 
 	@Autowired
-	public GameService(GameRepository gameRepository, TurnService turnService, CardService cardService, UserService userService, UserGameService userGameService) {
+	public GameService(GameRepository gameRepository, TurnService turnService, CardService cardService, UserService userService, UserGameService userGameService, AccusationService accusationService) {
 		this.gameRepository = gameRepository;
 		this.turnService = turnService;
 		this.cardService = cardService;
 		this.userService = userService;
 		this.userGameService = userGameService;
+		this.accusationService = accusationService;
 	}
     
     @Transactional(readOnly = true)
@@ -100,19 +105,62 @@ public class GameService {
 	}
 
 	public void finishTurn(Game game){
-		Turn actualTurn=turnService.getActualTurn(game).get();
+		Turn actualTurn=turnService.getActualTurn(game).get(); 
 		actualTurn.setPhase(Phase.FINISHED);
 		turnService.saveTurn(actualTurn);
+		UserGame last=userGameService.getLastUsergame(game);
+		System.out.println("Último---------->"+last);
 		do{
-			if(actualTurn.getUserGame()==game.getPlayers().get(game.getPlayers().size()-1)){
+			System.out.println("Actual------------->"+game.getActualPlayer());
+			if(game.getActualPlayer().getOrderUser()==game.getPlayers().size()){
 				game.setRound(game.getRound()+1);
 				game.setActualPlayer(userGameService.getFirstUsergame(game)); 
-			}else{
+			}else{ 
 				game.setActualPlayer(userGameService.getNextUsergame(game).get());  
 			}
 		}while(game.getActualPlayer().getIsEliminated()==true);
 		saveGame(game);
 		turnService.createTurn(game.getActualPlayer(),game.getRound());
+	}
+
+	/*public void makeAccusation(Game game, Accusation accusation){
+		accusationService.saveAccusation(accusation);
+        turnService.makeAccusation(game);
+	}*/
+
+	public void makeFinalAccusation(Game game, FinalAccusation finalAccusation) throws WrongPhaseException {
+		try{
+			Turn actualTurn=turnService.getActualTurn(game).get();
+			turnService.makeFinalDecision(actualTurn);
+			accusationService.saveFinalAccusation(finalAccusation);
+			finalAccusation.setCorrect(accusationService.isFinalAccusationCorrect(actualTurn));
+			accusationService.saveFinalAccusation(finalAccusation);
+			if (finalAccusation.isCorrect()) {
+				finishGame(finalAccusation);
+			}else{
+				UserGame usergame=actualTurn.getUserGame();
+				usergame.setIsEliminated(true);
+				userGameService.saveUserGame(usergame);
+				if(userGameService.remainingPlayersNotEliminated(game).size()==0){
+					finishGame(finalAccusation);
+				}else{
+					finishTurn(game);
+				}
+			}
+			
+		}catch(WrongPhaseException e){
+			throw e;
+		}
+	}
+
+	public void finishGame(FinalAccusation finalAccusation){
+		Game game=finalAccusation.getTurn().getUserGame().getGame();
+		if(finalAccusation.isCorrect()){
+			game.setWinner(finalAccusation.getTurn().getUserGame().getUser());	
+		}
+		game.setStatus(Status.FINISHED);
+		saveGame(game);
+
 	}
 
 	public boolean isUserTurn(Optional<User> user, Game game) {
@@ -149,6 +197,10 @@ public class GameService {
 			ug.setIsEliminated(true);
 			userGameService.saveUserGame(ug);
 		}
+	}
+
+	public void showAccusationCard(User loggedUser, Game game, Accusation accusation) {
+		
 	}
 } 
 

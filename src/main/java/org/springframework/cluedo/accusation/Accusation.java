@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.cluedo.card.Card;
 import org.springframework.cluedo.turn.Turn;
+import org.springframework.cluedo.user.UserGame;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -25,4 +26,8 @@ public class Accusation extends BaseAccusation{
     @ManyToOne
     @JoinColumn(name = "shown_card_id")
     private Card shownCard;
+
+    @ManyToOne
+    @JoinColumn(name = "player_who_shows_id")
+    private UserGame playerWhoShows;
 }
