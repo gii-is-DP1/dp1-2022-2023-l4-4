@@ -10,8 +10,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.cluedo.achievement.Achievement;
-import org.springframework.cluedo.statistics.UserStatistics;
+
 
 @DataJpaTest
 public class UserRepositoryTest {
@@ -52,18 +51,7 @@ public class UserRepositoryTest {
         user=repo.findById(3);
         assertFalse(user.isPresent());
     }
-    @Test
-    public void testFindAllMyAchievements(){
-        List<Achievement> myAchievements = repo.findAllMyAchievements(1);
-        assertFalse(myAchievements.isEmpty());
-        myAchievements=repo.findAllMyAchievements(2);
-        assertTrue(myAchievements.isEmpty());
-    }
-
-    @Test
-    public void testFindMyStatistics(){
-        Optional<User> user = repo.findByUsername("manuel333");
-        UserStatistics stats = repo.findMyStatistics(user.get());
-        assertNotNull(stats);
-    }
+    
+    
+    
 }

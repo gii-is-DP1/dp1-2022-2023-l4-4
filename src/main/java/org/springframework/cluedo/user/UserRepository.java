@@ -2,6 +2,7 @@ package org.springframework.cluedo.user;
 
 import org.springframework.cluedo.achievement.Achievement;
 import org.springframework.cluedo.statistics.UserStatistics;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -18,6 +19,8 @@ List<User> findAll();
 
 Optional<User> findById(Integer id);
 
+@Modifying
+@Query("DELETE User u WHERE u.id = ?1")
 void deleteById(Integer id);
 
 User findByTag(String tag);
@@ -28,12 +31,8 @@ List<User> findFriendsById(@Param("id")Integer id);
 @Query("SELECT u FROM User u WHERE u.username=:username")
 Optional<User> findByUsername(@Param("username") String username);
 
-@Query("SELECT u.achievements FROM User u WHERE u.id = :userId")
-List<Achievement> findAllMyAchievements(@Param("userId") Integer userId);
-
-@Query("SELECT u FROM UserStatistics u WHERE u.user = :user")
-UserStatistics findMyStatistics(@Param("user") User user);
-
+@Query("SELECT u.tag FROM User u")
+List<String> findAllTags();
 }
 
 

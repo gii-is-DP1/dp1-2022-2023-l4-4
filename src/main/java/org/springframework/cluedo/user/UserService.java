@@ -39,9 +39,30 @@ public class UserService {
 
 	@Transactional
 	public List<User> getAllUsers(){
+		
 		return userRepository.findAll();
 	}
+	public List<User> getXUsers(int page){
+		Integer normal =3;
+		Integer min= normal*page;
+		Integer max= min + normal;
 
+		if(page>=0){
+			if(min >= userRepository.findAll().size()){
+				min= userRepository.findAll().size();
+				max= userRepository.findAll().size();
+			}
+			if(max >= userRepository.findAll().size()){
+				max= userRepository.findAll().size();
+			}
+		List<User> users = userRepository.findAll().subList(min, max);
+			return users;
+		}
+		else{
+			return null;
+		}
+		
+	}
 	@Transactional
 	public void saveUser(User user) throws DataAccessException {
 		userRepository.save(user);
@@ -80,18 +101,6 @@ public class UserService {
 		return(UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 
-	@Transactional(readOnly = true)
-	public List<Achievement> findAllMyAchievements(){
-		User loggedUser = getLoggedUser().get();
-		return userRepository.findAllMyAchievements(loggedUser.getId());
-	}
-
-	@Transactional(readOnly = true)
-	public UserStatistics getMyStatistics(){
-		User loggedUser = getLoggedUser().get();
-		return userRepository.findMyStatistics(loggedUser);
-	}
-
 	@Transactional
     public void initializePlayers(List<User> lobby, Game copy) { 
 		List<SuspectType> suspects= new ArrayList<>(Arrays.asList(SuspectType.values()));
@@ -118,61 +127,47 @@ public class UserService {
 		copy.setPlayers(copy.getPlayers().stream().sorted(Comparator.comparing(x->x.getOrderUser())).collect(Collectors.toList()));
     }
 	
-	@Transactional
-	private void obtainAchievement(Achievement achievement){
-		User loggedUser = getLoggedUser().get();
-		loggedUser.addAchievement(achievement);
-		userRepository.save(loggedUser);
-	}
+	
 
 	@Transactional
-	public void checkToObtainAchievement(Achievement achievement){
-		User loggedUser = getLoggedUser().get();
-		UserStatistics stats = userRepository.findMyStatistics(loggedUser);
-		if(!loggedUser.getAchievements().contains(achievement)){
-			switch(achievement.getMetric()){
-				case VICTORIES:
-					if(stats.getVictories()>=achievement.getGoal()){
-						obtainAchievement(achievement);
-					}
-				case EXPERIENCE:
-					if(stats.getXp()>=achievement.getGoal()){
-						obtainAchievement(achievement);
-					}
-				case TOTAL_GAMES:
-					if(stats.getTotalGames()>=achievement.getGoal()){
-						obtainAchievement(achievement);
-					}
-				case TOTAL_ROUNDS:
-					if(stats.getTotalRounds()>=achievement.getGoal()){
-						obtainAchievement(achievement);
-					}
-				case TOTAL_TIME:
-					if(stats.getTotalTime()>=achievement.getGoal()){
-						obtainAchievement(achievement);
-					}
-				case TOTAL_ACUSATIONS:
-					if(stats.getTotalAccusations()>=achievement.getGoal()){
-						obtainAchievement(achievement);
-					}
-				case TOTAL_FINAL_ACUSATIONS:
-					if(stats.getTotalFinalAccusations()>=achievement.getGoal()){
-						obtainAchievement(achievement);
-					}
-			}
-		}
+	public void addFriend(User user) {
+		User loggedUser = this.getLoggedUser().get();
+		loggedUser.addFriend(user);
+		this.saveUser(loggedUser);
+	}
+	@Transactional
+	public void deleteFriend(User user) {
+		User loggedUser = this.getLoggedUser().get();
+		loggedUser.deleteFriend(user);
+		this.saveUser(loggedUser);
 	}
 
-	@Transactional
-		public void addFriend(User user) {
-			User loggedUser = this.getLoggedUser().get();
-			loggedUser.addFriend(user);
-			this.saveUser(loggedUser);
-	}
-	@Transactional
-		public void deleteFriend(User user) {
-			User loggedUser = this.getLoggedUser().get();
-			loggedUser.deleteFriend(user);
-			this.saveUser(loggedUser);
-	}
+	@Transactional(readOnly = true)
+	public String generarTag(){
+		//La variable palabra almacena el resultado final 
+			String palabra = "#"; 
+		//La variable caracteres es un número aleatorio entre 2 y 20 que define la 
+		//longitud de la palabra. 
+			int caracteres = 4; 
+		//Con un bucle for, que recorreremos las veces que tengamos almacenadas en la 
+		//variable caracteres, que será como mínimo 2, iremos concatenando los 
+		//caracteres aleatorios. 
+				 for (int i=0; i<caracteres; i++){ 
+		//Para generar caracteres aleatorios hay que recurrir al valor numérico de estos 
+		//caracteres en el alfabeto Ascii. En este programa vamos a generar palabras con 
+		//letras minúsculas, que se encuentran en el rango 65-90. El método floor 
+		//devuelve el máximo entero. 
+				 int codigoAscii = (int)Math.floor(Math.random()*(90 -
+				 65)+65); 
+		//para pasar el código a carácter basta con hacer un cast a char 
+				 palabra = palabra + (char)codigoAscii; 
+				 } 
+				 String numero = (ThreadLocalRandom.current().nextInt(8)+1)+"";
+				 String result = palabra + numero+numero+numero+numero;
+				 List<String> allTags = userRepository.findAllTags();
+				 if(allTags.contains(result)){
+					result = generarTag();
+				 }
+				 return result; 
+			 } 
 }

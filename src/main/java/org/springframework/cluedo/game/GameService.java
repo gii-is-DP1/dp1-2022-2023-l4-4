@@ -12,7 +12,8 @@ import org.springframework.cluedo.accusation.FinalAccusation;
 import org.springframework.cluedo.card.CardService;
 import org.springframework.cluedo.celd.Celd;
 import org.springframework.cluedo.enumerates.Phase;
-import org.springframework.cluedo.enumerates.Status;import org.springframework.cluedo.exceptions.DataNotFound;
+import org.springframework.cluedo.enumerates.Status;
+import org.springframework.cluedo.exceptions.DataNotFound;
 import org.springframework.cluedo.exceptions.WrongPhaseException;
 import org.springframework.cluedo.turn.Turn;
 import org.springframework.cluedo.turn.TurnService;
@@ -87,6 +88,11 @@ public class GameService {
 	@Transactional
 	public void saveGame(Game game){
 		gameRepository.save(game);
+	}
+
+	@Transactional
+	public void deleteGame(Game game){
+		gameRepository.delete(game);
 	}
 
 	@Transactional(readOnly=true)
@@ -174,10 +180,15 @@ public class GameService {
 		return gameRepository.getMyNotFinishedGame(user);
 	}
 	public void deleteUserFromLobby(User user, Game game) {
-		List<User> users = game.getLobby();
-		users.remove(user);
-		game.setLobby(users);
-		saveGame(game);
+		if(!game.getHost().equals(user)){
+			List<User> users = game.getLobby();
+			users.remove(user);
+			game.setLobby(users);
+			saveGame(game);
+		} else {
+			deleteGame(game);
+		}
+		
 	}
 	public void leaveGameInProgress(User user, Game game) {
 		List<UserGame> ugs = game.getPlayers();

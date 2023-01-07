@@ -26,10 +26,8 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.validation.MapBindingResult;
-import org.springframework.web.servlet.mvc.method.annotation.RedirectAttributesMethodArgumentResolver;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 @WebMvcTest(controllers=AchievementController.class,
 excludeFilters=@ComponentScan.Filter(type=FilterType.ASSIGNABLE_TYPE, classes=WebSecurityConfigurer.class),
@@ -91,33 +89,94 @@ public class AchievementControllerTest {
     }
 
     @WithMockUser
-    //@Test
-    public void testPostFormCreateAchievement() throws Exception{
-        mockMvc.perform(post("/achievements/new", new Achievement(),
-        new MapBindingResult(new HashMap<>(),"achievement"), 
-        new RedirectAttributesMethodArgumentResolver()))
-        .andExpect(status().isOk())
-        .andExpect(view().name("redirect:achievements/achievementsListing"));
+    @Test
+    public void testPostFormCreateAchievementSuccesfull() throws Exception{
+        mockMvc.perform(post("/achievements/new")
+            .with(csrf())
+            .param("id", "1")
+            .param("name", "Test 1")
+            .param("description", "Test Example 1")
+            .param("goal", "100")
+            .param("metric", "EXPERIENCE")
+            .param("badgeType", "BRONZE")
+            .param("xp", "100"))
+        .andExpect(status().is3xxRedirection())
+        .andExpect(view().name("redirect:/achievements"))
+        .andExpect(MockMvcResultMatchers.flash().attributeExists("message"));
     }
 
     @WithMockUser
     @Test
-    public void testGetFormEditAchievement() throws Exception{
+    public void testPostFormCreateAchievementFailed() throws Exception{
+        mockMvc.perform(post("/achievements/new")
+            .with(csrf())
+            .param("description", "Test Example 1")
+            .param("goal", "100")
+            .param("metric", "EXPERIENCE")
+            .param("badgeType", "BRONZE")
+            .param("xp", "100"))
+        .andExpect(view().name("achievements/createEditNewAchievement"))
+        .andExpect(model().attributeExists("achievement"));
+    }
+
+    @WithMockUser
+    @Test
+    public void testGetFormEditAchievementThatExists() throws Exception{
         when(achievementService.getAchievementById(any(Integer.class))).thenReturn(achievement1);
-        mockMvc.perform(get("/achievements/" + achievement1.getId() + "/edit"))
+        mockMvc.perform(get("/achievements/{id}/edit",achievement1.getId()))
         .andExpect(status().isOk())
         .andExpect(view().name("achievements/createEditNewAchievement"))
         .andExpect(model().attributeExists("achievement","badge","metric"));
     }
 
     @WithMockUser
-    //@Test
-    public void testPostFormEditAchievement() throws Exception{
-        when(achievementService.getAchievementById(any(Integer.class))).thenReturn(achievement1);
-        mockMvc.perform(post("/achievements/" + achievement1.getId() + "/edit", 
-        new Achievement(),new MapBindingResult(new HashMap<>(),"achievement"),
-         new RedirectAttributesMethodArgumentResolver()))
-        .andExpect(status().isOk())
-        .andExpect(view().name("redirect:achievements/achievementsListing"));
+    @Test
+    public void testGetFormEditAchievementNotExists() throws Exception{
+        mockMvc.perform(get("/achievements/{id}/edit",3))
+        .andExpect(view().name("achievements/achievementsListing"))
+        .andExpect(model().attributeExists("message"));
     }
+
+    @WithMockUser
+    @Test
+    public void testPostFormEditAchievementSuccessfull() throws Exception{
+        when(achievementService.getAchievementById(any(Integer.class))).thenReturn(achievement1);
+        mockMvc.perform(post("/achievements/{id}/edit",achievement1.getId())
+            .with(csrf())
+            .param("id", "1")
+            .param("name", "Test 11")
+            .param("description", "Test Example 11")
+            .param("goal", "1000")
+            .param("metric", "EXPERIENCE")
+            .param("badgeType", "SILVER")
+            .param("xp", "1000"))
+        .andExpect(status().is3xxRedirection())
+        .andExpect(view().name("redirect:/achievements"));
+    }
+
+    @WithMockUser
+    @Test
+    public void testPostFormEditAchievementFailed() throws Exception{
+        when(achievementService.getAchievementById(any(Integer.class))).thenReturn(achievement1);
+        mockMvc.perform(post("/achievements/{id}/edit",achievement1.getId())
+            .with(csrf())
+            .param("description", "Test Example 11")
+            .param("goal", "1000")
+            .param("metric", "EXPERIENCE")
+            .param("badgeType", "SILVER")
+            .param("xp", "1000"))
+        .andExpect(view().name("achievements/createEditNewAchievement"))
+        .andExpect(model().attributeExists("achievement"));
+    }
+
+    @WithMockUser
+    @Test
+    public void testGetAllMyAchievements() throws Exception{
+        when(achievementService.findAllMyAchievements()).thenReturn(List.of(achievement1));
+        mockMvc.perform(get("/myAchievements"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("achievements/achievementsListing"))
+        .andExpect(model().attributeExists("achievements"));
+    }
+
 }

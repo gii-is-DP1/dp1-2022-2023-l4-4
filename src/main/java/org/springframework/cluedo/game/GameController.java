@@ -23,6 +23,8 @@ import java.util.List;
 import org.springframework.cluedo.exceptions.CorruptGame;
 import org.springframework.cluedo.exceptions.DataNotFound;
 import org.springframework.cluedo.exceptions.WrongPhaseException;
+import org.springframework.cluedo.message.Message;
+import org.springframework.cluedo.message.MessageService;
 import org.springframework.cluedo.turn.Turn;
 import org.springframework.cluedo.turn.TurnService;
 import org.springframework.stereotype.Controller;
@@ -30,11 +32,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.cluedo.enumerates.CardName;
+import javassist.expr.NewArray;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/games")
@@ -44,8 +49,8 @@ public class GameController {
 	private final String GAME_LISTING="games/gameList";
     private final String GAME_PAST_LISTING="games/gamePastList";
     private final String CREATE_NEW_GAME="games/createNewGame";
-    private final String LOBBY_HOST="games/lobby";
-    private final String LOBBY_PLAYER="games/lobbyPlayer";
+    
+    private final String LOBBY="games/lobbyPlayer";
     private final String ON_GAME="games/onGame";
     private final String DICE_VIEW="games/diceView"; 
     private final String MOVE_VIEW = "games/selectCeld";
@@ -59,6 +64,7 @@ public class GameController {
     private CardService cardService;
     private AccusationService accusationService;
     private UserGameService userGameService;
+    private final MessageService messageService;
     
     @Autowired
     public GameController(GameService gameService, TurnService turnService, UserService userService, CardService cardService, AccusationService accusationService, UserGameService userGameService){
@@ -68,6 +74,8 @@ public class GameController {
         this.cardService = cardService;
         this.accusationService = accusationService;
         this.userGameService = userGameService;
+        this.messageService=messageService;
+
     }
     
     @ModelAttribute("privateList")
@@ -159,15 +167,42 @@ public class GameController {
     }
 
     @Transactional(readOnly = true)
+    @GetMapping("/{gameId}/chat")
+    public ModelAndView getChat(@PathVariable("gameId") Integer gameId)throws DataNotFound{
+        ModelAndView mav = new ModelAndView("games/chat");
+        User userNow = userService.getLoggedUser().get();
+        List<Message> nrMessages = messageService.getAllMessageByGameId(gameId);
+        if(nrMessages.size()>=0){
+            mav.addObject("messages", nrMessages);
+            mav.addObject("gameId",gameId);
+            mav.addObject("chatMessage", new Message());
+            mav.addObject("userNowId", userNow.getId());
+            return mav;
+        }
+        
+        throw new DataNotFound();
+
+    }
+    @PostMapping("/{gameId}/chat")
+    public ModelAndView newMessage(@Valid Message message, BindingResult br, @PathVariable("gameId") Integer gameId) throws DataNotFound{
+        if(!br.hasErrors()){
+            this.messageService.saveMessage(message);
+        }
+        ModelAndView result = new ModelAndView("redirect:chat");
+        return result;
+    } 
+
+
+    @Transactional(readOnly = true)
     @GetMapping("/{gameId}/lobby")
-    public ModelAndView getLobby(@PathVariable("gameId") Integer gameId){
+    public ModelAndView getLobby(@PathVariable("gameId") Integer gameId, RedirectAttributes ra){
     	ModelAndView result = null;
         Game game = null;
         try{
             game = gameService.getGameById(gameId);
         } catch(DataNotFound e) {
             result = new ModelAndView("redirect:/games");
-            result.addObject("message", "The game doesn't exist");
+            ra.addFlashAttribute("message", "The game doesn't exist or the host left the game");
             return result;
         }
         User user= userService.getLoggedUser().get();
@@ -175,9 +210,10 @@ public class GameController {
         if(!game.getLobby().contains(user)) {
             return new ModelAndView("redirect:/games");
         } else if (game.getHost().equals(user)){
-            result = new ModelAndView(LOBBY_HOST);
+            result = new ModelAndView(LOBBY);
+            result.addObject("isHost", true);
         } else {
-            result = new ModelAndView(LOBBY_PLAYER);
+            result = new ModelAndView(LOBBY);
         }
         
         result.addObject("lobby", game);
@@ -186,22 +222,23 @@ public class GameController {
 
     @Transactional()
     @GetMapping("/{gameId}/leave")
-    public String leaveGame(@PathVariable("gameId") Integer gameId) {
+    public ModelAndView leaveGame(@PathVariable("gameId") Integer gameId) {
         Game game = null;
+        ModelAndView result = new ModelAndView("redirect:/games");
         try{
             game = gameService.getGameById(gameId);
         } catch(DataNotFound e) {
-            return "redirect:/games";
+            return result;
         }
         User user= userService.getLoggedUser().get();
         if(game.getLobby().contains(user)){
             if(game.getStatus().equals(Status.LOBBY)) {
                 gameService.deleteUserFromLobby(user, game);
-            } else if (game.getStatus().equals(Status.IN_PROGRESS)) {
+            } else if (game.getStatus().equals(Status.IN_PROGRESS)) { 
                 gameService.leaveGameInProgress(user,game);
             }
         }
-        return "redirect:/games";
+        return result;
     }
     
     @Transactional
@@ -228,7 +265,7 @@ public class GameController {
             result.addObject("message", "The lobby is full");
             return result;
         } else {
-            result = new ModelAndView(LOBBY_HOST);
+            result = new ModelAndView(LOBBY);
             Game copy = new Game();
             BeanUtils.copyProperties(game, copy);
             copy.addLobbyUser(loggedUser.get());
@@ -252,12 +289,12 @@ public class GameController {
         }
         Optional<User> loggedUser = userService.getLoggedUser();
         if (game.getHost()!=loggedUser.get()){
-            ModelAndView result = new ModelAndView(LOBBY_PLAYER);
+            ModelAndView result = new ModelAndView(LOBBY);
             result.addObject("lobby",game);
             result.addObject("message", "The host is incorrect");
             return result;
         } else if (game.getLobby().size()<3) {
-            ModelAndView result = new ModelAndView(LOBBY_HOST);
+            ModelAndView result = new ModelAndView(LOBBY);
             result.addObject("lobby",game);
             result.addObject("message", "The game needs at least 3 players to start");
             return result;

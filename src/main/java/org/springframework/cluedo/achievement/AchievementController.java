@@ -17,21 +17,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/achievements")
 public class AchievementController {
     
     private AchievementService achievementService;
+    
     private final String ACHIEVEMENTS_LISTING = "achievements/achievementsListing";
     private final String CREATE_EDIT_ACHIEVEMENT = "achievements/createEditNewAchievement";
 
     @Autowired
     public AchievementController(AchievementService achievementService) {
         this.achievementService = achievementService;
+       
     }
 
     @ModelAttribute("metric")
@@ -52,16 +52,17 @@ public class AchievementController {
     }
 
     @Transactional(readOnly=true)
-    @GetMapping()
+    @GetMapping("/achievements")
     public ModelAndView getAllAchievements(){
         List<Achievement> achievements = achievementService.getAllAchievements();
         ModelAndView result = new ModelAndView(ACHIEVEMENTS_LISTING);
         result.addObject("achievements", achievements);
+        result.addObject("canCreateAndEdit",true);
         return result;
     }
 
     @Transactional(readOnly=true)
-    @GetMapping("/new")
+    @GetMapping("/achievements/new")
     public ModelAndView createAchievement(){
         Achievement achievement = new Achievement();
         ModelAndView result = new ModelAndView(CREATE_EDIT_ACHIEVEMENT);
@@ -71,10 +72,9 @@ public class AchievementController {
     
 
     @Transactional
-    @PostMapping("/new")
+    @PostMapping("/achievements/new")
     public ModelAndView saveCreatedAchievement(@Valid Achievement achievement, BindingResult br,RedirectAttributes attributes) {
         if(br.hasErrors()) {
-            System.out.println(br.getAllErrors().toString());
             return new ModelAndView(CREATE_EDIT_ACHIEVEMENT, br.getModel());
         } else {
             String imagen = "/resources/images/" + achievement.getBadgeType().toString().toLowerCase() + ".jpg";
@@ -87,7 +87,7 @@ public class AchievementController {
     }
 
     @Transactional(readOnly=true)
-    @GetMapping("/{id}/edit")
+    @GetMapping("/achievements/{id}/edit")
     public ModelAndView editAchievement(@PathVariable("id") Integer id) {
         Achievement achievement = achievementService.getAchievementById(id);
         ModelAndView result = new ModelAndView(CREATE_EDIT_ACHIEVEMENT);
@@ -95,13 +95,13 @@ public class AchievementController {
             result.addObject("achievement", achievement);
         } else {
             result=getAllAchievements();
-            result.addObject("message", "The achievement with id " + id + "doesn't exist");
+            result.addObject("message", "The achievement with id " + id + " doesn't exist");
         }
         return result;
     }
     
     @Transactional
-    @PostMapping("/{id}/edit")
+    @PostMapping("/achievements/{id}/edit")
     public ModelAndView saveEditedAchievement(@Valid Achievement achievement, BindingResult br, RedirectAttributes attributes){
         if(br.hasErrors()){
             return new ModelAndView(CREATE_EDIT_ACHIEVEMENT,br.getModel());
@@ -115,4 +115,13 @@ public class AchievementController {
             return result;
         }
     }
+
+    @Transactional(readOnly=true)
+	@GetMapping("/myAchievements")
+	public ModelAndView getAllMyAchievements(){
+		ModelAndView result= new ModelAndView(ACHIEVEMENTS_LISTING);
+		List<Achievement> achievements = achievementService.findAllMyAchievements();
+		result.addObject("achievements", achievements);
+		return result; 
+	}
 }

@@ -14,8 +14,10 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -31,18 +33,18 @@ import org.springframework.stereotype.Service;
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class GameServiceTest {
     
-    @MockBean
+    @Mock
 	private GameRepository gameRepository;
 
-    @MockBean
+    @Mock
 	private UserService userService;
 
-    @MockBean
+    @Mock
 	private CardService cardService;
 
     private List<Game> mockGames;
 
-    @Autowired
+    
     protected GameService gameService;
 
     @BeforeEach
@@ -109,8 +111,7 @@ public class GameServiceTest {
         mockGames.add(game2);
         mockGames.add(game3);
 
-        Mockito.doNothing().when(userService).initializePlayers(anyList(), any(Game.class));
-        Mockito.doNothing().when(cardService).initCards(any(Game.class));
+        gameService = new GameService(gameRepository, null, cardService, userService, null);
     }
 
     @Test
@@ -122,7 +123,6 @@ public class GameServiceTest {
         assertEquals(Status.IN_PROGRESS, game1.getStatus());
         assertEquals(Duration.ofMinutes(0), game1.getDuration());
         assertEquals(ug, game1.getActualPlayer());
-        
     }
 
     @Test

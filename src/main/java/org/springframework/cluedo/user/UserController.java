@@ -21,10 +21,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cluedo.achievement.Achievement;
 import org.springframework.cluedo.exceptions.DataNotFound;
 import org.springframework.cluedo.game.Game;
 import org.springframework.cluedo.game.GameService;
@@ -46,11 +46,8 @@ import org.springframework.web.servlet.ModelAndView;
 public class UserController {
 
 	private static final String VIEWS_USER_LIST = "users/userList";
-	private final String ACHIEVEMENTS_LISTING = "achievements/myAchievements";
   	private static final String VIEWS_USER_CREATE_OR_UPDATE_FORM = "users/createOrUpdateUserForm";
 	private static final String UPDATE_OTHER_USER_FORM_ADMIN = "users/updateOtherUserForm";
-	private static final String GLOBAL_STATISTICS = "users/globalStatistics";
-	private final String STATISTICS = "users/statistics";
 	private static final String ADD_FRIENDS_FORM = "users/addFriend";
 	private static final String DELETE_FRIENDS_FORM = "users/deleteFriend";
 
@@ -58,22 +55,53 @@ public class UserController {
 
 	private UserStatisticsService statisticsService;
 
-	private GameService gameService;
 
 	@Autowired
-    public UserController(UserService userService,UserStatisticsService statisticsService, GameService gameService) {
+    public UserController(UserService userService,UserStatisticsService statisticsService) {
         this.userService = userService;
 		this.statisticsService=statisticsService;
-		this.gameService= gameService;
     }
 
 	@Transactional(readOnly=true)
-	@GetMapping(value ="/users")
-    public ModelAndView showUserList() {
+	@GetMapping(value ="/users/paginable/{page}")
+    public ModelAndView showUserList(@PathVariable("page") int page) {
         ModelAndView mav = new ModelAndView(VIEWS_USER_LIST);
-        mav.addObject("users", userService.getAllUsers());
+        mav.addObject("users", userService.getXUsers(page));
         return mav;
     }
+	@Transactional(readOnly=true)
+	@GetMapping(value="/users/next")
+	public ModelAndView nextPage(HttpServletRequest request) {
+		String test = request.getHeader("Referer");
+		String[] parts = test.split("/");
+		String part5 = parts[5];
+		Integer page= Integer.parseInt(part5)+1;
+		if(page>0 && page<=(userService.getAllUsers().size())%3){
+			ModelAndView mav = new ModelAndView("redirect:/users/paginable/"+page);
+			return mav;
+		}
+		else{
+			ModelAndView mav = new ModelAndView("redirect:/users/paginable/"+(userService.getAllUsers().size()%3));
+			return mav;
+		}
+	
+	}
+	@Transactional(readOnly=true)
+	@GetMapping(value="/users/back")
+	public ModelAndView backPage(HttpServletRequest request) {
+		String test = request.getHeader("Referer");
+		String[] parts = test.split("/");
+		String part5 = parts[5];
+		Integer page= Integer.parseInt(part5)-1;
+		if(page <0){
+			ModelAndView mav = new ModelAndView("redirect:/users/paginable/0");
+			return mav;
+		}
+		else{
+			ModelAndView mav = new ModelAndView("redirect:/users/paginable/"+page);
+		return mav;
+	}
+	}
 	@Transactional(readOnly=true)
 	@GetMapping(value="/users/{userId}")
 	public ModelAndView showUser(@PathVariable("userId") int userId) throws DataNotFound{
@@ -149,8 +177,12 @@ public class UserController {
 			}
 			else {
 				User loggedUser = this.userService.getLoggedUser().get();
+				if(loggedUser.getTag().equals(userByTag.getTag())) {
+					result.addObject("message","You cannot be your own friend. Please try again.");
+				} else {
 				userService.addFriend(userByTag);
 				result= new ModelAndView("redirect:/users/"+loggedUser.getId()+"/friends");
+				}
 			}
 		}
 		return result;
@@ -195,7 +227,7 @@ public class UserController {
 			user.setEnabled(1);
 			user.setFriends(new ArrayList<>());
 			user.setAchievements(new ArrayList<>());
-			user.setTag(generarTag());
+			user.setTag(userService.generarTag());
 			this.userService.saveUser(user);
 			UserStatistics statistics = new UserStatistics();
 			statistics.setUser(user);
@@ -222,8 +254,8 @@ public class UserController {
 	@Transactional(readOnly=true)
 	@GetMapping(value = "/users/{userId}/delete")
 	public String deleteUser(@PathVariable("userId") int userId){
-		this.userService.deleteUser(userId);
-		return "redirect:/users/";
+		userService.deleteUser(userId);
+		return "redirect:/users/paginable/0";
 	}
   
 	@Transactional(readOnly=true)
@@ -265,56 +297,6 @@ public class UserController {
 			return "redirect:/profile";
 		}
 	} 
-	@Transactional(readOnly=true)
-	@GetMapping("/myAchievements")
-	public ModelAndView getAllMyAchievements(){
-		ModelAndView result= new ModelAndView(ACHIEVEMENTS_LISTING);
-		List<Achievement> achievements = userService.findAllMyAchievements();
-		result.addObject("achievements", achievements);
-		return result; 
-	}
-	@Transactional(readOnly=true)
-	@GetMapping("/stats")
-	public ModelAndView getMyStatistics(){
-		ModelAndView result = new ModelAndView(STATISTICS);
-		UserStatistics statistics = userService.getMyStatistics();
-		result.addObject("stats", statistics);
-		return result;
-	}
-	@Transactional(readOnly=true)
-	@GetMapping("/global")
-	public ModelAndView getGlobalStatistics(){
-		ModelAndView result = new ModelAndView(GLOBAL_STATISTICS);
-		List<UserStatistics> allStats = statisticsService.getAllStatistics();
-		List<Game> allGames = gameService.getAllFinishedGames();
-		GlobalStatistics stats = new GlobalStatistics(allGames, allStats);
-		result.addObject("stats", stats);
-		return result;
-	}
-
-
-	public static String generarTag(){
-		//La variable palabra almacena el resultado final 
-			String palabra = "#"; 
-		//La variable caracteres es un número aleatorio entre 2 y 20 que define la 
-		//longitud de la palabra. 
-			int caracteres = 4; 
-		//Con un bucle for, que recorreremos las veces que tengamos almacenadas en la 
-		//variable caracteres, que será como mínimo 2, iremos concatenando los 
-		//caracteres aleatorios. 
-				 for (int i=0; i<caracteres; i++){ 
-		//Para generar caracteres aleatorios hay que recurrir al valor numérico de estos 
-		//caracteres en el alfabeto Ascii. En este programa vamos a generar palabras con 
-		//letras minúsculas, que se encuentran en el rango 65-90. El método floor 
-		//devuelve el máximo entero. 
-				 int codigoAscii = (int)Math.floor(Math.random()*(90 -
-				 65)+65); 
-		//para pasar el código a carácter basta con hacer un cast a char 
-				 palabra = palabra + (char)codigoAscii; 
-				 } 
-				 String numero = (ThreadLocalRandom.current().nextInt(8)+1)+"";
-				 return palabra + numero+numero+numero+numero ; 
-			 } 
-
+	
 
 }

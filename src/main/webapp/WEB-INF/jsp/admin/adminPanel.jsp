@@ -11,6 +11,6 @@
     <a href="/games/admin/active">View All Not Finished Games</a> <br/>
     <a href="/games/admin/past">View All Finished Games</a>  <br/>
     <a href="/games">View All Listed Lobbies</a>  <br/>
-    <a href="/users">View All Users</a>  <br/>
+    <a href="/users/paginable/0">View All Users</a>  <br/>
    
 </petclinic:layout>

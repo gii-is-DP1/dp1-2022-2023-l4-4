@@ -8,16 +8,22 @@
 	uri="http://www.springframework.org/security/tags"%>
 
 <cluedo:layout pageName="achievements">
-    <h2 style = "font-size: 150%;">All achievements</h2>
+    <c:if test="${canCreateAndEdit}">
+        <h2 style = "font-size: 150%;">All achievements</h2>
+    </c:if>
+    <c:if test="${!canCreateAndEdit}">
+        <h2 style = "font-size: 150%;">My achievements</h2>
+    </c:if>
     <sec:authorize access="hasAuthority('admin')">
-        <h2>
-            <a  href="/achievements/new" style="float: right; padding: 5px; ">
-                <button class="btn btn-default" style="font-size:95%">
-                    Create achievement
-                </button>
-            </a>
-        </h2>
-
+        <c:if test="${canCreateAndEdit}">
+            <h2>
+                <a  href="/achievements/new" style="float: right; padding: 5px; ">
+                    <button class="btn btn-default" style="font-size:95%">
+                        Create achievement
+                    </button>
+                </a>
+            </h2>
+        </c:if>
     </sec:authorize>
     <table id="achievementTable" class="table table-striped">
         <thead>
@@ -29,7 +35,9 @@
             <th style="width: 120px; font-size:130%; text-align: center;">Description</th>
             <th style="width: 120px; font-size:130%; text-align: center;">Experience</th>
             <th style="width: 120px; font-size:130%; text-align: center;">Badge</th>
-            <th style="width: 50px; font-size:130%;"></th>
+            <c:if test="${canCreateAndEdit}">
+                <th style="width: 50px; font-size:130%;"></th>
+            </c:if>
         </tr>
         </thead>
         <tbody>
@@ -62,11 +70,13 @@
                         </c:if>
                     </td>
                     <sec:authorize access="hasAuthority('admin')">
-                        <td style="font-size:130%;">
-                            <a href="/achievements/${achievement.id}/edit">
-                                <span class="glyphicon glyphicon-pencil" aria-hidden="true" style="color: grey;"></span>
-                            </a>
-                        </td>
+                        <c:if test="${canCreateAndEdit}">
+                            <td style="font-size:130%;">
+                                <a href="/achievements/${achievement.id}/edit">
+                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true" style="color: grey;"></span>
+                                </a>
+                            </td>
+                        </c:if>
                     </sec:authorize>
                 </tr>
             </c:forEach>
