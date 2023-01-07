@@ -52,9 +52,8 @@ public class AchievementService {
 
 	@Transactional
 	public void checkToObtainAchievement(Achievement achievement, User user){
-		User loggedUser = userService.getLoggedUser().get();
 		UserStatistics stats = userStatisticsRepository.findMyStatistics(user);
-		if(!loggedUser.getAchievements().contains(achievement)){
+		if(!user.getAchievements().contains(achievement)){
 			switch(achievement.getMetric()){
 				case VICTORIES:
 					if(stats.getVictories()>=achievement.getGoal()){

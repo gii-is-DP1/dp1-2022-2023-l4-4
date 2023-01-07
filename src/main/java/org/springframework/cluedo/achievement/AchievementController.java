@@ -95,7 +95,7 @@ public class AchievementController {
             result.addObject("achievement", achievement);
         } else {
             result=getAllAchievements();
-            result.addObject("message", "The achievement with id " + id + "doesn't exist");
+            result.addObject("message", "The achievement with id " + id + " doesn't exist");
         }
         return result;
     }

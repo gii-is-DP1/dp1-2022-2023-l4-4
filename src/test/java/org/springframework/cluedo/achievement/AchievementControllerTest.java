@@ -123,12 +123,20 @@ public class AchievementControllerTest {
 
     @WithMockUser
     @Test
-    public void testGetFormEditAchievement() throws Exception{
+    public void testGetFormEditAchievementThatExists() throws Exception{
         when(achievementService.getAchievementById(any(Integer.class))).thenReturn(achievement1);
         mockMvc.perform(get("/achievements/{id}/edit",achievement1.getId()))
         .andExpect(status().isOk())
         .andExpect(view().name("achievements/createEditNewAchievement"))
         .andExpect(model().attributeExists("achievement","badge","metric"));
+    }
+
+    @WithMockUser
+    @Test
+    public void testGetFormEditAchievementNotExists() throws Exception{
+        mockMvc.perform(get("/achievements/{id}/edit",3))
+        .andExpect(view().name("achievements/achievementsListing"))
+        .andExpect(model().attributeExists("message"));
     }
 
     @WithMockUser
