@@ -91,7 +91,6 @@ public class TurnService {
                 throw new WrongPhaseException();
         }
         Turn turn = nrTurn.get();
-        //accusationController.makeAccusation();
         turn.setPhase(Phase.FINAL);
         return saveTurn(turn);
     }

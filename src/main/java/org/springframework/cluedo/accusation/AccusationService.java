@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.card.Card;
+import org.springframework.cluedo.game.Game;
 import org.springframework.cluedo.turn.Turn;
 import org.springframework.cluedo.user.UserGame;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,10 @@ public class AccusationService {
         return matchingCards;
     }
 
+    public List<Accusation> getAllAcusationsByGame(Game game){
+        return accusationRepository.findAllByGame(game);
+    }
+
     public Boolean isFinalAccusationCorrect(Turn turn){
         CrimeScene crimeScene = crimeSceneRepository.findByGame(turn.getUserGame().getGame());
         FinalAccusation finalAccusation = finalAccusationRepository.findByTurn(turn);
@@ -61,5 +66,11 @@ public class AccusationService {
     public FinalAccusation saveFinalAccusation(FinalAccusation finalAccusation) {
         return finalAccusationRepository.save(finalAccusation);
     }
+
+	public void showCard(Turn turn, Card card) {
+        Accusation accusation=thisTurnAccusation(turn).get();
+        accusation.setShownCard(card);
+        saveAccusation(accusation);
+	}
 
 }

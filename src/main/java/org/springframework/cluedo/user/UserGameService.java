@@ -3,8 +3,6 @@ package org.springframework.cluedo.user;
 import java.util.List;
 import java.util.Optional;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.accusation.Accusation;
 import org.springframework.cluedo.accusation.AccusationService;
@@ -14,9 +12,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserGameService {
-    @Autowired
     UserGameRepository userGameRepository;
     AccusationService accusationService;
+
+    @Autowired
+    public UserGameService (UserGameRepository userGameRepository, AccusationService accusationService){
+        this.userGameRepository = userGameRepository;
+        this.accusationService = accusationService;
+    }
     
     public UserGame saveUserGame(UserGame userGame) {
         return userGameRepository.save(userGame);
