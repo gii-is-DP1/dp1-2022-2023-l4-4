@@ -64,10 +64,10 @@ public class GameController {
     private CardService cardService;
     private AccusationService accusationService;
     private UserGameService userGameService;
-    private final MessageService messageService;
+    private MessageService messageService;
     
     @Autowired
-    public GameController(GameService gameService, TurnService turnService, UserService userService, CardService cardService, AccusationService accusationService, UserGameService userGameService){
+    public GameController(GameService gameService, TurnService turnService, UserService userService, CardService cardService, AccusationService accusationService, UserGameService userGameService, MessageService messageService){
         this.gameService=gameService;
         this.turnService = turnService;
         this.userService=userService;
