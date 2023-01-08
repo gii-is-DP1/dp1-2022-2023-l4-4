@@ -561,7 +561,7 @@ public class GameControllerTest {
         when(gameService.isUserTurn(any(), any(Game.class))).thenReturn(true);
         turn.setPhase(Phase.FINAL);
         when(turnService.getActualTurn(any(Game.class))).thenReturn(Optional.of(turn));
-        mockMvc.perform(get("/games/"+ipGame.getId()+"/play/finish")).
+        mockMvc.perform(post("/games/"+ipGame.getId()+"/play/finish").param("gameId", "1")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/games/"+ipGame.getId()+"/play"));
     }
