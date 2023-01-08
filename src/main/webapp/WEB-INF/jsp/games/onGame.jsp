@@ -9,6 +9,10 @@
     <h2>
         WAITING... IT'S THE TURN OF ${game.actualPlayer.user.username}
     </h2>
-    
+    <a  href="/games/${game.id}/play/notes" target="_blank">
+        <button class="btn btn-default" style="font-size:105%">
+            New table
+        </button>
+    </a>
                 
 </cluedo:layout>

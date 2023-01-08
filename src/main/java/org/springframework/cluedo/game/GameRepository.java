@@ -23,6 +23,7 @@ public interface GameRepository extends CrudRepository<Game,Integer>{
      
      @Query("select g from Game g WHERE g.status=org.springframework.cluedo.enumerates.Status.FINISHED")
      List<Game> findAllFinishedGames();
+     
      @Query("select g from Game g where :user member of g.lobby and g.status!=org.springframework.cluedo.enumerates.Status.FINISHED")
      Game getMyNotFinishedGame(@Param("user") User user);
      

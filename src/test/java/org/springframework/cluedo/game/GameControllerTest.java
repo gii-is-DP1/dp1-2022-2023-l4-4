@@ -5,16 +5,24 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cluedo.accusation.Accusation;
+import org.springframework.cluedo.accusation.AccusationService;
+import org.springframework.cluedo.card.Card;
+import org.springframework.cluedo.card.CardService;
 import org.springframework.cluedo.celd.Celd;
 import org.springframework.cluedo.configuration.SecurityConfiguration;
+import org.springframework.cluedo.enumerates.CardName;
+import org.springframework.cluedo.enumerates.CardType;
 import org.springframework.cluedo.enumerates.CeldType;
 import org.springframework.cluedo.enumerates.Phase;
 import org.springframework.cluedo.enumerates.Status;
 import org.springframework.cluedo.exceptions.DataNotFound;
+import org.springframework.cluedo.message.MessageService;
 import org.springframework.cluedo.turn.Turn;
 import org.springframework.cluedo.turn.TurnService;
 import org.springframework.cluedo.user.User;
 import org.springframework.cluedo.user.UserGame;
+import org.springframework.cluedo.user.UserGameService;
 import org.springframework.cluedo.user.UserService;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
@@ -50,6 +58,18 @@ public class GameControllerTest {
 
     @MockBean
     protected UserService userService;
+    
+    @MockBean
+    private CardService cardService;
+
+    @MockBean
+    private AccusationService accusationService;
+
+    @MockBean
+    private UserGameService userGameService;
+    
+    @MockBean
+    private MessageService messageService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -64,6 +84,10 @@ public class GameControllerTest {
     private Game newGame; 
     private Turn turn;
     private Celd celd;
+    private Card roomCard;
+    private Card suspectCard;
+    private Card weaponCard;
+    private Accusation accusation;
 
     @BeforeEach
     public void config(){
@@ -157,6 +181,29 @@ public class GameControllerTest {
         celd.setId(1);
         celd.setPosition(78);
         celd.setCeldType(CeldType.CORRIDOR);
+
+        roomCard=new Card();
+        roomCard.setId(1);
+        roomCard.setCardName(CardName.DINNINGHALL);
+        roomCard.setCardType(CardType.ROOM);
+
+        weaponCard=new Card();
+        weaponCard.setId(2);
+        weaponCard.setCardName(CardName.GUN);
+        weaponCard.setCardType(CardType.WEAPON);
+
+        suspectCard=new Card();
+        suspectCard.setId(3);
+        suspectCard.setCardName(CardName.BLUE);
+        suspectCard.setCardType(CardType.SUSPECT);
+        
+        accusation=new Accusation();
+        accusation.setId(1);
+        accusation.setRoomCard(roomCard);
+        accusation.setTurn(turn);
+        accusation.setWeaponCard(weaponCard);
+        accusation.setSuspectCard(suspectCard);
+
 
         when(turnService.createTurn(any(UserGame.class), any(Integer.class))).thenReturn(new Turn());
     }
@@ -264,7 +311,7 @@ public class GameControllerTest {
         when (gameService.getGameById(any(Integer.class))).thenReturn(lobbyGame);
         mockMvc.perform(get("/games/"+lobbyGame.getId()+"/lobby")).
                 andExpect(status().isOk()).
-                andExpect(view().name("games/lobbyPlayer")).
+                andExpect(view().name("games/lobby")).
                 andExpect(model().attributeExists("lobby"));
     }
 
@@ -353,10 +400,11 @@ public class GameControllerTest {
     public void testPlayGame() throws Exception{
 
         when(userService.getLoggedUser()).thenReturn(Optional.of(user2));
+        when(turnService.getActualTurn(any())).thenReturn(Optional.of(turn));
         when(gameService.getGameById(any(Integer.class))).thenReturn(ipGame);
         when(gameService.isGameInProgress(any(Game.class))).thenReturn(true);
         when(gameService.isUserTurn(any(), any(Game.class))).thenReturn(false);
-        mockMvc.perform(get("/games/"+lobbyGame.getId()+"/play")).
+        mockMvc.perform(get("/games/"+ipGame.getId()+"/play")).
                 andExpect(status().isOk()).
                 andExpect(view().name("games/onGame")).
                 andExpect(model().attributeExists("game"));
@@ -473,11 +521,17 @@ public class GameControllerTest {
         when(gameService.isGameInProgress(any(Game.class))).thenReturn(true);
         when(gameService.isUserTurn(any(), any(Game.class))).thenReturn(true);
         turn.setPhase(Phase.ACCUSATION);
+        turn.setFinalCeld(celd);
+        celd.setCeldType(CeldType.DINNINGHALL);
         when(turnService.getActualTurn(any(Game.class))).thenReturn(Optional.of(turn));
+        when( cardService.getCardByCardName(any())).thenReturn(roomCard);
         mockMvc.perform(get("/games/"+ipGame.getId()+"/play/accusation")).
                 andExpect(status().isOk()).
                 andExpect(view().name("games/makeAccusation")).
-                andExpect(model().attributeExists("gameId"));
+                andExpect(model().attributeExists("suspects")).
+                andExpect(model().attributeExists("weapons")).
+                andExpect(model().attributeExists("room")).
+                andExpect(model().attributeExists("accusation"));
     }
 
     @WithMockUser
@@ -491,7 +545,7 @@ public class GameControllerTest {
         turn.setPhase(Phase.ACCUSATION);
         turn.setFinalCeld(celd);
         when(turnService.getActualTurn(any(Game.class))).thenReturn(Optional.of(turn));
-        mockMvc.perform(post("/games/"+ipGame.getId()+"/play")).
+        mockMvc.perform(post("/games/"+ipGame.getId()+"/play/makeAccusation").flashAttr("accusation", accusation)).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/games/"+ipGame.getId()+"/play"));
 

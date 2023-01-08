@@ -48,7 +48,7 @@ public class GameController {
 	private final String GAME_LISTING="games/gameList";
     private final String GAME_PAST_LISTING="games/gamePastList";
     private final String CREATE_NEW_GAME="games/createNewGame";
-    
+    private final String NOTES_VIEW = "games/notes";
     private final String LOBBY="games/lobby";
     private final String ON_GAME="games/onGame";
     private final String DICE_VIEW="games/diceView"; 
@@ -580,7 +580,6 @@ public class GameController {
         if(!gameService.isUserTurn(nrLoggedUser, game)){
             return notYourTurn(game);
         }
-        //TODO
         try{
             System.out.println("LLEGA");
             accusation.setPlayerWhoShows(userGameService.whoShouldGiveCard(game,accusation));
@@ -787,5 +786,10 @@ public class GameController {
         return result;
     }
     
+    @GetMapping("/{gameId}/play/notes")
+    @Transactional(rollbackFor = {WrongPhaseException.class,DataNotFound.class})
+    public ModelAndView newNotes(){
+        return new ModelAndView(NOTES_VIEW);
+    }
 }
  
