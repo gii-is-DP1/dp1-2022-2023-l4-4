@@ -1,6 +1,7 @@
 package org.springframework.cluedo.game;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
@@ -334,7 +335,10 @@ public class GameController {
             } else {
                 //response.addHeader("Refresh", "3");
                 ModelAndView result = new ModelAndView(ON_GAME);
+                Set<Card> cardsFromUser = userGameService.getUsergameByGameAndUser(game, nrLoggedUser.get()).getCards();
+                result.addObject("phase", actualTurn.getPhase());
                 result.addObject("game", game);
+                result.addObject("cards", cardsFromUser);
                 return result;
             }
         }

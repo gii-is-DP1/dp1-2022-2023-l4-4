@@ -35,8 +35,10 @@ public class UserGameService {
 
     public UserGame getLastUsergame(Game game){
         return userGameRepository.findPlayerByGameAndOrder(game,game.getPlayers().size()).get();
-        
+    }
 
+    public UserGame getUsergameByGameAndUser(Game game, User user) {
+        return userGameRepository.findUsergameByGameAndUser(game,user);
     }
 
     public Optional<UserGame> getNextUsergame(Game game){
