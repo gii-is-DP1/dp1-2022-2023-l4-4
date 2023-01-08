@@ -672,6 +672,8 @@ INSERT INTO connected_celds(id2,id1) VALUES
 --game 1 host 1, lobbysize 4, public, finished
 INSERT INTO games(id,host_id,lobby_size,is_private,status) VALUES (1,1,4,0,2);
 
+INSERT INTO message(id,text,user_id,game_id) VALUES (1,'Bienvenido',1,1);
+
 INSERT INTO lobbies(game_id,user_id) VALUES
 (1,1),
 (1,2);
