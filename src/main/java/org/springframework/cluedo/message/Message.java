@@ -30,6 +30,7 @@ public class Message extends BaseEntity{
     private String text;
 
     @ManyToOne
+    @JoinColumn(name= "user_id")
     private User player;
 
     @ManyToOne
