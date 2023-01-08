@@ -49,7 +49,7 @@ public class UserGameService {
 
     public UserGame whoShouldGiveCard(Game game, Accusation accusation) {
         UserGame accusatorUser= accusation.getTurn().getUserGame();
-        UserGame next = getUsergameByGameAndOrder(game, accusatorUser.getOrderUser()+1%game.getPlayers().size());
+        UserGame next = getUsergameByGameAndOrder(game, (accusatorUser.getOrderUser()%game.getPlayers().size())+1);
         while (!next.equals(accusatorUser) && accusation.getPlayerWhoShows()==null){
             List<Card> cards=accusationService.getMatchingCardsFromUser(accusation, next);
             if (cards.size()!=0){

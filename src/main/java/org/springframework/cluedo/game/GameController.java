@@ -3,6 +3,7 @@ package org.springframework.cluedo.game;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
@@ -48,7 +49,7 @@ public class GameController {
     private final String GAME_PAST_LISTING="games/gamePastList";
     private final String CREATE_NEW_GAME="games/createNewGame";
     
-    private final String LOBBY="games/lobbyPlayer";
+    private final String LOBBY="games/lobby";
     private final String ON_GAME="games/onGame";
     private final String DICE_VIEW="games/diceView"; 
     private final String MOVE_VIEW = "games/selectCeld";
@@ -193,7 +194,7 @@ public class GameController {
 
     @Transactional(readOnly = true)
     @GetMapping("/{gameId}/lobby")
-    public ModelAndView getLobby(@PathVariable("gameId") Integer gameId, RedirectAttributes ra){
+    public ModelAndView getLobby(@PathVariable("gameId") Integer gameId, RedirectAttributes ra, HttpServletResponse response){
     	ModelAndView result = null;
         Game game = null;
         try{
@@ -209,11 +210,11 @@ public class GameController {
             return new ModelAndView("redirect:/games");
         } else if (game.getHost().equals(user)){
             result = new ModelAndView(LOBBY);
-            result.addObject("isHost", true);
+            result.addObject("canStart", game.getLobby().size()<3?false:true);
         } else {
             result = new ModelAndView(LOBBY);
         }
-        
+        //response.addHeader("Refresh", "4");
         result.addObject("lobby", game);
         return result;
     }
@@ -310,7 +311,7 @@ public class GameController {
 
     @GetMapping("/{gameId}/play")
     @Transactional
-    public ModelAndView playGame(@PathVariable("gameId") Integer gameId) throws WrongPhaseException,DataNotFound{
+    public ModelAndView playGame(@PathVariable("gameId") Integer gameId, HttpServletResponse response) throws WrongPhaseException,DataNotFound{
         
         Game game = null;
         try{
@@ -331,6 +332,7 @@ public class GameController {
             if(actualTurn.getPhase().equals(Phase.ACCUSATION) && nrAccusation.isPresent() && nrAccusation.get().getPlayerWhoShows().getUser().equals(nrLoggedUser.get())) {
                 return new ModelAndView("redirect:/games/"+gameId+"/play/showcard");
             } else {
+                //response.addHeader("Refresh", "3");
                 ModelAndView result = new ModelAndView(ON_GAME);
                 result.addObject("game", game);
                 return result;
@@ -344,6 +346,7 @@ public class GameController {
                 if(accusationService.thisTurnAccusation(actualTurn).isEmpty()){
                     return new ModelAndView("redirect:/games/"+gameId+"/play/accusation");
                 }else{
+                    //response.addHeader("Refresh", "3");
                     ModelAndView result = new ModelAndView(ON_GAME);
                     result.addObject("game",game);
                     return result;
@@ -351,6 +354,7 @@ public class GameController {
             }
             case FINAL:return new ModelAndView("redirect:/games/"+gameId+"/play/finish");
             default: {
+                //response.addHeader("Refresh", "3");
                 ModelAndView result = new ModelAndView(ON_GAME);
                 result.addObject("game", game);
                 return result;
@@ -513,7 +517,7 @@ public class GameController {
         }
         Turn turn=turnService.getActualTurn(game).get();
         turn.setFinalCeld(finalCeld.getFinalCeld());
-        if(turn.getFinalCeld().getCeldType()!=CeldType.CORRIDOR) {
+        if(turn.getFinalCeld().getCeldType()!=CeldType.CORRIDOR && turn.getFinalCeld().getCeldType()!=CeldType.CENTER) {
             turn.setPhase(Phase.ACCUSATION);
         } else {
             turn.setPhase(Phase.FINAL);
@@ -573,15 +577,18 @@ public class GameController {
         }
 
         Optional<User> nrLoggedUser=userService.getLoggedUser();
-        
         if(!gameService.isUserTurn(nrLoggedUser, game)){
             return notYourTurn(game);
         }
+        //TODO
         try{
+            System.out.println("LLEGA");
             accusation.setPlayerWhoShows(userGameService.whoShouldGiveCard(game,accusation));
+            System.out.println("TAMBIEN");
             accusationService.saveAccusation(accusation);
             if (accusation.getPlayerWhoShows()==null){
-                turnService.makeAccusation(game);
+                System.out.println("AQUI NOPE");
+                turnService.makeAccusation(game); 
             }
         } catch(Exception e) {
             ModelAndView result = new ModelAndView(ON_GAME);
@@ -779,5 +786,6 @@ public class GameController {
         }
         return result;
     }
+    
 }
  

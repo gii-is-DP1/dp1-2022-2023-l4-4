@@ -17,7 +17,7 @@ INSERT INTO cards(id,card_name,card_type,image_url) VALUES
 (2,'SPA','ROOM',null),
 (3,'HALL','ROOM',null),
 (4,'OBSERVATORY','ROOM',null),
-(5,'GUESSROOM','ROOM',null),
+(5,'GUESTROOM','ROOM',null),
 (6,'DINNINGHALL','ROOM',null),
 (7,'THEATRE','ROOM',null),
 (8,'LIVINGROOM','ROOM',null),
