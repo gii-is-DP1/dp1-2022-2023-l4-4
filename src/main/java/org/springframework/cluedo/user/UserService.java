@@ -13,8 +13,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cluedo.achievement.Achievement;
-import org.springframework.cluedo.statistics.UserStatistics;
 import org.springframework.cluedo.card.Card;
 import org.springframework.cluedo.enumerates.SuspectType;
 import org.springframework.cluedo.game.Game;
@@ -77,6 +75,7 @@ public class UserService {
 	public User findUserByTag(String tag) {
 		return userRepository.findByTag(tag);
 	}
+	@Transactional
 	public void deleteUser(int id){
 		userRepository.deleteById(id);
 	}

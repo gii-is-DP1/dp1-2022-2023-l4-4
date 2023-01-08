@@ -49,13 +49,14 @@ public class UserGameService {
 
     public UserGame whoShouldGiveCard(Game game, Accusation accusation) {
         UserGame accusatorUser= accusation.getTurn().getUserGame();
-        UserGame next = getUsergameByGameAndOrder(game, accusatorUser.getOrderUser()+1%game.getPlayers().size());
-        while (!next.equals(accusatorUser) && accusation.getPlayerWhoShows()==null){
+        UserGame next = getUsergameByGameAndOrder(game, (accusatorUser.getOrderUser()%game.getPlayers().size())+1);
+        while (!next.equals(accusatorUser)){
             List<Card> cards=accusationService.getMatchingCardsFromUser(accusation, next);
             if (cards.size()!=0){
                 return next;
             }else{
-                next=getUsergameByGameAndOrder(game, next.getOrderUser()+1%game.getPlayers().size());
+                next=getUsergameByGameAndOrder(game, (next.getOrderUser()%game.getPlayers().size())+1);
+                
             }
         }
         return null;
