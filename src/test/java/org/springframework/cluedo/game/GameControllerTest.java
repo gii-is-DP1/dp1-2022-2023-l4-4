@@ -30,6 +30,7 @@ import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.validation.MapBindingResult;
 import org.springframework.security.test.context.support.WithMockUser;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -535,7 +536,7 @@ public class GameControllerTest {
     }
 
     @WithMockUser
-    //@Test
+    @Test
     public void testMakeAccusation() throws Exception{
 
         when(userService.getLoggedUser()).thenReturn(Optional.of(user1));
@@ -545,7 +546,13 @@ public class GameControllerTest {
         turn.setPhase(Phase.ACCUSATION);
         turn.setFinalCeld(celd);
         when(turnService.getActualTurn(any(Game.class))).thenReturn(Optional.of(turn));
-        mockMvc.perform(post("/games/"+ipGame.getId()+"/play/makeAccusation").flashAttr("accusation", accusation)).
+        mockMvc.perform(post("/games/"+ipGame.getId()+"/play/makeAccusation")
+        .with(csrf())
+        .param("id", accusation.getId().toString())
+        .param("turn", turn.getId().toString())
+        .param("roomCard", roomCard.getId().toString())
+        .param("weaponCard", weaponCard.getId().toString())
+        .param("suspectCard", suspectCard.getId().toString())).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/games/"+ipGame.getId()+"/play"));
 
@@ -561,7 +568,7 @@ public class GameControllerTest {
         when(gameService.isUserTurn(any(), any(Game.class))).thenReturn(true);
         turn.setPhase(Phase.FINAL);
         when(turnService.getActualTurn(any(Game.class))).thenReturn(Optional.of(turn));
-        mockMvc.perform(post("/games/"+ipGame.getId()+"/play/finish").param("gameId", "1")).
+        mockMvc.perform(post("/games/"+ipGame.getId()+"/play/finish")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/games/"+ipGame.getId()+"/play"));
     }
