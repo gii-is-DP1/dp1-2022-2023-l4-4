@@ -65,9 +65,5 @@
                 </td>
             </tr>
         </tbody>
-    </table>
-
-
-    
-    
+    </table>  
 </cluedo:layout>

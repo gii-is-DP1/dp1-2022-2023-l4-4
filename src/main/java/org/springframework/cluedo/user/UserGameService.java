@@ -57,7 +57,7 @@ public class UserGameService {
             if (cards.size()!=0){
                 return next;
             }else{
-                next=getUsergameByGameAndOrder(game, next.getOrderUser()+1%game.getPlayers().size());
+                next=getUsergameByGameAndOrder(game, (next.getOrderUser()%game.getPlayers().size())+1);
             }
         }
         return null;
