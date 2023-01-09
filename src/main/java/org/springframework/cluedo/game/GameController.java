@@ -340,11 +340,13 @@ public class GameController {
         Turn actualTurn = turnService.getActualTurn(game).get();
         Optional<Accusation> nrAccusation =  accusationService.thisTurnAccusation(actualTurn);
         ModelAndView result = new ModelAndView(ON_GAME);
+        UserGame userGame = userGameService.getUsergameByGameAndUser(game, nrLoggedUser.get());
         List<Card> cardsFromUser = userGameService.getUsergameByGameAndUser(game, nrLoggedUser.get()).getCards()
             .stream().sorted(Comparator.comparing( Card::getCardName)).collect(Collectors.toList());
         result.addObject("cards", cardsFromUser);
         result.addObject("phase", actualTurn.getPhase());
         result.addObject("game", game);
+        result.addObject("userGame", userGame);
     
         if(!gameService.isUserTurn(nrLoggedUser, game)){
             if(actualTurn.getPhase().equals(Phase.ACCUSATION) && nrAccusation.isPresent()){

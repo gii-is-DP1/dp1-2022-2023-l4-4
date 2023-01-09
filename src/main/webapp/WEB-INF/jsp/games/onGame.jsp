@@ -46,7 +46,13 @@
         </c:if>
 
     </div>
-        
+    <c:if test="${userGame != null}">
+        <a  href="/games/${game.id}/chat"  target="_blank">
+            <button class="btn btn-default" style="font-size:105%">
+                Chat
+            </button>
+        </a>
+    </c:if>
     <div style = "padding-left: 90%">
         <a  href="/games/${game.id}/leave"  target="_blank">
             <button class="btn btn-default" style="font-size:105%">
