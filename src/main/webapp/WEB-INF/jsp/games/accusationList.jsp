@@ -7,6 +7,12 @@
 <%@ taglib prefix="cluedo" tagdir="/WEB-INF/tags" %>
 
 <cluedo:layout pageName="Accusation List">
+    <a href="/games/${game.id}/play/accusations">
+        <button class="btn btn-default" style="font-size: 105%">
+        Refresh
+        </button>
+    </a>
+    <br></br>
     <table id="gameTable" class="table table-striped">
         <thead>
         <tr>
@@ -28,23 +34,23 @@
                     <c:out value="${acc.turn.id}"/>
                 </td>
                 <td>
-                    <c:out value="${acc.suspectCard}"/>
+                    <c:out value="${acc.suspectCard.cardName}"/>
                 </td>
                 <td>
-                    <c:out value="${acc.weaponCard}"/>
+                    <c:out value="${acc.weaponCard.cardName}"/>
                 </td>
                 <td>
-                    <c:out value="${acc.roomCard}"/>
+                    <c:out value="${acc.roomCard.cardName}"/>
                 </td>
                 <td>
                     <c:out value="${acc.turn.userGame.user.username}"/>
                 </td>
                 <td>
-                    <c:out value="${acc.playerWhoShows}"/>
+                    <c:out value="${acc.playerWhoShows.user.username}"/>
                 </td>
                 <td>
-                    <c:if test="${{acc.turn.userGame.user.id == loggedUser.id}">
-                        <c:out value="${acc.shownCard}"/>
+                    <c:if test="${acc.turn.userGame.user.id == loggedUser.id}">
+                        <c:out value="${acc.shownCard.cardName}"/>
                     </c:if>
                 </td>
             </tr>
