@@ -135,8 +135,6 @@ public class UserStatisticsControllerTest {
         .andExpect(view().name("users/globalStatistics"))
         .andExpect(model().attributeExists("stats"));
     }
-
-    
     
 
 
