@@ -327,11 +327,15 @@ public class UserController {
 				return result;
 			}
 			User userToChange = nrUser.get();
+			String userName = userToChange.getUsername();
 			userToChange.setUsername(user.getUsername());
 			userToChange.setPassword(user.getPassword());
 			userToChange.setEmail(user.getEmail());
 			userToChange.setImageurl(user.getImageurl());
 			this.userService.saveUser(userToChange);
+			if(!userName.equals(user.getUsername())){
+				return new ModelAndView("redirect:/logout");
+			}
 			return new ModelAndView("redirect:/profile");
 		}
 	} 
