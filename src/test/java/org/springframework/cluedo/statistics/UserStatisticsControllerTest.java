@@ -25,10 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@WebMvcTest(controllers=UserStatisticsController.class,
+@WebMvcTest(controllers=UserStatisticsControllerTest.class,
     excludeFilters=@ComponentScan.Filter(type=FilterType.ASSIGNABLE_TYPE, classes=WebSecurityConfigurer.class),
     excludeAutoConfiguration=SecurityConfiguration.class)
-public class UserStatisticsController {
+public class UserStatisticsControllerTest {
 
     @MockBean
     protected UserStatisticsService userStatisticsService;
