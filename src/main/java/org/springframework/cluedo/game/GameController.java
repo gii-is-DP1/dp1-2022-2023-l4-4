@@ -210,11 +210,20 @@ public class GameController {
 
         if(!game.getLobby().contains(user)) {
             return new ModelAndView("redirect:/games");
-        } else if (game.getHost().equals(user)){
-            result = new ModelAndView(LOBBY);
-            result.addObject("canStart", game.getLobby().size()<3?false:true);
-        } else {
-            result = new ModelAndView(LOBBY);
+        } else{
+            if(game.getStatus().equals(Status.IN_PROGRESS)){
+                return new ModelAndView("redirect:/games/"+gameId+"/play");
+            }
+            else if(game.getStatus().equals(Status.FINISHED)){
+                result = new ModelAndView(GAME_LISTING);
+                result.addObject("message","The game has ended.");
+            }
+            else if (game.getHost().equals(user)){
+                result = new ModelAndView(LOBBY);
+                result.addObject("canStart", game.getLobby().size()<3?false:true);
+            } else {
+             result = new ModelAndView(LOBBY);
+            }
         }
         //response.addHeader("Refresh", "4");
         result.addObject("lobby", game);
