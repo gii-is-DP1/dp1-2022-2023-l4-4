@@ -6,14 +6,12 @@ import java.util.Optional;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cluedo.accusation.Accusation;
 import org.springframework.cluedo.accusation.AccusationService;
 import org.springframework.cluedo.accusation.FinalAccusation;
 import org.springframework.cluedo.card.CardService;
 import org.springframework.cluedo.celd.Celd;
 import org.springframework.cluedo.enumerates.Phase;
-import org.springframework.cluedo.enumerates.Status;
-import org.springframework.cluedo.exceptions.DataNotFound;
+import org.springframework.cluedo.enumerates.Status;import org.springframework.cluedo.exceptions.DataNotFound;
 import org.springframework.cluedo.exceptions.WrongPhaseException;
 import org.springframework.cluedo.turn.Turn;
 import org.springframework.cluedo.turn.TurnService;
@@ -108,10 +106,7 @@ public class GameService {
 		Turn actualTurn=turnService.getActualTurn(game).get(); 
 		actualTurn.setPhase(Phase.FINISHED);
 		turnService.saveTurn(actualTurn);
-		UserGame last=userGameService.getLastUsergame(game);
-		System.out.println("Último---------->"+last);
 		do{
-			System.out.println("Actual------------->"+game.getActualPlayer());
 			if(game.getActualPlayer().getOrderUser()==game.getPlayers().size()){
 				game.setRound(game.getRound()+1);
 				game.setActualPlayer(userGameService.getFirstUsergame(game)); 
@@ -180,16 +175,13 @@ public class GameService {
 		return gameRepository.getMyNotFinishedGame(user);
 	}
 	public void deleteUserFromLobby(User user, Game game) {
-		if(!game.getHost().equals(user)){
-			List<User> users = game.getLobby();
-			users.remove(user);
-			game.setLobby(users);
-			saveGame(game);
-		} else {
-			deleteGame(game);
-		}
-		
-	}
+        if(!game.getHost().equals(user)){
+            game.removeLobbyUser(user);
+            saveGame(game);
+        } else {
+            deleteGame(game);
+        } 
+    }
 	public void leaveGameInProgress(User user, Game game) {
 		List<UserGame> ugs = game.getPlayers();
 		UserGame ug = ugs.stream().filter(x->x.getUser().equals(user)).findAny().orElse(null);
@@ -199,9 +191,6 @@ public class GameService {
 		}
 	}
 
-	public void showAccusationCard(User loggedUser, Game game, Accusation accusation) {
-		
-	}
 } 
 
 	

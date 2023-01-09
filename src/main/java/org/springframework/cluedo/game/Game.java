@@ -19,7 +19,6 @@ import javax.validation.constraints.NotNull;
 import org.springframework.cluedo.model.BaseEntity;
 import org.springframework.cluedo.user.User;
 import org.springframework.cluedo.user.UserGame;
-import org.apache.logging.log4j.message.Message;
 import org.springframework.cluedo.accusation.CrimeScene;
 import org.springframework.cluedo.enumerates.Status;
 
