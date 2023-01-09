@@ -37,8 +37,11 @@
         <tbody>
             <tr>
                 <td style="width: 60%; vertical-align: top;">
-                    <div> 
+                    <div style="position: absolute">
                         <img src="/resources/images/tablero.jpeg" style="width:600px;height:600px;">
+                        <c:forEach items="${game.players}" var="player">
+                            <img src="/resources/images/pieces/${player.suspect}.png" style="width:20px;height:20px;position:absolute;z-index:2;top:40px;left:40px">
+                        </c:forEach>
                     </div>
                 </td>
                 <td>
