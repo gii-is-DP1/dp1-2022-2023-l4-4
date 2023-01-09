@@ -672,13 +672,15 @@ INSERT INTO connected_celds(id2,id1) VALUES
 --game 1 host 1, lobbysize 4, public, finished
 INSERT INTO games(id,host_id,lobby_size,is_private,status) VALUES (1,1,4,0,2);
 
+INSERT INTO message(id,text,user_id,game_id) VALUES (1,'Bienvenido',1,1);
+
 INSERT INTO lobbies(game_id,user_id) VALUES
 (1,1),
 (1,2);
 
 INSERT INTO user_games(id,order_user, accusations_number, is_afk,is_eliminated,suspect,user_id,game_id) VALUES 
-(1,0,1,1,0,1,1,1),
-(2,1,1,1,0,2,2,1);
+(1,1,1,1,0,1,1,1),
+(2,2,1,1,0,2,2,1);
 
 INSERT INTO turns(user_game_id, round, dice_result, initial_celd_id,phase) VALUES (1,1,5,1,3);
 
@@ -695,9 +697,9 @@ INSERT INTO lobbies(game_id,user_id) VALUES
 (2,3);
 
 INSERT INTO user_games(id,order_user, accusations_number, is_afk, is_eliminated,suspect,user_id,game_id) VALUES
-(3,0,1,1,0,1,1,2),
-(4,1,1,0,0,2,2,2),
-(5,2,1,0,0,3,3,2);
+(3,1,1,1,0,1,1,2),
+(4,2,1,0,0,2,2,2),
+(5,3,1,0,0,3,3,2);
 
 INSERT INTO turns(user_game_id, round, dice_result, initial_celd_id,phase) VALUES (3,1,5,1,5);
 

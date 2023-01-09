@@ -9,6 +9,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -27,6 +28,8 @@ import lombok.Setter;
 @Table(name = "user_games")
 public class UserGame extends BaseEntity{
     @Column
+    @Min(1)
+    @Max(6)    
     private Integer orderUser;
 
     @Min(0)
