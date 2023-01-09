@@ -672,13 +672,15 @@ INSERT INTO connected_celds(id2,id1) VALUES
 --game 1 host 1, lobbysize 4, public, finished
 INSERT INTO games(id,host_id,lobby_size,is_private,status) VALUES (1,1,4,0,2);
 
+INSERT INTO message(id,text,user_id,game_id) VALUES (1,'Bienvenido',1,1);
+
 INSERT INTO lobbies(game_id,user_id) VALUES
 (1,1),
 (1,2);
 
 INSERT INTO user_games(id,order_user, accusations_number, is_afk,is_eliminated,suspect,user_id,game_id) VALUES 
-(1,0,1,1,0,1,1,1),
-(2,1,1,1,0,2,2,1);
+(1,1,1,1,0,1,1,1),
+(2,2,1,1,0,2,2,1);
 
 INSERT INTO turns(user_game_id, round, dice_result, initial_celd_id,phase) VALUES (1,1,5,1,3);
 
@@ -695,9 +697,9 @@ INSERT INTO lobbies(game_id,user_id) VALUES
 (2,3);
 
 INSERT INTO user_games(id,order_user, accusations_number, is_afk, is_eliminated,suspect,user_id,game_id) VALUES
-(3,0,1,1,0,1,1,2),
-(4,1,1,0,0,2,2,2),
-(5,2,1,0,0,3,3,2);
+(3,1,1,1,0,1,1,2),
+(4,2,1,0,0,2,2,2),
+(5,3,1,0,0,3,3,2);
 
 INSERT INTO turns(user_game_id, round, dice_result, initial_celd_id,phase) VALUES (3,1,5,1,5);
 
@@ -720,4 +722,4 @@ INSERT INTO lobbies(game_id,user_id) VALUES
 INSERT INTO user_statistics(id, xp, total_games, total_time, total_rounds,total_accusations, victories, afk_counter, longest_game_id, shortest_game_id, total_final_accusations, user_id) VALUES (1,100,2,20,20,20,2,0,1,2,2,1),
 (2,100,2,20,20,20,2,0,1,2,2,2), (3,100,2,20,20,20,2,0,1,2,2,3), (4,100,2,20,20,20,2,0,1,2,2,4);
 
-
+INSERT INTO notifications(id,text,link,timestamp,user_id1,user_id2) VALUES (1,'Pablo te ha invitado a una partida', 100,'12:56',1,2);

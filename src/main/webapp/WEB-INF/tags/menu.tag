@@ -62,6 +62,11 @@
 					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 					<span>Friends</span>
 				</petclinic:menuItem>
+				<petclinic:menuItem active="${name eq 'notifications'}" url="/notifications/redirect"
+					title="Notifications">
+					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+					<span>Notifications</span>
+				</petclinic:menuItem>
 				<sec:authorize access="hasAuthority('admin')">
 					<petclinic:menuItem active="${name eq 'Admin'}" url="/admin"
 						title="Admin">

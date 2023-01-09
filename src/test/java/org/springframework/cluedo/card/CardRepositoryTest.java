@@ -20,7 +20,9 @@ public class CardRepositoryTest {
 
     @Autowired
     protected CardRepository repo;
-
+    
+    
+    
     @Test
     public void findAllTest(){
         List<Card> list = repo.findAll();

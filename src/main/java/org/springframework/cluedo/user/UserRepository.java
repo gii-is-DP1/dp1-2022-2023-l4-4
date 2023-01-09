@@ -1,6 +1,5 @@
 package org.springframework.cluedo.user;
 
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -14,12 +13,6 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends  CrudRepository<User, Integer>{
 	
 List<User> findAll();
-
-Optional<User> findById(Integer id);
-
-@Modifying
-@Query("DELETE User u WHERE u.id = ?1")
-void deleteById(Integer id);
 
 User findByTag(String tag);
 

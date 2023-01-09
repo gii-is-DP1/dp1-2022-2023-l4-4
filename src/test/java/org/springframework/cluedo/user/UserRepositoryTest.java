@@ -52,6 +52,24 @@ public class UserRepositoryTest {
         assertFalse(user.isPresent());
     }
     
+    @Test
+    public void testFindByTag(){
+        User user = repo.findByTag("#WADS1111");
+        assertNotNull(user);
+        assertTrue(user.getUsername().equals("1"));
+    }
     
-    
+    @Test
+    public void testFindFriendsById(){
+        List<User> friends = repo.findFriendsById(1);
+        assertNotNull(friends);
+        assertTrue(friends.size()==2);
+    }
+
+    @Test
+    public void testFindAllTags() {
+        List<String> tags = repo.findAllTags();
+        assertNotNull(tags);
+        assertTrue(!tags.isEmpty());
+    }
 }
