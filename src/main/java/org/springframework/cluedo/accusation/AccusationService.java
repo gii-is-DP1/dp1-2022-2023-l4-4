@@ -71,6 +71,6 @@ public class AccusationService {
         Accusation accusation=thisTurnAccusation(turn).get();
         accusation.setShownCard(card);
         saveAccusation(accusation);
-	}
+	} 
 
 }
