@@ -390,7 +390,7 @@ public class GameController {
         return null;
     }
     
-    @GetMapping("/{gameId}/play/accusationList")
+    @GetMapping("/{gameId}/play/accusations")
     @Transactional
     public ModelAndView viewAccusations(@PathVariable("gameId") Integer gameId) throws WrongPhaseException,DataNotFound,CorruptGame{
          Game game = null;
@@ -402,6 +402,7 @@ public class GameController {
         }
         ModelAndView result= new ModelAndView(ACCUSATION_LIST);
         result.addObject("accusations",accusationService.getAllAcusationsByGame(game));
+        result.addObject("loggedUser",userService.getLoggedUser());
         return result;
     }
         
@@ -793,5 +794,6 @@ public class GameController {
     public ModelAndView newNotes(){
         return new ModelAndView(NOTES_VIEW);
     }
+
 }
  
