@@ -41,5 +41,7 @@
                 Leave lobby
             </button>
         </a>
+        <a  href="/notifications/${lobby.id}/invite" ><button class="btn btn-default">Invite a friend</button></a>
+
     </div>
 </cluedo:layout>

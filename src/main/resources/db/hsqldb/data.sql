@@ -720,4 +720,4 @@ INSERT INTO lobbies(game_id,user_id) VALUES
 INSERT INTO user_statistics(id, xp, total_games, total_time, total_rounds,total_accusations, victories, afk_counter, longest_game_id, shortest_game_id, total_final_accusations, user_id) VALUES (1,100,2,20,20,20,2,0,1,2,2,1),
 (2,100,2,20,20,20,2,0,1,2,2,2), (3,100,2,20,20,20,2,0,1,2,2,3), (4,100,2,20,20,20,2,0,1,2,2,4);
 
-
+INSERT INTO notifications(id,text,link,timestamp,user_id1,user_id2) VALUES (1,'Pablo te ha invitado a una partida', 100,'12:56',1,2);
