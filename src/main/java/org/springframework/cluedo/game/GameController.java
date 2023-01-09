@@ -3,6 +3,7 @@ package org.springframework.cluedo.game;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
@@ -19,6 +20,7 @@ import org.springframework.cluedo.user.User;
 import org.springframework.cluedo.user.UserGameService;
 import org.springframework.cluedo.user.UserService;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import org.springframework.cluedo.exceptions.CorruptGame;
 import org.springframework.cluedo.exceptions.DataNotFound;
@@ -32,25 +34,23 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.cluedo.enumerates.CardName;
-import javassist.expr.NewArray;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/games")
 public class GameController {
     
-    private static final String ACCUSATION_LIST = "games/accusationListing";
+    private static final String ACCUSATION_LIST = "games/accusationList";
 	private final String GAME_LISTING="games/gameList";
     private final String GAME_PAST_LISTING="games/gamePastList";
     private final String CREATE_NEW_GAME="games/createNewGame";
-    
-    private final String LOBBY="games/lobbyPlayer";
+    private final String NOTES_VIEW = "games/notes";
+    private final String LOBBY="games/lobby";
     private final String ON_GAME="games/onGame";
     private final String DICE_VIEW="games/diceView"; 
     private final String MOVE_VIEW = "games/selectCeld";
@@ -195,7 +195,7 @@ public class GameController {
 
     @Transactional(readOnly = true)
     @GetMapping("/{gameId}/lobby")
-    public ModelAndView getLobby(@PathVariable("gameId") Integer gameId, RedirectAttributes ra){
+    public ModelAndView getLobby(@PathVariable("gameId") Integer gameId, RedirectAttributes ra, HttpServletResponse response){
     	ModelAndView result = null;
         Game game = null;
         try{
@@ -209,13 +209,22 @@ public class GameController {
 
         if(!game.getLobby().contains(user)) {
             return new ModelAndView("redirect:/games");
-        } else if (game.getHost().equals(user)){
-            result = new ModelAndView(LOBBY);
-            result.addObject("isHost", true);
-        } else {
-            result = new ModelAndView(LOBBY);
+        } else{
+            if(game.getStatus().equals(Status.IN_PROGRESS)){
+                return new ModelAndView("redirect:/games/"+gameId+"/play");
+            }
+            else if(game.getStatus().equals(Status.FINISHED)){
+                result = new ModelAndView(GAME_LISTING);
+                result.addObject("message","The game has ended.");
+            }
+            else if (game.getHost().equals(user)){
+                result = new ModelAndView(LOBBY);
+                result.addObject("canStart", game.getLobby().size()<3?false:true);
+            } else {
+             result = new ModelAndView(LOBBY);
+            }
         }
-        
+        //response.addHeader("Refresh", "4");
         result.addObject("lobby", game);
         return result;
     }
@@ -312,8 +321,7 @@ public class GameController {
 
     @GetMapping("/{gameId}/play")
     @Transactional
-    public ModelAndView playGame(@PathVariable("gameId") Integer gameId) throws WrongPhaseException,DataNotFound{
-        
+    public ModelAndView playGame(@PathVariable("gameId") Integer gameId, HttpServletResponse response) throws WrongPhaseException,DataNotFound{   
         Game game = null;
         try{
             game = gameService.getGameById(gameId);
@@ -321,24 +329,37 @@ public class GameController {
             ModelAndView result = new ModelAndView("redirect:/games");
             return result;
         }
-        
+
         if(!gameService.isGameInProgress(game)) {
             return wrongStatus(game);
         }
-
+    
         Optional<User> nrLoggedUser=userService.getLoggedUser();
         Turn actualTurn = turnService.getActualTurn(game).get();
         Optional<Accusation> nrAccusation =  accusationService.thisTurnAccusation(actualTurn);
+        ModelAndView result = new ModelAndView(ON_GAME);
+        List<Card> cardsFromUser = userGameService.getUsergameByGameAndUser(game, nrLoggedUser.get()).getCards()
+            .stream().sorted(Comparator.comparing( Card::getCardName)).collect(Collectors.toList());
+        result.addObject("cards", cardsFromUser);
+        result.addObject("phase", actualTurn.getPhase());
+        result.addObject("game", game);
+    
         if(!gameService.isUserTurn(nrLoggedUser, game)){
-            if(actualTurn.getPhase().equals(Phase.ACCUSATION) && nrAccusation.isPresent() && nrAccusation.get().getPlayerWhoShows().getUser().equals(nrLoggedUser.get())) {
-                return new ModelAndView("redirect:/games/"+gameId+"/play/showcard");
+            if(actualTurn.getPhase().equals(Phase.ACCUSATION) && nrAccusation.isPresent()){
+                if(nrAccusation.get().getPlayerWhoShows().getUser().equals(nrLoggedUser.get())) {
+                    return new ModelAndView("redirect:/games/"+gameId+"/play/showcard");
+                }else{
+                    //response.addHeader("Refresh", "3");
+                    result.addObject("playerWhoShows", accusationService.thisTurnAccusation(actualTurn).get().getPlayerWhoShows());
+                    result.addObject("notAccuser", true);
+                    return result;    
+                }
             } else {
-                ModelAndView result = new ModelAndView(ON_GAME);
-                result.addObject("game", game);
+                //response.addHeader("Refresh", "3");
                 return result;
             }
         }
-        
+            
         switch(actualTurn.getPhase()){
             case DICE:return new ModelAndView("redirect:/games/"+gameId+"/play/dice");
             case MOVEMENT:return new ModelAndView("redirect:/games/"+gameId+"/play/move");
@@ -346,14 +367,14 @@ public class GameController {
                 if(accusationService.thisTurnAccusation(actualTurn).isEmpty()){
                     return new ModelAndView("redirect:/games/"+gameId+"/play/accusation");
                 }else{
-                    ModelAndView result = new ModelAndView(ON_GAME);
-                    result.addObject("game",game);
+                    //response.addHeader("Refresh", "3");
+                    result.addObject("playerWhoShows", accusationService.thisTurnAccusation(actualTurn).get().getPlayerWhoShows());
                     return result;
                 }
             }
             case FINAL:return new ModelAndView("redirect:/games/"+gameId+"/play/finish");
             default: {
-                ModelAndView result = new ModelAndView(ON_GAME);
+                //response.addHeader("Refresh", "3");
                 result.addObject("game", game);
                 return result;
             }
@@ -374,7 +395,7 @@ public class GameController {
 
     public ModelAndView notYourTurn(Game game) {
         //Redirige al usuario a la pantalla correspondiente si no es su turno
-        ModelAndView result = new ModelAndView("redirect:/games/"+game.getId()+"/play"); //TODO: pantalla default para expectadores de la partida
+        ModelAndView result = new ModelAndView("redirect:/games/"+game.getId()+"/play");
         result.addObject("message", "Wait until it's your turn");
         return result;
     }
@@ -388,7 +409,7 @@ public class GameController {
         return null;
     }
     
-    @GetMapping("/{gameId}/play/accusationList")
+    @GetMapping("/{gameId}/play/accusations")
     @Transactional
     public ModelAndView viewAccusations(@PathVariable("gameId") Integer gameId) throws WrongPhaseException,DataNotFound,CorruptGame{
          Game game = null;
@@ -399,7 +420,9 @@ public class GameController {
             return result;
         }
         ModelAndView result= new ModelAndView(ACCUSATION_LIST);
+        result.addObject("game",game);
         result.addObject("accusations",accusationService.getAllAcusationsByGame(game));
+        result.addObject("loggedUser",userService.getLoggedUser().get());
         return result;
     }
         
@@ -515,7 +538,7 @@ public class GameController {
         }
         Turn turn=turnService.getActualTurn(game).get();
         turn.setFinalCeld(finalCeld.getFinalCeld());
-        if(turn.getFinalCeld().getCeldType()!=CeldType.CORRIDOR) {
+        if(turn.getFinalCeld().getCeldType()!=CeldType.CORRIDOR && turn.getFinalCeld().getCeldType()!=CeldType.CENTER) {
             turn.setPhase(Phase.ACCUSATION);
         } else {
             turn.setPhase(Phase.FINAL);
@@ -575,7 +598,6 @@ public class GameController {
         }
 
         Optional<User> nrLoggedUser=userService.getLoggedUser();
-        
         if(!gameService.isUserTurn(nrLoggedUser, game)){
             return notYourTurn(game);
         }
@@ -583,7 +605,7 @@ public class GameController {
             accusation.setPlayerWhoShows(userGameService.whoShouldGiveCard(game,accusation));
             accusationService.saveAccusation(accusation);
             if (accusation.getPlayerWhoShows()==null){
-                turnService.makeAccusation(game);
+                turnService.makeAccusation(game); 
             }
         } catch(Exception e) {
             ModelAndView result = new ModelAndView(ON_GAME);
@@ -775,9 +797,47 @@ public class GameController {
         }
         ModelAndView result=checkPhase(game,Phase.FINAL); 
         if (result==null){
+            System.out.println("ENTRA AQUI");
             gameService.finishTurn(game);
             return new ModelAndView("redirect:/games/"+game.getId()+"/play");
 
+        }
+        System.out.println("PASA POR AQUI");
+        return result;
+    }
+    
+    @GetMapping("/{gameId}/play/notes")
+    @Transactional(rollbackFor = {WrongPhaseException.class,DataNotFound.class})
+    public ModelAndView newNotes(){
+        return new ModelAndView(NOTES_VIEW);
+    }
+
+    @GetMapping("/{gameId}/spectate")
+    @Transactional
+    public ModelAndView spectateGame(@PathVariable("gameId") Integer gameId, HttpServletResponse response) throws WrongPhaseException,DataNotFound{
+        Game game = null;
+        try{
+            game = gameService.getGameById(gameId);
+        } catch(DataNotFound e) {
+            ModelAndView result = new ModelAndView("redirect:/games");
+            return result;
+        }
+        
+        if(!gameService.isGameInProgress(game)) {
+            return wrongStatus(game);
+        }
+        ModelAndView result = new ModelAndView(ON_GAME);
+        //response.addHeader("Refresh", "3");
+        Optional<User> nrLoggedUser=userService.getLoggedUser();
+        Turn actualTurn = turnService.getActualTurn(game).get();
+        Optional<Accusation> nrAccusation =  accusationService.thisTurnAccusation(actualTurn);
+        result.addObject("cards",userGameService.getUsergameByGameAndUser(game, nrLoggedUser.get()).getCards()
+            .stream().sorted(Comparator.comparing( Card::getCardName)).collect(Collectors.toList()));
+        result.addObject("phase", actualTurn.getPhase());
+        result.addObject("game", game);
+        if(actualTurn.getPhase().equals(Phase.ACCUSATION) && nrAccusation.isPresent()){    
+            result.addObject("playerWhoShows", accusationService.thisTurnAccusation(actualTurn).get().getPlayerWhoShows());
+            result.addObject("notAccuser", true);   
         }
         return result;
     }

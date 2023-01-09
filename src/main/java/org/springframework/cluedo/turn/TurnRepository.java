@@ -13,6 +13,4 @@ public interface TurnRepository extends CrudRepository<Turn,Integer> {
     @Query("SELECT t FROM Turn t WHERE t.userGame.id=:userGameId AND t.round=:round")
     public Optional<Turn> getTurn(@Param("userGameId")Integer userGameId, @Param("round")Integer round);
 
-    public Turn save(Turn t);
-
 }

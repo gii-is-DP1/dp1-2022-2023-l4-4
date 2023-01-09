@@ -6,7 +6,7 @@ public enum CardName {
         SPA,
         HALL,
         OBSERVATORY,
-        GUESSROOM,
+        GUESTROOM,
         DINNINGHALL,
         THEATRE,
         LIVINGROOM,

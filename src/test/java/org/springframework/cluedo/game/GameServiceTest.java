@@ -2,8 +2,6 @@ package org.springframework.cluedo.game;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 
 import java.time.Duration;
@@ -15,12 +13,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cluedo.card.CardService;
 import org.springframework.cluedo.enumerates.Status;
 import org.springframework.cluedo.user.User;
@@ -111,7 +105,7 @@ public class GameServiceTest {
         mockGames.add(game2);
         mockGames.add(game3);
 
-        gameService = new GameService(gameRepository, null, cardService, userService, null, null);
+        gameService = new GameService(gameRepository, null, cardService, userService, null,null);
     }
 
     @Test

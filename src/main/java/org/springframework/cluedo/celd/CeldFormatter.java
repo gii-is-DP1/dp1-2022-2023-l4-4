@@ -38,7 +38,6 @@ public class CeldFormatter implements Formatter<Celd>{
 			}  catch (DataNotFound e) {
 				throw new ParseException("Celd not found: " + text, 0);
 			}	catch(NumberFormatException e){ 
-				System.out.println("ASI SE QUEDA:----->"+text.replaceAll(" ", ""));
 				return this.celdService.getByCeldType(CeldType.valueOf(text.replaceAll(" ", "")));
 			}
 					 
