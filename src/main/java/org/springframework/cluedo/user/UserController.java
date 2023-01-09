@@ -15,6 +15,8 @@
  */
 package org.springframework.cluedo.user;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.exceptions.DataNotFound;
 import org.springframework.cluedo.game.Game;
 import org.springframework.cluedo.game.GameService;
+import org.springframework.cluedo.notification.Notification;
+import org.springframework.cluedo.notification.NotificationService;
 import org.springframework.cluedo.statistics.GlobalStatistics;
 import org.springframework.cluedo.statistics.UserStatistics;
 import org.springframework.cluedo.statistics.UserStatisticsService;
@@ -52,14 +56,15 @@ public class UserController {
 	private static final String DELETE_FRIENDS_FORM = "users/deleteFriend";
 
 	private UserService userService;
-
+	private NotificationService notificationService;
 	private UserStatisticsService statisticsService;
 
 
 	@Autowired
-    public UserController(UserService userService,UserStatisticsService statisticsService) {
+    public UserController(UserService userService,UserStatisticsService statisticsService,NotificationService notificationService) {
         this.userService = userService;
 		this.statisticsService=statisticsService;
+		this.notificationService=notificationService;
     }
 
 	@Transactional(readOnly=true)
@@ -181,6 +186,17 @@ public class UserController {
 					result.addObject("message","You cannot be your own friend. Please try again.");
 				} else {
 				userService.addFriend(userByTag);
+				LocalDateTime localDate = LocalDateTime.now();//For reference
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+				String formattedString = localDate.format(formatter);
+			
+				Notification noti = new Notification();
+				noti.setLink(null);
+				noti.setSender(loggedUser);
+				noti.setReceiver(userByTag);
+				noti.setText(loggedUser.getUsername()+" te ha añadido como amigo    ");
+				noti.setTimestamp(formattedString);
+				notificationService.save(noti);
 				result= new ModelAndView("redirect:/users/"+loggedUser.getId()+"/friends");
 				}
 			}
