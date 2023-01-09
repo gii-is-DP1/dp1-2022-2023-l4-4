@@ -46,6 +46,14 @@
         </c:if>
 
     </div>
+        
+    <div style = "padding-left: 90%">
+        <a  href="/games/${game.id}/leave"  target="_blank">
+            <button class="btn btn-default" style="font-size:105%">
+                Exit
+            </button>
+        </a>
+    </div>
 
     <table class="table table-striped" style="border:0;">
         <tbody>
@@ -59,6 +67,13 @@
                     </div>
                 </td>
                 <td>
+                    <div style = "padding-top: 20%">
+                        <a  href="/games/${game.id}/play/accusations"  target="_blank">
+                            <button class="btn btn-default" style="font-size:105%">
+                                Accusations
+                            </button>
+                        </a>
+                    </div>
                     <div style = "padding-top: 20%">
                         <h3>
                             YOUR CARDS:
@@ -82,13 +97,6 @@
                                 </p>
                             
                         </c:forEach>
-                    </div>
-                    <div style = "padding-top: 20%">
-                        <a  href="/games/${game.id}/play/accusations"  target="_blank">
-                            <button class="btn btn-default" style="font-size:105%">
-                                Accusations
-                            </button>
-                        </a>
                     </div>
                 </td>
             </tr>

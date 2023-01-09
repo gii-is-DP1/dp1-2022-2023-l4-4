@@ -17,6 +17,7 @@ import org.springframework.cluedo.enumerates.CeldType;
 import org.springframework.cluedo.enumerates.Phase;
 import org.springframework.cluedo.enumerates.Status;
 import org.springframework.cluedo.user.User;
+import org.springframework.cluedo.user.UserGame;
 import org.springframework.cluedo.user.UserGameService;
 import org.springframework.cluedo.user.UserService;
 import java.util.ArrayList;
@@ -110,10 +111,11 @@ public class GameController {
     public ModelAndView getAllPublicLobbies(){
         User user= userService.getLoggedUser().get();
         Game game = gameService.getMyNotFinishedGame(user);
+        UserGame userGame = userGameService.getUsergameByGameAndUser(game, user);
         if(game != null) {
             if(game.getStatus().equals(Status.LOBBY)) {
                 return new ModelAndView("redirect:/games/"+game.getId()+"/lobby");
-            } else {
+            } else if(userGame != null && !userGame.getIsEliminated()){
                 return new ModelAndView("redirect:/games/"+game.getId()+"/play");
             }
         }

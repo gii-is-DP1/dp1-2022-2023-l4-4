@@ -7,12 +7,26 @@
 <%@ taglib prefix="cluedo" tagdir="/WEB-INF/tags" %>
 
 <cluedo:layout pageName="Accusation List">
-    <a href="/games/${game.id}/play/accusations">
-        <button class="btn btn-default" style="font-size: 105%">
-        Refresh
-        </button>
-    </a>
-    <br></br>
+    <table class = "table table-striped" style = "border:o;">
+        <tbody>
+            <tr>
+                <td style ="width: 20%; vertical-align: top;">
+                    <a href="/games/${game.id}/play/accusations">
+                        <button class="btn btn-default" style="font-size: 105%">
+                            Refresh
+                        </button>
+                    </a>
+                </td>
+                <td>
+                    <a href="/games/${game.id}/play">
+                        <button class="btn btn-default" style="font-size: 105%">
+                            Back To Game
+                        </button>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
     <table id="gameTable" class="table table-striped">
         <thead>
         <tr>
