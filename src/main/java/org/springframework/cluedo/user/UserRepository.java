@@ -15,12 +15,6 @@ public interface UserRepository extends  CrudRepository<User, Integer>{
 	
 List<User> findAll();
 
-Optional<User> findById(Integer id);
-
-@Modifying
-@Query("DELETE User u WHERE u.id = ?1")
-void deleteById(Integer id);
-
 User findByTag(String tag);
 
 @Query("SELECT u.friends FROM User u where u.id=:id ")

@@ -27,16 +27,13 @@
             </tr>
         </c:forEach>
     </table>
-    <form:form  class="form-horizontal">
-        <div class="form-group">
-            <button class="btn btn-default" type="submit">Start Game</button>
-        
-            <a  href="/games/${lobby.id}/leave" >
-                <button class="btn btn-default">
-                    Leave lobby
-                </button>
-            </a>
-        </div>
-    </form:form>
-    
+    <div>
+        <a  href="/games/${lobby.id}/leave" >
+            <button class="btn btn-default" style="font-size:110%;">
+                Leave lobby
+            </button>
+        </a>
+        <a  href="/notifications/${lobby.id}/invite" ><button class="btn btn-default">Invite a friend</button></a>
+
+    </div>
 </cluedo:layout>

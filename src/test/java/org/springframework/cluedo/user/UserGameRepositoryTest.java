@@ -2,7 +2,6 @@ package org.springframework.cluedo.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.cluedo.enumerates.SuspectType;
 import org.springframework.cluedo.game.Game;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,9 +17,10 @@ public class UserGameRepositoryTest {
     
     @Autowired
     protected UserGameRepository repo;
+
     User user;
     Game game;
-    UserGame userGame;
+
     @BeforeEach
     public void config(){
 
@@ -29,23 +29,13 @@ public class UserGameRepositoryTest {
         
         game = new Game();
         game.setId(1);
-
-        userGame = new UserGame();
-        userGame.setId(1);
-        userGame.setOrderUser(0);
-        userGame.setAccusationsNumber(1);
-        userGame.setIsAfk(true);
-        userGame.setIsEliminated(true);
-        userGame.setSuspect(SuspectType.BLUE);
-        userGame.setUser(user);
-        userGame.setGame(game);
     }
 
     @Test
     public void testFindPlayerByGameAndOrder() {
-        Optional<UserGame> userGame = repo.findPlayerByGameAndOrder(game, 0);
+        Optional<UserGame> userGame = repo.findPlayerByGameAndOrder(game, 1);
         assertTrue(userGame.isPresent());
-        userGame = repo.findPlayerByGameAndOrder(null, null);
+        userGame = repo.findPlayerByGameAndOrder(game, 10);
         assertFalse(userGame.isPresent());
     }
 
@@ -58,8 +48,9 @@ public class UserGameRepositoryTest {
     }
 
     @Test
-    public void testGetUserGameByUserId() {
-        UserGame userGame = repo.getUserGameByUserId(user.getId());
-        assertNotNull(userGame);
+    public void testFindPlayerByGame() {
+        List<UserGame> players = repo.findPlayerByGame(game);
+        assertNotNull(players);
+        assertTrue(!players.isEmpty());
     }
 }

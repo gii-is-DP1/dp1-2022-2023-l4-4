@@ -15,13 +15,10 @@ public interface UserGameRepository extends CrudRepository<UserGame,Integer>{
     @Query("SELECT ug FROM UserGame ug WHERE ug.game=:game")
     List<UserGame> findPlayerByGame(@Param("game")Game game);
 
-
     @Query("SELECT ug FROM UserGame ug WHERE ug.game=:game AND ug.isEliminated=false")
     List<UserGame> remainingPlayersNotEliminated(@Param("game")Game game);
-
-    @Query("SELECT ug FROM UserGame ug WHERE ug.user.id = :id")
-    UserGame getUserGameByUserId(@Param("id") Integer id);
-
+    
     @Query("SELECT ug FROM UserGame ug WHERE ug.user = :user AND ug.game = :game")
     UserGame findUsergameByGameAndUser(@Param("game")Game game, @Param("user")User user);
+
 }

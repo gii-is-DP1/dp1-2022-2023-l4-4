@@ -40,7 +40,7 @@ public class UserGameService {
     public UserGame getUsergameByGameAndUser(Game game, User user) {
         return userGameRepository.findUsergameByGameAndUser(game,user);
     }
-
+    
     public Optional<UserGame> getNextUsergame(Game game){
         return userGameRepository.findPlayerByGameAndOrder(game,game.getActualPlayer().getOrderUser()+1);
     }
@@ -52,7 +52,7 @@ public class UserGameService {
     public UserGame whoShouldGiveCard(Game game, Accusation accusation) {
         UserGame accusatorUser= accusation.getTurn().getUserGame();
         UserGame next = getUsergameByGameAndOrder(game, (accusatorUser.getOrderUser()%game.getPlayers().size())+1);
-        while (!next.equals(accusatorUser) && accusation.getPlayerWhoShows()==null){
+        while (!next.equals(accusatorUser)){
             List<Card> cards=accusationService.getMatchingCardsFromUser(accusation, next);
             if (cards.size()!=0){
                 return next;

@@ -75,6 +75,7 @@ public class UserService {
 	public User findUserByTag(String tag) {
 		return userRepository.findByTag(tag);
 	}
+	@Transactional
 	public void deleteUser(int id){
 		userRepository.deleteById(id);
 	}

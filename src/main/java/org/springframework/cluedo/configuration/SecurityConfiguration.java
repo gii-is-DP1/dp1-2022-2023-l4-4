@@ -44,6 +44,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/owners/**").permitAll()	
 				.antMatchers("/profile/**").authenticated()
 				.antMatchers("/newchat/**").authenticated()	
+				.antMatchers("/notifications/**").authenticated()	
 				.antMatchers("/chat/**").authenticated()
 				.antMatchers("/vets/**").authenticated()
 				.antMatchers("/games/**").authenticated()
