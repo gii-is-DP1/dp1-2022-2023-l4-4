@@ -246,8 +246,23 @@ public class GameController {
         if(game.getLobby().contains(user)){
             if(game.getStatus().equals(Status.LOBBY)) {
                 gameService.deleteUserFromLobby(user, game);
+                if(game.getLobbySize() == 0) {
+                    game.setStatus(Status.FINISHED);
+                    gameService.saveGame(game);
+                }
             } else if (game.getStatus().equals(Status.IN_PROGRESS)) { 
                 gameService.leaveGameInProgress(user,game);
+                boolean allPlayersEliminated = true;
+                for(UserGame ug:game.getPlayers()) {
+                    if(!ug.getIsEliminated()) {
+                        allPlayersEliminated = false;
+                        break;
+                    }
+                }
+                if(allPlayersEliminated) {
+                    game.setStatus(Status.FINISHED);
+                    gameService.saveGame(game);
+                }
             }
         }
         return result;
