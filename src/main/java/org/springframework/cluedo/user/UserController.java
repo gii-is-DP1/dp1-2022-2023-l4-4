@@ -70,6 +70,7 @@ public class UserController {
         mav.addObject("users", userService.getXUsers(page));
         return mav;
     }
+
 	@Transactional(readOnly=true)
 	@GetMapping(value="/users/next")
 	public ModelAndView nextPage(HttpServletRequest request) {
@@ -87,6 +88,7 @@ public class UserController {
 		}
 	
 	}
+
 	@Transactional(readOnly=true)
 	@GetMapping(value="/users/back")
 	public ModelAndView backPage(HttpServletRequest request) {
@@ -103,6 +105,7 @@ public class UserController {
 		return mav;
 	}
 	}
+
 	@Transactional(readOnly=true)
 	@GetMapping(value="/users/{userId}")
 	public ModelAndView showUser(@PathVariable("userId") int userId) throws DataNotFound{
@@ -230,11 +233,18 @@ public class UserController {
   
 	@Transactional
 	@PostMapping(value = "/users/new")
-	public String processCreationForm(@Valid User user, BindingResult result) {
-		if (result.hasErrors()) {
-			return VIEWS_USER_CREATE_OR_UPDATE_FORM;
+	public ModelAndView processCreationForm(@Valid User user, BindingResult br) {
+		if (br.hasErrors()) {
+			return new ModelAndView(VIEWS_USER_CREATE_OR_UPDATE_FORM,br.getModel());
 		}
 		else {
+			List<User> users = userService.getAllUsers();
+			Boolean usernameExists = users.stream().anyMatch(x -> x.getUsername().equals(user.getUsername()));
+			if(usernameExists){
+				ModelAndView result = new ModelAndView(VIEWS_USER_CREATE_OR_UPDATE_FORM);
+				result.addObject("message","Username already exists. Please try again.");
+				return result;
+			}
 			user.setAuthority("user");
 			user.setEnabled(1);
 			user.setFriends(new ArrayList<>());
@@ -244,22 +254,30 @@ public class UserController {
 			UserStatistics statistics = new UserStatistics();
 			statistics.setUser(user);
 			this.statisticsService.save(statistics);
-			return "redirect:/";
+			return new ModelAndView("redirect:/");
 		}
 	}
 	@Transactional
  	@PostMapping(value= "/users/{userId}/edit")
-	public String processUpdateForm(@Valid User user, BindingResult result,@PathVariable("userId") int userId){
+	public ModelAndView processUpdateForm(@Valid User user, BindingResult br,@PathVariable("userId") int userId){
 		User userToChange = userService.findUserById(userId).get();
-		if(result.hasErrors()){
-			return UPDATE_OTHER_USER_FORM_ADMIN;
+		ModelAndView result = new ModelAndView(UPDATE_OTHER_USER_FORM_ADMIN,br.getModel());
+		result.addObject("user",userToChange);
+		if(br.hasErrors()){
+			return result;
 		}else{
+			List<User> users = userService.getAllUsers();
+			Boolean usernameExists = users.stream().anyMatch(x -> x.getUsername().equals(user.getUsername()) && x.getId()!=user.getId());
+			if(usernameExists){
+				result.addObject("message","Username already exists. Please try again.");
+				return result;
+			}
 			userToChange.setUsername(user.getUsername());
 			userToChange.setPassword(user.getPassword());
 			userToChange.setEmail(user.getEmail());
 			userToChange.setImageurl(user.getImageurl());
 			this.userService.saveUser(userToChange);
-			return "redirect:/users/{userId}";
+			return new ModelAndView("redirect:/users/"+userToChange.getId());
 		}
 	} 
 
@@ -295,18 +313,26 @@ public class UserController {
 	}
 	@Transactional
 	@PostMapping(value= "/profile/edit")
-	public String processUpdateFormProfile(@Valid User user, BindingResult br){
+	public ModelAndView processUpdateFormProfile(@Valid User user, BindingResult br){
 		Optional<User> nrUser = userService.getLoggedUser();
+		ModelAndView result = new ModelAndView(VIEWS_USER_CREATE_OR_UPDATE_FORM, br.getModel());
+		result.addObject("user",nrUser.get());
 		if(br.hasErrors()){
-			return VIEWS_USER_CREATE_OR_UPDATE_FORM;
+			return result;
 		}else{
+			List<User> users = userService.getAllUsers();
+			Boolean usernameExists = users.stream().anyMatch(x -> x.getUsername().equals(user.getUsername()) && x.getId()!=user.getId());
+			if(usernameExists){
+				result.addObject("message","Username already exists. Please try again.");
+				return result;
+			}
 			User userToChange = nrUser.get();
 			userToChange.setUsername(user.getUsername());
 			userToChange.setPassword(user.getPassword());
 			userToChange.setEmail(user.getEmail());
 			userToChange.setImageurl(user.getImageurl());
 			this.userService.saveUser(userToChange);
-			return "redirect:/profile";
+			return new ModelAndView("redirect:/profile");
 		}
 	} 
 	

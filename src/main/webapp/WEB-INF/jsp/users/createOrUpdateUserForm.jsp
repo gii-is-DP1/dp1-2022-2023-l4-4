@@ -12,6 +12,9 @@
             <cluedo:inputField label="Username" name="username" />
             <cluedo:inputField label="E-mail" name="email" />
             <cluedo:inputField label="Password" name="password" />
+            <c:if test="${!user['new']}">
+                <input type="hidden" name="id" value="${user.id}" />
+            </c:if>
             <input type="hidden" name="enabled" value="${user.enabled}">
             <h4>Photo:</h4>
             <spring:url value="/resources/images/jake.png" htmlEscape="true" var="jake"/>

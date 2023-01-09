@@ -35,11 +35,12 @@ public class UserService {
 		this.userGameService = userGameService;
 	}
 
-	@Transactional
+	@Transactional(readOnly = true)
 	public List<User> getAllUsers(){
 		
 		return userRepository.findAll();
 	}
+	@Transactional(readOnly = true)
 	public List<User> getXUsers(int page){
 		Integer normal =3;
 		Integer min= normal*page;
@@ -84,6 +85,8 @@ public class UserService {
 	public Optional<User> findUserByUsername(String username) {
 		return userRepository.findByUsername(username);
 	}
+	
+	@Transactional(readOnly = true)
 	public List<User> findUserFriends(Integer id) {
 		return userRepository.findFriendsById(id);
 	}
