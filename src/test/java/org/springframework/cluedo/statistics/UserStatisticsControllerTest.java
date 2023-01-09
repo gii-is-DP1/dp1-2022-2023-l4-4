@@ -136,6 +136,7 @@ public class UserStatisticsControllerTest {
         .andExpect(model().attributeExists("stats"));
     }
     
+    
 
 
 
