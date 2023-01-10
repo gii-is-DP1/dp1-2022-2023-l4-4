@@ -7,6 +7,7 @@
 <style>
     h2{text-align: center}
 </style>
+
 <cluedo:layout pageName="On Game">
     <div>
         <c:if test="${phase == 'DICE'}">
@@ -66,9 +67,9 @@
             <tr>
                 <td style="width: 60%; vertical-align: top;">
                     <div style="position: absolute">
-                        <img src="/resources/images/tablero.jpeg" style="width:600px;height:600px;">
+                        <img src="/resources/images/tablero.jpeg" style="width:600px; height:600px;">
                         <c:forEach items="${game.players}" var="player">
-                            <img src="/resources/images/pieces/${player.suspect}.png" style="width:20px;height:20px;position:absolute;z-index:2;top:${player.position}px;left:${player.position}px">
+                            <img src="/resources/images/pieces/${player.suspect}.png" style="width:20px; height:20px; position:absolute; z-index:2; top:${player.getY()}px; left:${player.getX()}px">
                         </c:forEach>
                     </div>
                 </td>

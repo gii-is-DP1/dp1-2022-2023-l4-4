@@ -63,4 +63,12 @@ public class UserGame extends BaseEntity{
 
     private Integer position;
 
+    public Integer getX() {
+        return (int)((position%24) * 20) - 15;
+    } 
+
+    public Integer getY() {
+        return (Math.floorDiv(position, 24) * 20) + 10;
+    }
+
 }
