@@ -29,6 +29,13 @@
                     </button>
                 </a>
             </th>
+            <th style="border:none">
+                <a href="/games">
+                    <button class="btn btn-default" style="font-size: 105%">
+                    Refresh
+                    </button>
+                </a>
+            </th>
         </table>
     
     </div>

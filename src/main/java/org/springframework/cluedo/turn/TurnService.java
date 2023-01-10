@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cluedo.accusation.FinalAccusation;
 import org.springframework.cluedo.celd.Celd;
 import org.springframework.cluedo.celd.CeldService;
 import org.springframework.cluedo.enumerates.Phase;

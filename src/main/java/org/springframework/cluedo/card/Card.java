@@ -11,10 +11,12 @@ import org.springframework.cluedo.enumerates.CardType;
 import org.springframework.cluedo.model.BaseEntity;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "cards")
 @Getter
+@Setter
 public class Card extends BaseEntity {
 
     @Column(name="card_name")

@@ -1,13 +1,11 @@
 package org.springframework.cluedo.user;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -26,7 +24,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.cluedo.accusation.Accusation;
 import org.springframework.cluedo.accusation.AccusationService;
 import org.springframework.cluedo.enumerates.SuspectType;
-import org.springframework.cluedo.game.CardForm;
 import org.springframework.cluedo.game.Game;
 import org.springframework.cluedo.turn.Turn;
 import org.springframework.context.annotation.ComponentScan;

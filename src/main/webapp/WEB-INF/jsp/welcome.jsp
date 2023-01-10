@@ -22,4 +22,9 @@
             <img class="img-responsive" src="${petsImage}"/>
         </div>
     </div>
+    <div>
+        <button>
+            <a href="/" target="_blank"> New Window</a>
+        </button>
+    </div>
 </petclinic:layout>
