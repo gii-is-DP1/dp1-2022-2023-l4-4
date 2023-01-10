@@ -562,6 +562,9 @@ public class GameController {
         }
         Turn turn=turnService.getActualTurn(game).get();
         turn.setFinalCeld(finalCeld.getFinalCeld());
+        UserGame player = turn.getUserGame();
+        player.setPosition(turn.getFinalCeld().getPosition());
+        userGameService.saveUserGame(player);
         if(turn.getFinalCeld().getCeldType()!=CeldType.CORRIDOR && turn.getFinalCeld().getCeldType()!=CeldType.CENTER) {
             turn.setPhase(Phase.ACCUSATION);
         } else {

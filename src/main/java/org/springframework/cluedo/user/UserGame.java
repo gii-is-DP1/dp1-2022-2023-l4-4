@@ -13,6 +13,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cluedo.card.Card;
 import org.springframework.cluedo.enumerates.SuspectType;
@@ -60,4 +61,7 @@ public class UserGame extends BaseEntity{
     public void addCard(Card card){
         cards.add(card);
     }
+
+    private Integer position;
+
 }

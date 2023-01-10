@@ -33,7 +33,6 @@ public class TurnService {
         turn.setRound(round);
         Optional<Turn> previousTurn = turnRepository.getTurn(userGame.getId(),round-1);
         if(previousTurn.isPresent()){
-            
             turn.setInitialCeld(previousTurn.get().getFinalCeld());
         } else{
             turn.setInitialCeld(celdService.getCenter());
