@@ -2,6 +2,7 @@ package org.springframework.cluedo.accusation;
 
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,9 @@ public class CrimeSceneRepositoryTest {
 
     @Test
     public void testFindByGame(){
-        CrimeScene accusations = repo.findByGame(1);
-        assertNotNull(accusations);
+        CrimeScene crimeScene = repo.findByGame(1);
+        assertNotNull(crimeScene);
+        crimeScene = repo.findByGame(0);
+        assertNull(crimeScene);
     }
 }
