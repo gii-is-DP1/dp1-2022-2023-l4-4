@@ -53,14 +53,12 @@
                 Chat
             </button>
         </a>
-    </c:if>
-    <div style = "padding-left: 90%">
         <a  href="/games/${game.id}/leave"  target="_blank">
             <button class="btn btn-default" style="font-size:105%">
                 Exit
             </button>
         </a>
-    </div>
+    </c:if>
 
     <table class="table table-striped" style="border:0;">
         <tbody>
