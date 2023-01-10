@@ -80,6 +80,11 @@
                                 Accusations
                             </button>
                         </a>
+                        <a  href="/games/${game.id}/play/notes"  target="_blank">
+                            <button class="btn btn-default" style="font-size:105%">
+                                Open New Notes
+                            </button>
+                        </a>
                     </div>
                     <div style = "padding-top: 20%">
                         <h3>
