@@ -53,4 +53,13 @@ public class UserGameRepositoryTest {
         assertNotNull(players);
         assertTrue(!players.isEmpty());
     }
-}
+    
+    @Test
+    public void testSetNullUser(){
+        repo.setNullUser(1);
+        List<UserGame> userGames = repo.findUserGameByGameId(1);
+        assertTrue(userGames.isEmpty());
+    }
+
+    }
+

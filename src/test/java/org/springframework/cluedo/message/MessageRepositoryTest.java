@@ -94,7 +94,12 @@ public class MessageRepositoryTest {
         assertFalse(testMessages2.size()!=0);
         }
 
-    
+    @Test
+    public void testSetNullUser(){
+        repo.setNullUser(1);
+        List<Message> messages = repo.findAllByUserId(1);
+        assertTrue(messages.isEmpty());
+    }
     
     
 }

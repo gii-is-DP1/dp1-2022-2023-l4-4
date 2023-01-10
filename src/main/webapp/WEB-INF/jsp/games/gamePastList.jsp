@@ -44,7 +44,7 @@
                         <c:out value="${game.isPrivate}"/>
                     </td>
                     <td>
-                        <c:out value="${game.winner}"/>
+                        <c:out value="${game.winner.username}"/>
                     </td>
                     <td>
                         <c:out value="${game.duration}"/>

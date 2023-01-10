@@ -22,10 +22,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.cluedo.achievement.Achievement;
+import org.springframework.cluedo.achievement.AchievementRepository;
 import org.springframework.cluedo.enumerates.Badge;
 import org.springframework.cluedo.enumerates.Metric;
 import org.springframework.cluedo.game.Game;
+import org.springframework.cluedo.game.GameRepository;
+import org.springframework.cluedo.game.GameService;
+import org.springframework.cluedo.message.MessageRepository;
+import org.springframework.cluedo.notification.NotificationRepository;
 import org.springframework.cluedo.statistics.UserStatistics;
+import org.springframework.cluedo.statistics.UserStatisticsRepository;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +47,24 @@ public class UserServiceTest {
     @Mock
     UserGameService userGameService;
     
+    @Mock
+    UserStatisticsRepository userStatisticsRepository;
+
+    @Mock
+    UserGameRepository userGameRepository;
+
+    @Mock
+    GameRepository gameRepository;
+
+    @Mock
+    MessageRepository messageRepository;
+
+    @Mock
+    NotificationRepository notificationRepository;
+
+    @Mock
+    AchievementRepository achievementRepository;
+
     User user1;
     User user2;
     List<User> users = new ArrayList<>();
@@ -86,7 +110,8 @@ public class UserServiceTest {
         stats.setUser(user1);
         stats.setVictories(20);
 
-        userService = new UserService(repo, userGameService);
+        userService = new UserService(repo, userGameService, userStatisticsRepository, 
+        userGameRepository,gameRepository,messageRepository,notificationRepository,achievementRepository);
     }
     
     @Test

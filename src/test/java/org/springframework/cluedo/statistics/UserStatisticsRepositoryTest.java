@@ -1,6 +1,9 @@
 package org.springframework.cluedo.statistics;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -37,5 +40,15 @@ public class UserStatisticsRepositoryTest {
         Optional<User> user = userRepository.findByUsername("manuel333");
         UserStatistics stats = userStatisticsRepository.findMyStatistics(user.get());
         assertNotNull(stats);
+    }
+    
+    @Test
+    public void TestSetNullUserStatistic(){
+        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(user));
+        Optional<User> user = userRepository.findByUsername("1");
+        userStatisticsRepository.setNullUserStatistic(1);
+        UserStatistics stats = userStatisticsRepository.findMyStatistics(user.get());
+        assertNull(stats);
+        assertThrows(NullPointerException.class, () -> {userStatisticsRepository.findMyStatistics(user.get()).getUser();});
     }
 }

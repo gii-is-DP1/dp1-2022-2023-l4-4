@@ -689,7 +689,7 @@ INSERT INTO players(game_id,user_game_id) VALUES
 (1,2);
 
 --game 2, host 2, size, 3, private, ingame
-INSERT INTO games(id,host_id,lobby_size,is_private,status) VALUES (2,2,3,1,2);
+INSERT INTO games(id,host_id,lobby_size,is_private,status,winner_id) VALUES (2,2,3,1,2,1);
 
 INSERT INTO lobbies(game_id,user_id) VALUES 
 (2,1),

@@ -272,7 +272,6 @@ public class UserController {
 				result.addObject("message","Username already exists. Please try again.");
 				return result;
 			}
-			userToChange.setUsername(user.getUsername());
 			userToChange.setPassword(user.getPassword());
 			userToChange.setEmail(user.getEmail());
 			userToChange.setImageurl(user.getImageurl());
