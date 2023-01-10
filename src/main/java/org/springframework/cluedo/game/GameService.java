@@ -1,6 +1,7 @@
 package org.springframework.cluedo.game;
 
-import java.time.Duration;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,7 +66,7 @@ public class GameService {
 
 	public void initGame(Game copy){
         copy.setStatus(Status.IN_PROGRESS);
-        copy.setDuration(Duration.ofMinutes(0));
+        copy.setStartTime(Timestamp.from(Instant.now()));
         copy.setRound(1);
 		userService.initializePlayers(copy.getLobby(), copy);
 		copy.setActualPlayer(copy.getPlayers().get(0));
@@ -153,6 +154,7 @@ public class GameService {
 		if(finalAccusation.isCorrect()){
 			game.setWinner(finalAccusation.getTurn().getUserGame().getUser());	
 		}
+		game.setEndTime(Timestamp.from(Instant.now()));
 		game.setStatus(Status.FINISHED);
 		saveGame(game);
 

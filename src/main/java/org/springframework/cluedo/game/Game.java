@@ -1,5 +1,6 @@
 package org.springframework.cluedo.game;
 
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.util.List;
 
@@ -50,7 +51,10 @@ public class Game extends BaseEntity{
     @JoinColumn(name = "winner_id")
 	private User winner;
 
-    private Duration duration;
+    private Timestamp startTime;
+
+    private Timestamp endTime;
+
     @Min(0)
     private Integer round;
 
@@ -108,5 +112,12 @@ public class Game extends BaseEntity{
 
     public UserGame lastPlayer(){
         return players.get(players.size()-1);
+    }
+
+    public Duration getDuration() {
+        if(startTime == null || endTime == null) {
+            return null;
+        }
+        return Duration.between(startTime.toInstant(), endTime.toInstant());
     }
 }

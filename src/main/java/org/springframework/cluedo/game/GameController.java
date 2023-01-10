@@ -21,6 +21,9 @@ import org.springframework.cluedo.user.User;
 import org.springframework.cluedo.user.UserGame;
 import org.springframework.cluedo.user.UserGameService;
 import org.springframework.cluedo.user.UserService;
+
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -261,6 +264,7 @@ public class GameController {
                 }
                 if(allPlayersEliminated) {
                     game.setStatus(Status.FINISHED);
+                    game.setEndTime(Timestamp.from(Instant.now()));
                     gameService.saveGame(game);
                 }
             }
