@@ -27,7 +27,6 @@ import org.springframework.cluedo.enumerates.Badge;
 import org.springframework.cluedo.enumerates.Metric;
 import org.springframework.cluedo.game.Game;
 import org.springframework.cluedo.game.GameRepository;
-import org.springframework.cluedo.game.GameService;
 import org.springframework.cluedo.message.MessageRepository;
 import org.springframework.cluedo.notification.NotificationRepository;
 import org.springframework.cluedo.statistics.UserStatistics;
