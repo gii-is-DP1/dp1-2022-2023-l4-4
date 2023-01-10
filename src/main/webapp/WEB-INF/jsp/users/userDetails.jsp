@@ -45,11 +45,13 @@
         <spring:param name="userId" value="${user.id}"/>
     </spring:url>
     <a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Edit User</a>
-
-    <spring:url value="/users/{userId}/delete" var="deleteUrl">
-        <spring:param name="userId" value="${user.id}"/>
-    </spring:url>
-    <a href="${fn:escapeXml(deleteUrl)}" class="btn btn-default"> Delete User</a>
+    <c:if test="${user.getAuthority().equals('user')}">
+        <spring:url value="/users/{userId}/delete" var="deleteUrl">
+            <spring:param name="userId" value="${user.id}"/>
+        </spring:url>
+        <a href="${fn:escapeXml(deleteUrl)}" class="btn btn-default"> Delete User</a>
+    </c:if>  
+    
 
     <br/>
     <br/>
