@@ -69,7 +69,7 @@
                     <div style="position: absolute">
                         <img src="/resources/images/tablero.jpeg" style="width:600px; height:600px;">
                         <c:forEach items="${game.players}" var="player">
-                            <img src="/resources/images/pieces/${player.suspect}.png" style="width:20px; height:20px; position:absolute; z-index:2; top:${player.getY()}px; left:${player.getX()}px">
+                            <img src="/resources/images/pieces/${player.suspect}.png" style="width:18px; height:18px; position:absolute; z-index:2; top:${player.getY()}px; left:${player.getX()}px">
                         </c:forEach>
                     </div>
                 </td>
