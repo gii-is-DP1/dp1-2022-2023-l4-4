@@ -4,7 +4,9 @@ package org.springframework.cluedo.game;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+import java.sql.Timestamp;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -153,4 +155,21 @@ public class GameServiceTest {
         gameService.deleteUserFromLobby(user, game1);
         assertEquals(false, game1.getLobby().contains(user));
     }
+
+    @Test
+    void shouldReturnDuration(){
+        Game game = mockGames.get(0);
+        game.setStartTime(Timestamp.valueOf(LocalDateTime.of(2023, 1, 1, 16, 30, 0)));
+        game.setEndTime(Timestamp.valueOf(LocalDateTime.of(2023, 1, 1, 17, 0, 0)));
+        assertEquals(Duration.ofMinutes(30), game.getDuration());
+    }
+
+    @Test
+    void shouldReturnNullDuration(){
+        Game game = mockGames.get(0);
+        game.setStartTime(Timestamp.valueOf(LocalDateTime.of(2023, 1, 1, 16, 30, 0)));
+        assertEquals(null, game.getDuration());
+    }
+
+    //Los tests restantes toman relevancia en cada uno de los servicios a los que se invoca
 }
