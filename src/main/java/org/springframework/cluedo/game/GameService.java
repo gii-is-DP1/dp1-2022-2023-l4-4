@@ -14,6 +14,7 @@ import org.springframework.cluedo.celd.Celd;
 import org.springframework.cluedo.enumerates.Phase;
 import org.springframework.cluedo.enumerates.Status;import org.springframework.cluedo.exceptions.DataNotFound;
 import org.springframework.cluedo.exceptions.WrongPhaseException;
+import org.springframework.cluedo.statistics.UserStatisticsService;
 import org.springframework.cluedo.turn.Turn;
 import org.springframework.cluedo.turn.TurnService;
 import org.springframework.cluedo.user.User;
@@ -33,15 +34,17 @@ public class GameService {
 	private UserService userService;
 	private UserGameService userGameService;
 	private AccusationService accusationService;
+	private UserStatisticsService userStatisticsService;
 
 	@Autowired
-	public GameService(GameRepository gameRepository, TurnService turnService, CardService cardService, UserService userService, UserGameService userGameService, AccusationService accusationService) {
+	public GameService(GameRepository gameRepository, TurnService turnService, CardService cardService, UserService userService, UserGameService userGameService, AccusationService accusationService, UserStatisticsService userStatisticsService) {
 		this.gameRepository = gameRepository;
 		this.turnService = turnService;
 		this.cardService = cardService;
 		this.userService = userService;
 		this.userGameService = userGameService;
 		this.accusationService = accusationService;
+		this.userStatisticsService = userStatisticsService;
 	}
     
     @Transactional(readOnly = true)
@@ -157,6 +160,7 @@ public class GameService {
 		game.setEndTime(Timestamp.from(Instant.now()));
 		game.setStatus(Status.FINISHED);
 		saveGame(game);
+		userStatisticsService.updateStatistics(game);
 
 	}
 

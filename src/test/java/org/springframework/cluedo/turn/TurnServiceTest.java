@@ -1,6 +1,7 @@
 package org.springframework.cluedo.turn;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -157,6 +158,7 @@ public class TurnServiceTest {
         }
 
         assertEquals(false, throwsException);
+        assertNotNull(diceThrownTurn);
         assertTrue(2<=diceThrownTurn.getDiceResult() && 12>=diceThrownTurn.getDiceResult());
         assertEquals(Phase.MOVEMENT, diceThrownTurn.getPhase());
         

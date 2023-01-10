@@ -42,28 +42,30 @@ public class UserStatisticsService {
 	}
 
     @Transactional
-    public void updateStatistics(Game game, User user){
-        UserGame userGame = game.getPlayers().stream().filter(x -> x.getUser().equals(user)).findFirst().get();
-        UserStatistics stats = userStatisticsRepository.findMyStatistics(user);
-        if(game.getWinner().equals(user)) stats.setVictories(stats.getVictories()+1);
-        if(userGame.getIsAfk()) stats.setAfkCounter(stats.getAfkCounter()+1);
-        stats.setTotalGames(stats.getTotalGames()+1);
-        stats.setTotalRounds(stats.getTotalRounds()+game.getRound());
-        if(game.getWinner().equals(user) || userGame.getIsEliminated()) 
-            stats.setTotalFinalAccusations(stats.getTotalAccusations()+1);
-        stats.setTotalAccusations(stats.getTotalAccusations()+ userGame.getAccusationsNumber());
-        if(stats.getLongestGame()==null && stats.getShortestGame()==null){
-            stats.setLongestGame(game);
-            stats.setShortestGame(game);
-        } else {
-            if(stats.getLongestGame().getDuration().compareTo(game.getDuration())<0){
+    public void updateStatistics(Game game){
+       for(UserGame userGame : game.getPlayers()){
+            User user=userGame.getUser(); 
+            UserStatistics stats = userStatisticsRepository.findMyStatistics(user);
+            if(game.getWinner().equals(user)) stats.setVictories(stats.getVictories()+1);
+            if(userGame.getIsAfk()) stats.setAfkCounter(stats.getAfkCounter()+1);
+            stats.setTotalGames(stats.getTotalGames()+1);
+            stats.setTotalRounds(stats.getTotalRounds()+game.getRound());
+            if(game.getWinner().equals(user) || userGame.getIsEliminated()) 
+                stats.setTotalFinalAccusations(stats.getTotalAccusations()+1);
+            stats.setTotalAccusations(stats.getTotalAccusations()+ userGame.getAccusationsNumber());
+            if(stats.getLongestGame()==null && stats.getShortestGame()==null){
                 stats.setLongestGame(game);
-            }
-            if(stats.getShortestGame().getDuration().compareTo(game.getDuration())>0){
                 stats.setShortestGame(game);
+            } else {
+                if(stats.getLongestGame().getDuration().compareTo(game.getDuration())<0){
+                    stats.setLongestGame(game);
+                }
+                if(stats.getShortestGame().getDuration().compareTo(game.getDuration())>0){
+                    stats.setShortestGame(game);
+                }
             }
+            save(stats);
         }
-        save(stats);
     }
 
     @Transactional
