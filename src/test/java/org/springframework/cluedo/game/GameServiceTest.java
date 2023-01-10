@@ -115,7 +115,8 @@ public class GameServiceTest {
         game1.setPlayers(List.of(ug));
         gameService.initGame(game1);
         assertEquals(Status.IN_PROGRESS, game1.getStatus());
-        assertEquals(Duration.ofMinutes(0), game1.getDuration());
+        //el juego no ha terminado, no tiene duración
+        assertEquals(null, game1.getDuration());
         assertEquals(ug, game1.getActualPlayer());
     }
 
@@ -146,7 +147,7 @@ public class GameServiceTest {
     @Test
     void shouldDeleteUserFromLobby() {
         Game game1 = mockGames.get(0);
-        User user = game1.getLobby().get(0);
+        User user = game1.getLobby().get(1);
         assertEquals(true, game1.getLobby().contains(user));
         when(gameRepository.save(game1)).thenReturn(game1);
         gameService.deleteUserFromLobby(user, game1);

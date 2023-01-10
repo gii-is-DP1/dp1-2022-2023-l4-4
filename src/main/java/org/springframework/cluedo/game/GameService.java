@@ -186,7 +186,7 @@ public class GameService {
             saveGame(game);
         } else {
             deleteGame(game);
-        } 
+        }
     }
 	public void leaveGameInProgress(User user, Game game) {
 		List<UserGame> ugs = game.getPlayers();
