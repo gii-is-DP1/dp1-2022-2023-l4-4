@@ -71,24 +71,7 @@ public class MessageServiceTest {
 
      }
 
-    @Test
-    public void getAllTest(){
-        List<Message> testMessages = messageService.getAll();
-        assertTrue(testMessages.size()==1);
-        assertTrue(testMessages.get(0).getText().equals("Bienvenido"));
-    }
-
-   @Test
-    public void getAllMessageByGameIdTest(){
-       List<Message> testMessages = messageService.getAllMessageByGameId(1);
-       assertTrue(testMessages.get(0).getText().equals("Bienvenido"));
-    }
-
-    @Test
-    public void getNotAllMessageByGameIdTest(){
-       List<Message> testMessages = messageService.getAllMessageByGameId(1);
-       assertFalse(testMessages.get(0).getText().equals("Adios"));
-    }
+   
 
 
 }

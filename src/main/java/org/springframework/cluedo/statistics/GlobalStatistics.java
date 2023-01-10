@@ -39,6 +39,7 @@ public class GlobalStatistics {
     }
     public List<User> top3Wins(){
         return globalStatistics.stream()
+        .filter(stat -> stat.getUser()!=null)
         .sorted(Comparator.comparing(UserStatistics::getVictories).reversed())
         .limit(3)
         .map(UserStatistics::getUser)

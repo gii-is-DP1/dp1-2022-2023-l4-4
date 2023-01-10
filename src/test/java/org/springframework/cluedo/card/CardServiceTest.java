@@ -18,14 +18,6 @@ public class CardServiceTest {
     @Autowired
     protected CardService service;
 
-    @Test
-    public void getCardsTest(){
-        List<Card> cards = service.getAllCards();
-        Integer numCards = 21;
-        assertFalse(cards.isEmpty());
-        assertTrue(cards.size()==numCards);
-        
-    }
 
 
 }

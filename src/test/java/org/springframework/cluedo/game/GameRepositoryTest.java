@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
@@ -68,5 +69,13 @@ public class GameRepositoryTest {
         Game myGame = repo.getMyNotFinishedGame(user);
         assertNotNull(myGame);
         assertTrue(myGame.getStatus()!=Status.FINISHED);
+    }
+    
+    @Test
+    public void testSetNullWinner(){
+        repo.setWinnerNull(user.getId());
+        List<Game> myGames = repo.findMyFinishedGames(user);
+        assertTrue(myGames.stream().allMatch(game -> game.getWinner()==null));
+    
     }
 }
