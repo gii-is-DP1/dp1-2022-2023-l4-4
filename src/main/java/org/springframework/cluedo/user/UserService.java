@@ -14,7 +14,6 @@ import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.card.Card;
-import org.springframework.cluedo.celd.CeldService;
 import org.springframework.cluedo.enumerates.SuspectType;
 import org.springframework.cluedo.game.Game;
 import org.springframework.dao.DataAccessException;
@@ -28,14 +27,12 @@ public class UserService {
 
 	private UserRepository userRepository;
 	private UserGameService userGameService;
-	private CeldService celdService;
 	
 
 	@Autowired
-	public UserService(UserRepository userRepository,UserGameService userGameService, CeldService celdService) {
+	public UserService(UserRepository userRepository,UserGameService userGameService) {
 		this.userRepository = userRepository;
 		this.userGameService = userGameService;
-		this.celdService = celdService;
 	}
 
 	@Transactional
@@ -123,7 +120,7 @@ public class UserService {
 			Integer order = ThreadLocalRandom.current().nextInt(orderList.size());
 			userGame.setOrderUser(orderList.get(order));
 			orderList.remove(orderList.get(order));
-			userGame.setPosition(celdService.getCenter().getPosition());
+			userGame.setPosition(326);
 			userGameService.saveUserGame(userGame);
 			copy.addPlayers(userGame);
 		}
