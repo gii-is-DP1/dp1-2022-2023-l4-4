@@ -688,6 +688,12 @@ INSERT INTO players(game_id,user_game_id) VALUES
 (1,1),
 (1,2);
 
+INSERT INTO accusations(id, room_card, suspect_card, weapon_card, turn, shown_card, player_who_shows) VALUES (1,1,10,17,1,1,2);
+
+INSERT INTO crime_scenes(id, room_card, suspect_card, weapon_card, game) VALUES (1,1,10,17,1);
+
+INSERT INTO final_accusations(id, room_card, suspect_card, weapon_card, turn, is_correct) VALUES (1,1,10,17,1,1);
+
 --game 2, host 2, size, 3, private, ingame
 INSERT INTO games(id,host_id,lobby_size,is_private,status) VALUES (2,2,3,1,2);
 
