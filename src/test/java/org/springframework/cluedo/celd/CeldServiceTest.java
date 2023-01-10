@@ -4,35 +4,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.cluedo.boardGraph.BoardGraph;
-import org.springframework.cluedo.enumerates.Badge;
 import org.springframework.cluedo.enumerates.CeldType;
-import org.springframework.cluedo.enumerates.Metric;
-import org.springframework.cluedo.exceptions.DataNotFound;
-import org.springframework.cluedo.statistics.UserStatistics;
-import org.springframework.cluedo.statistics.UserStatisticsRepository;
-import org.springframework.cluedo.statistics.UserStatisticsService;
-import org.springframework.cluedo.user.User;
-import org.springframework.cluedo.user.UserService;
 import org.springframework.context.annotation.ComponentScan;
 
 @ExtendWith(MockitoExtension.class)
