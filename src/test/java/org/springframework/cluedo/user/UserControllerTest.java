@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cluedo.configuration.SecurityConfiguration;
-import org.springframework.cluedo.exceptions.DataNotFound;
 import org.springframework.cluedo.notification.NotificationService;
 import org.springframework.cluedo.statistics.UserStatisticsService;
 import org.springframework.context.annotation.ComponentScan;
