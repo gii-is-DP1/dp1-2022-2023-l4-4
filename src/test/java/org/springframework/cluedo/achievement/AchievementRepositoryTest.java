@@ -39,4 +39,15 @@ public class AchievementRepositoryTest {
         myAchievements=repo.findAllMyAchievements(2);
         assertTrue(myAchievements.isEmpty());
     }
+
+    @Test
+    public void testDeleteUsersAchievementsUserToDelete(){
+        List<Achievement> myAchievementsBefore = repo.findAllMyAchievements(1);
+        assertFalse(myAchievementsBefore.isEmpty());
+
+        repo.deleteUsersAchievementsUserToDelete(1);
+
+        List<Achievement> myAchievementsAfter = repo.findAllMyAchievements(1);
+        assertTrue(myAchievementsAfter.isEmpty());
+    }
 }

@@ -19,6 +19,6 @@ public interface UserStatisticsRepository extends CrudRepository<UserStatistics,
 
   
     @Modifying
-    @Query("UPDATE UserStatistics u SET u.user=null WHERE u.user.id = :id")
-    void setNullUserStatistic(@Param("id")Integer id);
+    @Query("DELETE FROM UserStatistics u WHERE u.user.id = :id")
+    void deleteUserStatisticByUserId(@Param("id")Integer id);
 }

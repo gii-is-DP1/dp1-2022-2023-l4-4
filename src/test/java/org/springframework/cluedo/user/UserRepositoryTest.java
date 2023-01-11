@@ -2,6 +2,7 @@ package org.springframework.cluedo.user;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -72,4 +73,12 @@ public class UserRepositoryTest {
         assertNotNull(tags);
         assertTrue(!tags.isEmpty());
     }
+
+    @Test
+    public void testDeleteUserFriendsUserToDelete(){
+        repo.deleteUserFriendsUserToDelete(1);
+        List<User> friends = repo.findFriendsById(1);
+        assertTrue(friends.isEmpty());
+    }
+
 }

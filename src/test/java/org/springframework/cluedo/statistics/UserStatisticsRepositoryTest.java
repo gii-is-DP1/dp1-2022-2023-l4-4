@@ -45,7 +45,7 @@ public class UserStatisticsRepositoryTest {
     public void TestSetNullUserStatistic(){
         when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(user));
         Optional<User> user = userRepository.findByUsername("1");
-        userStatisticsRepository.setNullUserStatistic(1);
+        userStatisticsRepository.deleteUserStatisticByUserId(1);
         UserStatistics stats = userStatisticsRepository.findMyStatistics(user.get());
         assertNull(stats);
         assertThrows(NullPointerException.class, () -> {userStatisticsRepository.findMyStatistics(user.get()).getUser();});

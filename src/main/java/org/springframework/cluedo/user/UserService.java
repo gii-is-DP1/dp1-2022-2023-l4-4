@@ -98,7 +98,7 @@ public class UserService {
 
 	@Transactional
 	public void deleteUser(int id){
-		userStatisticsRepository.setNullUserStatistic(id);    
+		userStatisticsRepository.deleteUserStatisticByUserId(id);    
 		userGameRepository.setNullUser(id);
 		gameRepository.setWinnerNull(id);
 		gameRepository.setHostNull(id);

@@ -61,5 +61,17 @@ public class UserGameRepositoryTest {
         assertTrue(userGames.isEmpty());
     }
 
+    @Test
+    public void testFindUsergameByGameAndUser(){
+        UserGame userGame = repo.findUsergameByGameAndUser(game, user);
+        assertNotNull(userGame);
+    }
+
+    @Test
+    public void testFindUserGameByGameId(){
+        List<UserGame> userGames = repo.findUserGameByGameId(game.getId());
+        assertFalse(userGames.isEmpty());
+    }
+
     }
 
