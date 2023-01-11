@@ -8,11 +8,10 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
-<<<<<<< HEAD
-import java.util.Optional;
+
+
 import java.util.Set;
-=======
->>>>>>> origin/develop
+
 
 import org.springframework.stereotype.Service;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.cluedo.boardGraph.BoardGraph;
 import org.springframework.cluedo.enumerates.CeldType;
 import org.springframework.context.annotation.ComponentScan;
 

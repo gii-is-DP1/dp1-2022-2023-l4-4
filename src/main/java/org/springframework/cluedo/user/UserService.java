@@ -178,6 +178,7 @@ public class UserService {
 	public String generarTag(){
 		//La variable palabra almacena el resultado final 
 			String palabra = "#"; 
+			String numero = "";
 		//La variable caracteres es un número aleatorio entre 2 y 20 que define la 
 		//longitud de la palabra. 
 			int caracteres = 4; 
@@ -194,8 +195,12 @@ public class UserService {
 		//para pasar el código a carácter basta con hacer un cast a char 
 				 palabra = palabra + (char)codigoAscii; 
 				 } 
-				 String numero = (ThreadLocalRandom.current().nextInt(8)+1)+"";
-				 String result = palabra + numero+numero+numero+numero;
+				 for(int i=0;i<caracteres;i++){
+					String num = (ThreadLocalRandom.current().nextInt(8)+1)+"";
+					numero = numero +num;
+				 }
+				
+				 String result = palabra + numero;
 				 List<String> allTags = userRepository.findAllTags();
 				 if(allTags.contains(result)){
 					result = generarTag();
