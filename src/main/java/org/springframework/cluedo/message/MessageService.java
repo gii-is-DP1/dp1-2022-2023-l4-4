@@ -28,8 +28,8 @@ public class MessageService {
 
         @Transactional(readOnly = true)
         public List<Message> getAll(){
-            List<Message> m = messageRepository.findAll();
-            return m;
+          return messageRepository.findAll();
+         
         }
 
         @Transactional

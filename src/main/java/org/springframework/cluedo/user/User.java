@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
@@ -47,7 +48,7 @@ public class User extends BaseEntity{
 	
 	private String tag;
 
-	@ManyToMany(cascade=CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JoinTable(name="user_friends",joinColumns = @JoinColumn(
        name = "id1", referencedColumnName = "id"),
     inverseJoinColumns = @JoinColumn(
@@ -59,9 +60,8 @@ public class User extends BaseEntity{
 	private Integer enabled;
 	
 	private String authority;
-
-
-	@ManyToMany(cascade=CascadeType.ALL)
+  
+	@ManyToMany(cascade = CascadeType.ALL)
 	private List<Achievement> achievements;
 
 
@@ -71,6 +71,7 @@ public class User extends BaseEntity{
 		}
 	}
 	public void deleteFriend(User friend){
+
 		this.friends.remove(friend);
 	}
 

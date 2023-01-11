@@ -35,9 +35,11 @@
             <th style="width: 120px; font-size:130%; text-align: center;">Description</th>
             <th style="width: 120px; font-size:130%; text-align: center;">Experience</th>
             <th style="width: 120px; font-size:130%; text-align: center;">Badge</th>
-            <c:if test="${canCreateAndEdit}">
-                <th style="width: 50px; font-size:130%;"></th>
-            </c:if>
+            <sec:authorize access="hasAuthority('admin')">
+                <c:if test="${canCreateAndEdit}">
+                    <th style="width: 50px; font-size:130%;"></th>
+                </c:if>
+            </sec:authorize>
         </tr>
         </thead>
         <tbody>

@@ -13,9 +13,14 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cluedo.achievement.AchievementRepository;
 import org.springframework.cluedo.card.Card;
 import org.springframework.cluedo.enumerates.SuspectType;
 import org.springframework.cluedo.game.Game;
+import org.springframework.cluedo.game.GameRepository;
+import org.springframework.cluedo.message.MessageRepository;
+import org.springframework.cluedo.notification.NotificationRepository;
+import org.springframework.cluedo.statistics.UserStatisticsRepository;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,12 +32,26 @@ public class UserService {
 
 	private UserRepository userRepository;
 	private UserGameService userGameService;
+	private UserStatisticsRepository userStatisticsRepository;
+	private UserGameRepository userGameRepository;
+	private GameRepository gameRepository;
+	private MessageRepository messageRepository;
+	private NotificationRepository notificationRepository;
+	private AchievementRepository achievementRepository;
 	
-
 	@Autowired
-	public UserService(UserRepository userRepository,UserGameService userGameService) {
+	public UserService(UserRepository userRepository,UserGameService userGameService,
+	UserStatisticsRepository userStatisticsRepository,UserGameRepository userGameRepository,
+	GameRepository gameRepository,MessageRepository messageRepository,NotificationRepository notificationRepository,
+	AchievementRepository achievementRepository) {
 		this.userRepository = userRepository;
 		this.userGameService = userGameService;
+		this.userStatisticsRepository = userStatisticsRepository;
+		this.userGameRepository = userGameRepository;
+		this.gameRepository=gameRepository;
+		this.messageRepository=messageRepository;
+		this.notificationRepository = notificationRepository;
+		this.achievementRepository = achievementRepository;
 	}
 
 	@Transactional(readOnly = true)
@@ -76,9 +95,20 @@ public class UserService {
 	public User findUserByTag(String tag) {
 		return userRepository.findByTag(tag);
 	}
+
 	@Transactional
 	public void deleteUser(int id){
-		userRepository.deleteById(id);
+		userStatisticsRepository.deleteUserStatisticByUserId(id);    
+		userGameRepository.setNullUser(id);
+		gameRepository.setWinnerNull(id);
+		gameRepository.setHostNull(id);
+		gameRepository.deleteUserInLobby(id); 
+		notificationRepository.deleteNotificactionsByReceiverId(id);
+		notificationRepository.deleteNotificationsBySenderId(id);
+		messageRepository.setNullUser(id);
+		userRepository.deleteUserFriendsUserToDelete(id);
+		achievementRepository.deleteUsersAchievementsUserToDelete(id);
+		userRepository.deleteUser(id);
 	}
 
 	@Transactional(readOnly = true)
