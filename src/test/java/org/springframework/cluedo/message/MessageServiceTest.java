@@ -6,8 +6,8 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.cluedo.enumerates.Status;
 import org.springframework.cluedo.exceptions.DataNotFound;
@@ -20,7 +20,9 @@ import org.springframework.stereotype.Service;
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class MessageServiceTest {
 
-    @Autowired
+    @Mock
+    protected MessageRepository messageRepository;
+
     protected MessageService messageService;
 
 
@@ -66,6 +68,7 @@ public class MessageServiceTest {
         m1.setPlayer(user1);
         messages.add(m1);
 
+        messageService= new MessageService(messageRepository);
      }
 
    

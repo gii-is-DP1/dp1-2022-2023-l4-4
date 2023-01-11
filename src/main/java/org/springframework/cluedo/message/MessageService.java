@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class MessageService {
 
-        @Autowired
+        
         MessageRepository messageRepository;
 
 
