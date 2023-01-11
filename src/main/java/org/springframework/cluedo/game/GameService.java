@@ -1,6 +1,7 @@
 package org.springframework.cluedo.game;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -179,7 +180,7 @@ public class GameService {
             game.removeLobbyUser(user);
             saveGame(game);
         } else {
-			game.removeLobbyUser(user);
+			game.setLobby(new ArrayList<>());
 			saveGame(game);
             deleteGame(game);
         } 
