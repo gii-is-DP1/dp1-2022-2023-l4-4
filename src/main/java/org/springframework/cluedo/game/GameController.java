@@ -532,7 +532,10 @@ public class GameController {
         if(!gameService.isUserTurn(nrLoggedUser, game)){
             return notYourTurn(game);
         }
-
+        List<Card> cardsFromUser = userGameService.getUsergameByGameAndUser(game, nrLoggedUser.get()).getCards()
+            .stream().sorted(Comparator.comparing( Card::getCardName)).collect(Collectors.toList());
+        result.addObject("game", game);
+        result.addObject("cards", cardsFromUser);
         result.addObject("diceResult", turnService.getActualTurn(game).get().getDiceResult());
         result.addObject("celdForm",new CeldForm());
         result.addObject("movements", turnService.whereCanIMove(game).stream().collect(Collectors.toList()));
