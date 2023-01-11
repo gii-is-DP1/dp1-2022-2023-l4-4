@@ -266,12 +266,6 @@ public class UserController {
 		if(br.hasErrors()){
 			return result;
 		}else{
-			List<User> users = userService.getAllUsers();
-			Boolean usernameExists = users.stream().anyMatch(x -> x.getUsername().equals(user.getUsername()) && x.getId()!=user.getId());
-			if(usernameExists){
-				result.addObject("message","Username already exists. Please try again.");
-				return result;
-			}
 			userToChange.setPassword(user.getPassword());
 			userToChange.setEmail(user.getEmail());
 			userToChange.setImageurl(user.getImageurl());
@@ -320,7 +314,7 @@ public class UserController {
 			return result;
 		}else{
 			List<User> users = userService.getAllUsers();
-			Boolean usernameExists = users.stream().anyMatch(x -> x.getUsername().equals(user.getUsername()) && x.getId()!=user.getId());
+			Boolean usernameExists = users.stream().anyMatch(x -> x.getUsername().equals(user.getUsername()) && x.getId()!=nrUser.get().getId());
 			if(usernameExists){
 				result.addObject("message","Username already exists. Please try again.");
 				return result;

@@ -1,17 +1,16 @@
 package org.springframework.cluedo.notifications;
 
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.cluedo.notification.Notification;
 import org.springframework.cluedo.notification.NotificationRepository;
-import org.springframework.cluedo.user.User;
 
 @DataJpaTest
 public class NotificationRepositoryTest {
@@ -19,21 +18,16 @@ public class NotificationRepositoryTest {
     @Autowired 
     NotificationRepository notificationRepository;
     
-    Notification notification;
-    @BeforeEach
-    public void config(){
-        User user1 = new User();
-        user1.setId(1);
-        User user2 = new User();
-        user2.setId(2);
-        notification = new Notification();
-        notification.setId(1);
-        notification.setSender(user1);
-        notification.setReceiver(user2);
-    }
     @Test
     public void testFindNotificationsByReceiverId(){
+        List<Notification> notifications= notificationRepository.findNotificationsByReceiverId(2);
+        assertFalse(notifications.isEmpty());
+    }
 
+    @Test
+    public void testFindNotificationsBySenderId(){
+        List<Notification> notifications= notificationRepository.findNotificationsBySenderId(1);
+        assertFalse(notifications.isEmpty());
     }
 
     @Test

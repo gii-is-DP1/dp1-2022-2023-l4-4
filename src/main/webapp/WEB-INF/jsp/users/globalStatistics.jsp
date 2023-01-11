@@ -58,15 +58,27 @@
                         <tbody>
                             <tr>
                                 <th style="font-size:120%">1. </th>
-                                <td style="font-size: 120%; text-align: center"><c:out value="${stats.top3Wins().get(0).getUsername()}"></c:out></td>
+                                <td style="font-size: 120%; text-align: center">
+                                    <c:if test="${stats.top3Wins().size()>=1}">
+                                        <c:out value="${stats.top3Wins().get(0).getUsername()}"/>
+                                    </c:if>
+                                </td>
                             </tr>
                             <tr>
                                 <th style="font-size:120%">2. </th>
-                                <td style="font-size: 120%; text-align: center"><c:out value="${stats.top3Wins().get(1).getUsername()}"></c:out></td>
+                                <td style="font-size: 120%; text-align: center">
+                                    <c:if test="${stats.top3Wins().size()>=2}">
+                                        <c:out value="${stats.top3Wins().get(1).getUsername()}"/>
+                                    </c:if>
+                                </td>
                             </tr>
                             <tr>
                                 <th style="font-size:120%">3. </th>
-                                <td style="font-size: 120%; text-align: center"><c:out value="${stats.top3Wins().get(2).getUsername()}"></c:out></td>
+                                <td style="font-size: 120%; text-align: center">
+                                    <c:if test="${stats.top3Wins().size()>=3}">
+                                        <c:out value="${stats.top3Wins().get(2).getUsername()}"></c:out>
+                                    </c:if>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

@@ -94,7 +94,7 @@ public class UserControllerTest {
     }
 
     @WithMockUser
-    //@Test
+    @Test
     public void testShowUserUserPresent() throws Exception{
         when(userService.findUserById(any(Integer.class))).thenReturn(Optional.of(users.get(0)));
         mockMvc.perform(get("/users/{userId}",1))
@@ -264,5 +264,144 @@ public class UserControllerTest {
         .andExpect(view().name("redirect:/users/paginable/0"));
     }
 
+    @WithMockUser
+    @Test
+    public void testProcessCreationFormHasErrors() throws Exception {
+        mockMvc.perform(post("/users/new")
+        .with(csrf())
+        .param("username", ""))
+        .andExpect(view().name("users/createOrUpdateUserForm"))
+        .andExpect(model().hasErrors());
+    }
 
+    @WithMockUser
+    @Test
+    public void testProcessCreationFormUserExists() throws Exception {
+        when(userService.getAllUsers()).thenReturn(users);
+        mockMvc.perform(post("/users/new")
+        .with(csrf())
+        .param("username", "test 1")
+        .param("password", "test10")
+        .param("email", "test@gmail.com"))
+        .andExpect(view().name("users/createOrUpdateUserForm"))
+        .andExpect(model().attributeExists("message"));
+    }
+
+    @WithMockUser
+    @Test
+    public void testProcessCreationFormUserSucessful() throws Exception {
+        when(userService.getAllUsers()).thenReturn(users);
+        mockMvc.perform(post("/users/new")
+        .with(csrf())
+        .param("username", "tester")
+        .param("password", "test10")
+        .param("email", "tester@gmail.com"))
+        .andExpect(view().name("redirect:/"))
+        .andExpect(model().hasNoErrors())
+        .andExpect(status().is3xxRedirection());
+    }
+
+    @WithMockUser
+    @Test
+    public void testProcessUpdateFormHasErrors() throws Exception {
+        when(userService.findUserById(any(Integer.class))).thenReturn(Optional.of(user1));
+        mockMvc.perform(post("/users/{userId}/edit", 1)
+        .with(csrf())
+        .param("username", ""))
+        .andExpect(view().name("users/updateOtherUserForm"))
+        .andExpect(model().hasErrors());
+    }
+
+    @WithMockUser
+    @Test
+    public void testProcessUpdateFormSucessful() throws Exception {
+        when(userService.findUserById(any(Integer.class))).thenReturn(Optional.of(user1));
+        when(userService.getAllUsers()).thenReturn(users);
+        mockMvc.perform(post("/users/{userId}/edit", 1)
+        .with(csrf())
+        .param("username", "nuevoUser")
+        .param("password", "test10")
+        .param("email", "testeo@gmail.com"))
+        .andExpect(view().name("redirect:/users/" + 1))
+        .andExpect(model().hasNoErrors())
+        .andExpect(status().is3xxRedirection());
+    }
+
+    @WithMockUser
+    @Test
+    public void testShowProfile() throws Exception{
+        when(userService.getLoggedUser()).thenReturn(Optional.of(user1));
+        mockMvc.perform(get("/profile"))
+        .andExpect(view().name("users/profile"))
+        .andExpect(status().isOk())
+        .andExpect(model().attributeExists("user"));
+    }
+    
+    @WithMockUser
+    @Test
+    public void testInitUpdateUserProfileForm() throws Exception {
+        when(userService.getLoggedUser()).thenReturn(Optional.of(user1));
+        mockMvc.perform(post("/profile/edit")
+         .with(csrf())
+         .param("username", "nuevoUsuario"))
+         .andExpect(model().attributeExists("user"))
+         .andExpect(model().hasErrors())
+         .andExpect(status().isOk());
+    }
+    
+    
+    @WithMockUser
+    @Test
+    public void testProcessUpdateFormProfileHasErrors() throws Exception{
+        when(userService.getLoggedUser()).thenReturn(Optional.of(user1));
+        mockMvc.perform(post("/profile/edit")
+        .with(csrf()))
+        .andExpect(view().name("users/createOrUpdateUserForm"))
+        .andExpect(model().hasErrors());
+        
+    }
+
+    @WithMockUser
+    @Test
+    public void testProcessUpdateFormProfileUsernameExists() throws Exception{
+        when(userService.getLoggedUser()).thenReturn(Optional.of(user1));
+        when(userService.getAllUsers()).thenReturn(users);
+        mockMvc.perform(post("/profile/edit")
+        .with(csrf())
+        .param("name", "test 2")
+        .param("email","test@gmail.com")
+        .param("password","test"))
+        .andExpect(view().name("users/createOrUpdateUserForm"))
+        .andExpect(model().hasErrors());
+    }
+
+    @WithMockUser
+    @Test
+    public void testProcessUpdateFormProfileSuccessfullUsernameNotChanged() throws Exception{
+        when(userService.getLoggedUser()).thenReturn(Optional.of(user1));
+        when(userService.getAllUsers()).thenReturn(users);
+        mockMvc.perform(post("/profile/edit")
+        .with(csrf())
+        .param("username", "test 1")
+        .param("email","test@gmail.com")
+        .param("password","test"))
+        .andExpect(view().name("redirect:/profile"))
+        .andExpect(model().hasNoErrors())
+        .andExpect(status().is3xxRedirection());
+    }
+
+    @WithMockUser
+    @Test
+    public void testProcessUpdateFormProfileSuccessfullUsernameChanged() throws Exception{
+        when(userService.getLoggedUser()).thenReturn(Optional.of(user1));
+        when(userService.getAllUsers()).thenReturn(users);
+        mockMvc.perform(post("/profile/edit")
+        .with(csrf())
+        .param("username", "test 3")
+        .param("email","test@gmail.com")
+        .param("password","test"))
+        .andExpect(view().name("redirect:/logout"))
+        .andExpect(model().hasNoErrors())
+        .andExpect(status().is3xxRedirection());
+    }
 }

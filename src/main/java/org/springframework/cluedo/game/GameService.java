@@ -179,6 +179,8 @@ public class GameService {
             game.removeLobbyUser(user);
             saveGame(game);
         } else {
+			game.removeLobbyUser(user);
+			saveGame(game);
             deleteGame(game);
         } 
     }
