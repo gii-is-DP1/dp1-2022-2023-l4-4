@@ -4,10 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +19,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.cluedo.boardGraph.BoardGraph;
 import org.springframework.cluedo.enumerates.CeldType;
+import org.springframework.cluedo.exceptions.DataNotFound;
 import org.springframework.context.annotation.ComponentScan;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,6 +34,7 @@ public class CeldServiceTest {
     protected CeldService service;
 
     List<Celd> celds = new ArrayList<>();
+    BoardGraph board;
 
     @BeforeEach
     public void config(){
@@ -65,7 +71,8 @@ public class CeldServiceTest {
         celds.add(c3);
         celds.add(c4);
 
-
+        when(repo.findAll()).thenReturn(celds);
+        board = new BoardGraph(celds, service.getAllPairs());
 
     }
 
@@ -93,9 +100,9 @@ public class CeldServiceTest {
         assertEquals(c.getCeldType(), CeldType.CENTER);
     }
 
-    /*@Test
+    @Test
     public void testGetById() throws DataNotFound{
-        when(repo.findById(1).get()).thenReturn(celds.get(0));
+        when(repo.findById(1)).thenReturn(Optional.of(celds.get(0)));
         Celd c = service.getById(1);
         assertNotNull(c);
         assertEquals(c, celds.get(0));
@@ -103,10 +110,9 @@ public class CeldServiceTest {
 
     @Test
     public void testShouldNotGetById() throws DataNotFound{
-        when(repo.findById(1).get()).thenReturn(celds.get(0));
-        Celd c = service.getById(10);
-        assertThrows(DataNotFound.class());
-    } */
+        when(repo.findById(10)).thenReturn(Optional.empty());
+        assertThrows(DataNotFound.class, () -> {service.getById(10);});
+    } 
 
     @Test
     public void testGetByCeldType(){
@@ -118,6 +124,8 @@ public class CeldServiceTest {
 
     @Test
     public void testGetAllPossibleMovements(){
-
+        Set<Celd> movements = service.getAllPossibleMovements(1, celds.get(0));
+        assertNotNull(movements);
+        assertEquals(movements.size(), 2);
     }
 }
