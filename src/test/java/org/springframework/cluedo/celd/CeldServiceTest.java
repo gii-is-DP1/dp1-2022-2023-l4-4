@@ -4,14 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
-
-
+import java.util.Optional;
 import java.util.Set;
-
 
 import org.springframework.stereotype.Service;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.cluedo.boardGraph.BoardGraph;
 import org.springframework.cluedo.enumerates.CeldType;
+import org.springframework.cluedo.exceptions.DataNotFound;
 import org.springframework.context.annotation.ComponentScan;
 
 @ExtendWith(MockitoExtension.class)
@@ -100,8 +100,19 @@ public class CeldServiceTest {
         assertEquals(c.getCeldType(), CeldType.CENTER);
     }
 
+    @Test
+    public void testGetById() throws DataNotFound{
+        when(repo.findById(1)).thenReturn(Optional.of(celds.get(0)));
+        Celd c = service.getById(1);
+        assertNotNull(c);
+        assertEquals(c, celds.get(0));
+    }
 
-
+    @Test
+    public void testShouldNotGetById() throws DataNotFound{
+        when(repo.findById(10)).thenReturn(Optional.empty());
+        assertThrows(DataNotFound.class, () -> {service.getById(10);});
+    } 
 
     @Test
     public void testGetByCeldType(){
