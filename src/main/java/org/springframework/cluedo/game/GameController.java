@@ -51,6 +51,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class GameController {
     
     private static final String ACCUSATION_LIST = "games/accusationList";
+    private static final String WINNER_VIEW = "games/winner";
 	private final String GAME_LISTING="games/gameList";
     private final String GAME_PAST_LISTING="games/gamePastList";
     private final String CREATE_NEW_GAME="games/createNewGame";
@@ -412,7 +413,9 @@ public class GameController {
             result = new ModelAndView("redirect:/games/"+game.getId()+"/lobby");
         return result;
         } else {
-            result = new ModelAndView("redirect:/games");
+            result= new ModelAndView(WINNER_VIEW);
+                result.addObject("game",game);
+                result.addObject("loggedUser",userService.getLoggedUser().get());
         }
         return result;
     }
@@ -778,7 +781,7 @@ public class GameController {
 
     @PostMapping("/{gameId}/play/finalAccusation")
     @Transactional(rollbackFor = {WrongPhaseException.class,DataNotFound.class})
-    public ModelAndView makeFinalAccusation(@PathVariable("gameId") Integer gameId, @Valid FinalAccusation finalAccusation) throws WrongPhaseException,DataNotFound,CorruptGame{
+    public ModelAndView makeFinalAccusation(@PathVariable("gameId") Integer gameId, @Valid FinalAccusation finalAccusation, RedirectAttributes attributes) throws WrongPhaseException,DataNotFound,CorruptGame{
         Game game = null;
         try{
             game = gameService.getGameById(gameId);
@@ -802,7 +805,16 @@ public class GameController {
 
         if (result==null){
             gameService.makeFinalAccusation(game, finalAccusation);
-            return new ModelAndView("redirect:/games/"+game.getId()+"/play");
+            if (game.getWinner()==null){
+                result = new ModelAndView("redirect:/games/"+game.getId()+"/play");
+                attributes.addFlashAttribute("message", "FAILED! You were eliminated");
+                return result;
+            }else{
+                result= new ModelAndView(WINNER_VIEW);
+                result.addObject("game",game);
+                result.addObject("loggedUser",nrLoggedUser.get());
+                return result;
+            }
         }
 
         return result; 

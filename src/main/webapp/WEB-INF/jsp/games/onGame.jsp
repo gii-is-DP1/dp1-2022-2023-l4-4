@@ -51,7 +51,7 @@
         <a  href="/games/${game.id}/chat"  target="_blank">
             <button class="btn btn-default" style="font-size:105%">
                 Chat
-            </button>
+            </button> 
         </a>
         <a  href="/games/${game.id}/leave"  target="_blank">
             <button class="btn btn-default" style="font-size:105%">
