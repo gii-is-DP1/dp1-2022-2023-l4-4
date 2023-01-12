@@ -77,7 +77,6 @@ public class TurnService {
         if(turn.getPhase()!=Phase.MOVEMENT){
             throw new WrongPhaseException();
         }
-        //celdController.movement()
         turn.setFinalCeld(finalCeld);
         turn.setPhase(Phase.ACCUSATION);
         return (turn);

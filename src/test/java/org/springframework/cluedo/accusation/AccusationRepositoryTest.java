@@ -31,5 +31,7 @@ public class AccusationRepositoryTest {
         List<Accusation> accusations = repo.findAllByGame(1);
         assertNotNull(accusations);
         assertFalse(accusations.isEmpty());
+        accusations = repo.findAllByGame(0);
+        assertTrue(accusations.isEmpty());
     }
 }

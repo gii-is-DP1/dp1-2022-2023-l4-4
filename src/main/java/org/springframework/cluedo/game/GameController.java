@@ -636,8 +636,8 @@ public class GameController {
         try{
             accusation.setPlayerWhoShows(userGameService.whoShouldGiveCard(game,accusation));
             accusationService.saveAccusation(accusation);
-            if (accusation.getPlayerWhoShows()==null || accusation.getPlayerWhoShows().getIsEliminated()){
-                if(accusation.getPlayerWhoShows().getIsEliminated()) {
+            if (accusation.getPlayerWhoShows()==null || accusation.getPlayerWhoShows().getIsEliminated() || accusation.getPlayerWhoShows().getIsAfk()){
+                if(accusation.getPlayerWhoShows().getIsEliminated() || accusation.getPlayerWhoShows().getIsAfk()) {
                     List<Card> cardsToShow = accusationService.getMatchingCardsFromUser(accusation, accusation.getPlayerWhoShows());
                     accusation.setShownCard(cardsToShow.get(ThreadLocalRandom.current().nextInt(cardsToShow.size())));
                 }
@@ -884,4 +884,3 @@ public class GameController {
         return result;
     }
 }
- 
