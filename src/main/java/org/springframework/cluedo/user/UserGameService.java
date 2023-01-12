@@ -3,6 +3,7 @@ package org.springframework.cluedo.user;
 import java.util.List;
 import java.util.Optional;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.accusation.Accusation;
 import org.springframework.cluedo.accusation.AccusationService;
@@ -61,6 +62,11 @@ public class UserGameService {
             }
         }
         return null;
+    }
+
+    public void sumOneAcussation(UserGame userGame) {
+        userGame.setAccusationsNumber(userGame.getAccusationsNumber()+1);
+        saveUserGame(userGame);
     }
 
 }

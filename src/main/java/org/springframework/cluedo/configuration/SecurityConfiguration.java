@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 @Configuration
 @EnableWebSecurity
+@SuppressWarnings("deprecation")
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired

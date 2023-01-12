@@ -49,6 +49,7 @@ public class UserStatisticsService {
             if(game.getWinner().equals(user)) stats.setVictories(stats.getVictories()+1);
             if(userGame.getIsAfk()) stats.setAfkCounter(stats.getAfkCounter()+1);
             stats.setTotalGames(stats.getTotalGames()+1);
+            stats.setTotalTime(stats.getTotalTime()+Long.valueOf(game.getDuration().getSeconds()).intValue());
             stats.setTotalRounds(stats.getTotalRounds()+game.getRound());
             if(game.getWinner().equals(user) || userGame.getIsEliminated()) 
                 stats.setTotalFinalAccusations(stats.getTotalAccusations()+1);

@@ -8,6 +8,7 @@
 <cluedo:layout pageName="Accusation">
     <jsp:body>
         <div class="container">
+            
             <h2>Make your FINAL ACCUSATION</h2>
             <div>
                 <h3 style="padding-top: 3%;">
@@ -16,6 +17,11 @@
                 <a  href="/games/${game.id}/play/accusations"  target="_blank">
                     <button class="btn btn-default" style="font-size:105%;">
                         Accusations
+                    </button>
+                </a>
+                <a  href="/games/${game.id}/play/finish">
+                    <button class="btn btn-default" style="font-size:105%;">
+                        Go back
                     </button>
                 </a>
             </div>

@@ -231,7 +231,7 @@ public class GameController {
              result = new ModelAndView(LOBBY);
             }
         }
-        //response.addHeader("Refresh", "4");
+        response.addHeader("Refresh", "4");
         result.addObject("lobby", game);
         return result;
     }
@@ -374,13 +374,13 @@ public class GameController {
                 if(nrAccusation.get().getPlayerWhoShows().getUser().equals(nrLoggedUser.get())) {
                     return new ModelAndView("redirect:/games/"+gameId+"/play/showcard");
                 }else{
-                    //response.addHeader("Refresh", "3");
+                    response.addHeader("Refresh", "3");
                     result.addObject("playerWhoShows", accusationService.thisTurnAccusation(actualTurn).get().getPlayerWhoShows());
                     result.addObject("notAccuser", true);
                     return result;    
                 }
             } else {
-                //response.addHeader("Refresh", "3");
+                response.addHeader("Refresh", "3");
                 return result;
             }
         }
@@ -392,14 +392,14 @@ public class GameController {
                 if(accusationService.thisTurnAccusation(actualTurn).isEmpty()){
                     return new ModelAndView("redirect:/games/"+gameId+"/play/accusation");
                 }else{
-                    //response.addHeader("Refresh", "3");
+                    response.addHeader("Refresh", "3");
                     result.addObject("playerWhoShows", accusationService.thisTurnAccusation(actualTurn).get().getPlayerWhoShows());
                     return result;
                 }
             }
             case FINAL:return new ModelAndView("redirect:/games/"+gameId+"/play/finish");
             default: {
-                //response.addHeader("Refresh", "3");
+                response.addHeader("Refresh", "3");
                 result.addObject("game", game);
                 return result;
             }
@@ -547,7 +547,7 @@ public class GameController {
 
     @PostMapping("/{gameId}/play/move")
     @Transactional
-    public ModelAndView moveTo(@PathVariable("gameId") Integer gameId,CeldForm finalCeld, BindingResult br) throws WrongPhaseException,DataNotFound{
+    public ModelAndView moveTo(@PathVariable("gameId") Integer gameId,CeldForm finalCeld, BindingResult br) throws WrongPhaseException,DataNotFound,CorruptGame{
         
         Game game = null;
         try{
@@ -567,17 +567,29 @@ public class GameController {
             return notYourTurn(game);
         }
         Turn turn=turnService.getActualTurn(game).get();
-        turn.setFinalCeld(finalCeld.getFinalCeld());
-        UserGame player = turn.getUserGame();
-        player.setPosition(turn.getFinalCeld().getPosition());
-        userGameService.saveUserGame(player);
-        if(turn.getFinalCeld().getCeldType()!=CeldType.CORRIDOR && turn.getFinalCeld().getCeldType()!=CeldType.CENTER) {
-            turn.setPhase(Phase.ACCUSATION);
-        } else {
-            turn.setPhase(Phase.FINAL);
+            if(finalCeld.getFinalCeld()!=null){
+            turn.setFinalCeld(finalCeld.getFinalCeld());
+            UserGame player = turn.getUserGame();
+            player.setPosition(turn.getFinalCeld().getPosition());
+            userGameService.saveUserGame(player);
+            if(turn.getFinalCeld().getCeldType()!=CeldType.CORRIDOR && turn.getFinalCeld().getCeldType()!=CeldType.CENTER) {
+                turn.setPhase(Phase.ACCUSATION);
+            } else {
+                turn.setPhase(Phase.FINAL);
+            }
+            turnService.saveTurn(turn);
+            return new ModelAndView("redirect:/games/"+game.getId()+"/play");
+        }else{
+            ModelAndView result= new ModelAndView(MOVE_VIEW);
+            List<Card> cardsFromUser = userGameService.getUsergameByGameAndUser(game, nrLoggedUser.get()).getCards()
+            .stream().sorted(Comparator.comparing( Card::getCardName)).collect(Collectors.toList());
+            result.addObject("game", game);
+            result.addObject("cards", cardsFromUser);
+            result.addObject("diceResult", turnService.getActualTurn(game).get().getDiceResult());
+            result.addObject("celdForm",new CeldForm());
+            result.addObject("movements", turnService.whereCanIMove(game).stream().collect(Collectors.toList()));
+            return result;
         }
-        turnService.saveTurn(turn);
-        return new ModelAndView("redirect:/games/"+game.getId()+"/play");
     }
     
     @GetMapping("/{gameId}/play/accusation")
@@ -609,6 +621,7 @@ public class GameController {
                 result.addObject("weapons", cardService.getAllWeapons());
                 result.addObject("room", cardService.getCardByCardName(CardName.valueOf(accusation.getTurn().getFinalCeld().getCeldType().toString())));
                 result.addObject("accusation", accusation);
+                result.addObject("game",game);
                 }
             }
         }
@@ -634,6 +647,7 @@ public class GameController {
             return notYourTurn(game);
         }
         try{
+            userGameService.sumOneAcussation(accusation.getTurn().getUserGame());
             accusation.setPlayerWhoShows(userGameService.whoShouldGiveCard(game,accusation));
             accusationService.saveAccusation(accusation);
             if (accusation.getPlayerWhoShows()==null || accusation.getPlayerWhoShows().getIsEliminated() || accusation.getPlayerWhoShows().getIsAfk()){
@@ -644,12 +658,17 @@ public class GameController {
                 turnService.makeAccusation(game); 
             }
         } catch(Exception e) {
-            ModelAndView result = new ModelAndView(ON_GAME);
-            result.addObject("game", game);
-            result.addObject("message", "This is not your turn");
+            ModelAndView result = new ModelAndView(ACCUSATION_VIEW);
+            accusation = new Accusation();
+            accusation.setTurn(turnService.getActualTurn(game).get());
+            result.addObject("suspects", cardService.getAllSuspects());
+            result.addObject("weapons", cardService.getAllWeapons());
+            result.addObject("room", cardService.getCardByCardName(CardName.valueOf(accusation.getTurn().getFinalCeld().getCeldType().toString())));
+            result.addObject("accusation", accusation);
+            result.addObject("game",game);
+            result.addObject("message", " You didn't select one or more cards. Try other time!");
             return result;
-        }
-         
+        }  
         return new ModelAndView("redirect:/games/"+game.getId()+"/play");
     } 
 
@@ -714,6 +733,7 @@ public class GameController {
             result.addObject("weapons", cardService.getAllWeapons());
             result.addObject("rooms", cardService.getAllRooms());
             result.addObject("finalAccusation", finalAccusation);
+            result.addObject("game",game);
         }
         return result;
     }
@@ -770,9 +790,18 @@ public class GameController {
         ModelAndView result=checkPhase(game,Phase.ACCUSATION); 
 
         if (result==null){
-            accusationService.showCard(turnService.getActualTurn(game).get(),cardForm.cardSelected);
-            turnService.makeAccusation(game);
-            return new ModelAndView("redirect:/games/"+game.getId()+"/play");
+            if (cardForm.cardSelected!=null){
+                accusationService.showCard(turnService.getActualTurn(game).get(),cardForm.cardSelected);
+                turnService.makeAccusation(game);
+                return new ModelAndView("redirect:/games/"+game.getId()+"/play");
+            }else{
+                Optional<Accusation> nrAccusation =  accusationService.thisTurnAccusation(turnService.getActualTurn(game).get());
+                result = new ModelAndView(SELECT_CARD_TO_SHOW);
+                List<Card> cardsToShow = accusationService.getMatchingCardsFromUser(nrAccusation.get(), nrAccusation.get().getPlayerWhoShows());
+                result.addObject("cards", cardsToShow);
+                result.addObject("cardForm",new CardForm());
+                return result;  
+            }
         }
 
         return result; 
@@ -780,7 +809,7 @@ public class GameController {
 
     @PostMapping("/{gameId}/play/finalAccusation")
     @Transactional(rollbackFor = {WrongPhaseException.class,DataNotFound.class})
-    public ModelAndView makeFinalAccusation(@PathVariable("gameId") Integer gameId, @Valid FinalAccusation finalAccusation, RedirectAttributes attributes) throws WrongPhaseException,DataNotFound,CorruptGame{
+    public ModelAndView makeFinalAccusation(@PathVariable("gameId") Integer gameId, FinalAccusation finalAccusation, RedirectAttributes attributes) throws WrongPhaseException,DataNotFound,CorruptGame{
         Game game = null;
         try{
             game = gameService.getGameById(gameId);
@@ -803,15 +832,28 @@ public class GameController {
         ModelAndView result=checkPhase(game,Phase.FINAL); 
 
         if (result==null){
-            gameService.makeFinalAccusation(game, finalAccusation);
-            if (game.getWinner()==null){
-                result = new ModelAndView("redirect:/games/"+game.getId()+"/play");
-                attributes.addFlashAttribute("message", "FAILED! You were eliminated");
-                return result;
+            if(finalAccusation.getRoomCard()!=null && finalAccusation.getSuspectCard()!= null && finalAccusation.getWeaponCard()!=null){
+                gameService.makeFinalAccusation(game, finalAccusation);
+                if (game.getWinner()==null){
+                    result = new ModelAndView("redirect:/games/"+game.getId()+"/play");
+                    attributes.addFlashAttribute("message", "FAILED! You were eliminated");
+                    return result;
+                }else{
+                    result= new ModelAndView(WINNER_VIEW);
+                    result.addObject("game",game);
+                    result.addObject("loggedUser",nrLoggedUser.get());
+                    return result;
+                }
             }else{
-                result= new ModelAndView(WINNER_VIEW);
+                result=new ModelAndView(FINAL_ACCUSATION_VIEW); 
+                finalAccusation = new FinalAccusation();
+                finalAccusation.setTurn(turnService.getActualTurn(game).get());
+                result.addObject("suspects", cardService.getAllSuspects());
+                result.addObject("weapons", cardService.getAllWeapons());
+                result.addObject("rooms", cardService.getAllRooms());
+                result.addObject("finalAccusation", finalAccusation);
                 result.addObject("game",game);
-                result.addObject("loggedUser",nrLoggedUser.get());
+                result.addObject("message", " You didn't select one or more cards. Try other time!");
                 return result;
             }
         }
@@ -869,7 +911,7 @@ public class GameController {
             return wrongStatus(game);
         }
         ModelAndView result = new ModelAndView(ON_GAME);
-        //response.addHeader("Refresh", "3");
+        response.addHeader("Refresh", "3");
         Optional<User> nrLoggedUser=userService.getLoggedUser();
         Turn actualTurn = turnService.getActualTurn(game).get();
         Optional<Accusation> nrAccusation =  accusationService.thisTurnAccusation(actualTurn);
