@@ -34,7 +34,7 @@ public class CeldFormatter implements Formatter<Celd>{
 	public Celd parse(String text, Locale locale) throws ParseException,NumberFormatException{
 			try {
 				Integer i=Integer.parseInt(text);
-				return this.celdService.getById(i); 
+				return this.celdService.getById(i);
 			}  catch (DataNotFound e) {
 				throw new ParseException("Celd not found: " + text, 0);
 			}	catch(NumberFormatException e){ 
