@@ -16,6 +16,8 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -27,7 +29,9 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+@ExtendWith(MockitoExtension.class)
 @WebMvcTest(controllers=UserController.class,
 excludeFilters=@ComponentScan.Filter(type=FilterType.ASSIGNABLE_TYPE, classes=WebSecurityConfigurer.class),
 excludeAutoConfiguration=SecurityConfiguration.class)
@@ -258,10 +262,23 @@ public class UserControllerTest {
 
     @WithMockUser
     @Test
-    public void testDeleteUser() throws Exception{
+    public void testDeleteUserSuccessfull() throws Exception{
+        when(userService.isInANotFinishedGame(any(User.class))).thenReturn(false);
+        when(userService.findUserById(any(Integer.class))).thenReturn(Optional.of(user1));
         mockMvc.perform(get("/users/{userId}/delete",1))
         .andExpect(status().is3xxRedirection())
         .andExpect(view().name("redirect:/users/paginable/0"));
+    }
+
+    @WithMockUser
+    @Test
+    public void testDeleteUserInGame() throws Exception{
+        when(userService.isInANotFinishedGame(any(User.class))).thenReturn(true);
+        when(userService.findUserById(any(Integer.class))).thenReturn(Optional.of(user1));
+        mockMvc.perform(get("/users/{userId}/delete",1))
+        .andExpect(status().is3xxRedirection())
+        .andExpect(view().name("redirect:/users/paginable/0"))
+        .andExpect(MockMvcResultMatchers.flash().attributeExists("message"));
     }
 
     @WithMockUser

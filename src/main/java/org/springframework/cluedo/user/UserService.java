@@ -109,7 +109,7 @@ public class UserService {
 		userRepository.deleteUserFriendsUserToDelete(id);
 		achievementRepository.deleteUsersAchievementsUserToDelete(id);
 		userRepository.deleteUser(id);
-	}
+	}  
 
 	@Transactional(readOnly = true)
 	public Optional<User> findUserByUsername(String username) {
@@ -207,4 +207,10 @@ public class UserService {
 				 }
 				 return result; 
 			 } 
+
+		@Transactional(readOnly = true)
+		public boolean isInANotFinishedGame(User user) {
+			Game game = gameRepository.getMyNotFinishedGame(user);
+			return game!=null;
+		}
 }

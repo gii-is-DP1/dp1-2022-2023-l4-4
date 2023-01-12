@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 
@@ -276,9 +277,15 @@ public class UserController {
 
 	@Transactional(readOnly=true)
 	@GetMapping(value = "/users/{userId}/delete")
-	public String deleteUser(@PathVariable("userId") int userId){
+	public ModelAndView deleteUser(@PathVariable("userId") int userId, RedirectAttributes ra){
+		User user = userService.findUserById(userId).get();
+		if(userService.isInANotFinishedGame(user)){
+			ModelAndView result = new ModelAndView("redirect:/users/paginable/0");
+			ra.addFlashAttribute("message","You cannot delete users while they are in a game");
+			return result;
+		}
 		userService.deleteUser(userId);
-		return "redirect:/users/paginable/0";
+		return new ModelAndView("redirect:/users/paginable/0");
 	}
   
 	@Transactional(readOnly=true)
