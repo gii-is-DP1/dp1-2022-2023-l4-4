@@ -69,7 +69,7 @@ public class UserStatisticsControllerTest {
         Game game1 = new Game();
         game1.setHost(user1);
         game1.setId(100);
-        game1.setDuration(Duration.ofSeconds(5000));
+        //game1.setDuration(Duration.ofSeconds(5000));
         game1.setIsPrivate(false);
         game1.setStatus(Status.FINISHED);
         List<User> lobby1 = new ArrayList<>();
@@ -82,7 +82,7 @@ public class UserStatisticsControllerTest {
         Game game2 = new Game();
         game2.setHost(user2);
         game2.setId(100);
-        game2.setDuration(Duration.ofSeconds(1000));
+        //game2.setDuration(Duration.ofSeconds(1000));
         game2.setIsPrivate(true);
         game2.setStatus(Status.FINISHED);
         List<User> lobby2 = new ArrayList<>();
