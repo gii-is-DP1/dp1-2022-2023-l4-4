@@ -617,7 +617,7 @@ public class GameController {
 
     @Transactional(rollbackFor = {WrongPhaseException.class,DataNotFound.class})
     @PostMapping("/{gameId}/play/accusation")
-    public ModelAndView makeAccusation(@PathVariable("gameId") Integer gameId, @Valid Accusation accusation) throws WrongPhaseException,DataNotFound,CorruptGame{
+    public ModelAndView makeAccusation(@PathVariable("gameId") Integer gameId, Accusation accusation) throws WrongPhaseException,DataNotFound,CorruptGame{
         Game game = null;
         try{
             game = gameService.getGameById(gameId);
@@ -629,7 +629,6 @@ public class GameController {
         if(!gameService.isGameInProgress(game)) {
             return wrongStatus(game);
         }
-
         Optional<User> nrLoggedUser=userService.getLoggedUser();
         if(!gameService.isUserTurn(nrLoggedUser, game)){
             return notYourTurn(game);
