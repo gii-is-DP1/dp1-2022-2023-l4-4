@@ -9,9 +9,10 @@
 <cluedo:layout pageName="users">
     <form:form modelAttribute="user" class="form-horizontal" id="add-owner-form" enctype="multipart/form-data">
         <div class="form-group has-feedback">
-            <cluedo:inputField label="Username" name="username" />
+            <input type="hidden" name="username" value="${user.username}" />
             <cluedo:inputField label="E-mail" name="email" />
             <cluedo:inputField label="Password" name="password" />
+            <input type="hidden" name="id" value="${user.id}" />
             <input type="hidden" name="enabled" value="${user.enabled}">
             <h4>Photo:</h4>
             <spring:url value="/resources/images/jake.png" htmlEscape="true" var="jake"/>
@@ -23,16 +24,9 @@
             
         </div>
         <div class="form-group">
-            <c:if test="${!user['new']}">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <button class="btn btn-default" type="submit" formaction="/users/${user.id}/edit">Update User</button>
-                </div>
-            </c:if>
-            <c:if test="${user['new']}">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <button class="btn btn-default" type="submit" formaction="/users/new">Create User</button>
-                </div>
-            </c:if>
+            <div class="col-sm-offset-2 col-sm-10">
+                <button class="btn btn-default" type="submit" formaction="/users/${user.id}/edit">Update User</button>
+            </div>
         </div>
     </form:form>
 </cluedo:layout>

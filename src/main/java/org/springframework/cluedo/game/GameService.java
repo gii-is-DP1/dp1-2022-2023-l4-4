@@ -1,5 +1,6 @@
 package org.springframework.cluedo.game;
 
+
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
@@ -189,6 +190,8 @@ public class GameService {
             game.removeLobbyUser(user);
             saveGame(game);
         } else {
+			game.setLobby(new ArrayList<>());
+			saveGame(game);
             deleteGame(game);
         }
     }

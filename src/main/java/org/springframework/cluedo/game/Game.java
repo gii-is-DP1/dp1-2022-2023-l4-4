@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.time.Duration;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -58,7 +59,7 @@ public class Game extends BaseEntity{
     @Min(0)
     private Integer round;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name="lobbies",joinColumns = @JoinColumn(
         name = "game_id", referencedColumnName = "id"),
      inverseJoinColumns = @JoinColumn(

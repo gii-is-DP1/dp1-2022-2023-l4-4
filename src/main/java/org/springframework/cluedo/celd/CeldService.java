@@ -13,11 +13,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CeldService {
-    @Autowired
+    
     CeldRepository celdRepository;
 
     BoardGraph board;
 
+    @Autowired
     public CeldService(CeldRepository cRepository) {
         this.celdRepository=cRepository;
     }

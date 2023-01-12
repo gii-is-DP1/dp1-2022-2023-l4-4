@@ -3,6 +3,7 @@ package org.springframework.cluedo.statistics;
 import java.util.List;
 
 import org.springframework.cluedo.user.User;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -15,4 +16,9 @@ public interface UserStatisticsRepository extends CrudRepository<UserStatistics,
     
     @Query("SELECT u FROM UserStatistics u WHERE u.user = :user")
     UserStatistics findMyStatistics(@Param("user") User user);
+
+  
+    @Modifying
+    @Query("DELETE FROM UserStatistics u WHERE u.user.id = :id")
+    void deleteUserStatisticByUserId(@Param("id")Integer id);
 }

@@ -1,13 +1,14 @@
 package org.springframework.cluedo.statistics;
 
-import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cluedo.configuration.SecurityConfiguration;
 import org.springframework.cluedo.enumerates.Status;
 import org.springframework.cluedo.game.Game;
+import org.springframework.cluedo.game.GameService;
 import org.springframework.cluedo.user.User;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
@@ -21,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import org.springframework.context.annotation.FilterType;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,15 +30,20 @@ import java.util.List;
 @WebMvcTest(controllers=UserStatisticsController.class,
     excludeFilters=@ComponentScan.Filter(type=FilterType.ASSIGNABLE_TYPE, classes=WebSecurityConfigurer.class),
     excludeAutoConfiguration=SecurityConfiguration.class)
-public class UserStatisticsController {
+public class UserStatisticsControllerTest {
 
     @MockBean
     protected UserStatisticsService userStatisticsService;
+
+    @MockBean
+    protected GameService gameService;
 
     @Autowired
     protected MockMvc mockMvc;
 
     private UserStatistics stats;
+    private List<UserStatistics> lStatistics;
+    private List<Game> lGames;
     @BeforeEach
     public void config(){
 
@@ -62,6 +69,7 @@ public class UserStatisticsController {
         Game game1 = new Game();
         game1.setHost(user1);
         game1.setId(100);
+        game1.setDuration(Duration.ofSeconds(5000));
         game1.setIsPrivate(false);
         game1.setStatus(Status.FINISHED);
         List<User> lobby1 = new ArrayList<>();
@@ -71,25 +79,57 @@ public class UserStatisticsController {
         game1.setLobby(lobby1);
         game1.setLobbySize(6);
 
-        UserStatistics stats= new UserStatistics();
-        stats.setId(1);
-        stats.setLongestGame(game1);
-        stats.setShortestGame(game1);
+        Game game2 = new Game();
+        game2.setHost(user2);
+        game2.setId(100);
+        game2.setDuration(Duration.ofSeconds(1000));
+        game2.setIsPrivate(true);
+        game2.setStatus(Status.FINISHED);
+        List<User> lobby2 = new ArrayList<>();
+        lobby2.add(user1);
+        lobby2.add(user2);
+        lobby2.add(user3);
+        game2.setLobby(lobby2);
+        game2.setLobbySize(3);
+
+        stats= new UserStatistics();
+        stats.setId(1); 
+        stats.setAfkCounter(11); 
+        stats.setLongestGame(game1); 
+        stats.setShortestGame(game2); 
         stats.setTotalAccusations(2);
         stats.setTotalFinalAccusations(1);
-        stats.setTotalGames(1);
-        stats.setTotalRounds(5);
-        stats.setTotalTime(6000);
-        stats.setUser(user1);
-        stats.setVictories(1);
-        stats.setXp(10);
-        
+        stats.setTotalGames(1); 
+        stats.setTotalRounds(5); 
+        stats.setTotalTime(6000); 
+        stats.setUser(user1); 
+        stats.setVictories(1); 
+        stats.setXp(10); 
+
+        lStatistics=new ArrayList<>();
+        lGames=new ArrayList<>();
+        lStatistics.add(stats);
+        lGames.add(game2);
+        lGames.add(game1);
+
     }
 
     @WithMockUser
     @Test
     public void getMyStatisticsTest() throws Exception{
         when(userStatisticsService.getMyStatistics()).thenReturn(stats);
+        mockMvc.perform(get("/stats"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("users/statistics"))
+        .andExpect(model().attributeExists("stats"));
+    }
+
+    @WithMockUser
+    @Test
+    public void getGlobalStatistics() throws Exception{
+        
+        when(userStatisticsService.getAllStatistics()).thenReturn(lStatistics);
+        when(gameService.getAllFinishedGames()).thenReturn(lGames);
         mockMvc.perform(get("/global"))
         .andExpect(status().isOk())
         .andExpect(view().name("users/globalStatistics"))
