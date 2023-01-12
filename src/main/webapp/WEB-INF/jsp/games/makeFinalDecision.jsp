@@ -9,17 +9,30 @@
     <jsp:body>
         <div class="container">
             <h2>
-                <a  href="/games/${game.id}/play/finalAccusation" >
-                    <button class="btn btn-default" style="font-size:105%">
-                        Final Accusation
+                Will you make a FINAL ACCUSATION this turn?
+            </h2>
+            <div>
+                <h3 style="padding-top: 5%;">
+                    View all accusations made
+                </h3>
+                <a  href="/games/${game.id}/play/accusations"  target="_blank">
+                    <button class="btn btn-default" style="font-size:105%;">
+                        Accusations
                     </button>
                 </a>
-                <form:form  class="form-horizontal">
-                    <div class="form-group">
-                        <button class="btn btn-default" type="submit">Finish Turn</button>
-                    </div>
-                </form:form>
-            </h2>
+            </div>
+            <h3 style="padding-top: 5%;">Make the FINAL ACCUSATION</h3>
+            <a  href="/games/${game.id}/play/finalAccusation" >
+                <button class="btn btn-default" style="font-size:105%">
+                    Final Accusation
+                </button>
+            </a>
+            <h3 style="padding-top: 5%;">Finish the turn</h3>
+            <form:form  class="form-horizontal">
+                <div class="form-group">
+                    <button class="btn btn-default" type="submit">Conclude turn</button>
+                </div>
+            </form:form>
         </div>
     </jsp:body>
 </cluedo:layout>

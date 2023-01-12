@@ -7,6 +7,7 @@
 <style>
     h2{text-align: center}
 </style>
+
 <cluedo:layout pageName="On Game">
     <div>
         <c:if test="${phase == 'DICE'}">
@@ -46,16 +47,43 @@
         </c:if>
 
     </div>
+    <c:if test="${userGame != null}">
+        <a  href="/games/${game.id}/chat"  target="_blank">
+            <button class="btn btn-default" style="font-size:105%">
+                Chat
+            </button> 
+        </a>
+        <a  href="/games/${game.id}/leave"  target="_blank">
+            <button class="btn btn-default" style="font-size:105%">
+                Exit
+            </button>
+        </a>
+    </c:if>
 
     <table class="table table-striped" style="border:0;">
         <tbody>
             <tr>
                 <td style="width: 60%; vertical-align: top;">
-                    <div> 
-                        <img src="/resources/images/tablero.jpeg" style="width:600px;height:600px;">
+                    <div style="position: absolute">
+                        <img src="/resources/images/tablero.jpeg" style="width:600px; height:600px;">
+                        <c:forEach items="${game.players}" var="player">
+                            <img src="/resources/images/pieces/${player.suspect}.png" style="width:18px; height:18px; position:absolute; z-index:2; top:${player.getY()}px; left:${player.getX()}px">
+                        </c:forEach>
                     </div>
                 </td>
                 <td>
+                    <div style = "padding-top: 20%">
+                        <a  href="/games/${game.id}/play/accusations"  target="_blank">
+                            <button class="btn btn-default" style="font-size:105%">
+                                Accusations
+                            </button>
+                        </a>
+                        <a  href="/games/${game.id}/play/notes"  target="_blank">
+                            <button class="btn btn-default" style="font-size:105%">
+                                Open New Notes
+                            </button>
+                        </a>
+                    </div>
                     <div style = "padding-top: 20%">
                         <h3>
                             YOUR CARDS:
@@ -79,13 +107,6 @@
                                 </p>
                             
                         </c:forEach>
-                    </div>
-                    <div style = "padding-top: 20%">
-                        <a  href="/games/${game.id}/play/accusations"  target="_blank">
-                            <button class="btn btn-default" style="font-size:105%">
-                                Accusations
-                            </button>
-                        </a>
                     </div>
                 </td>
             </tr>

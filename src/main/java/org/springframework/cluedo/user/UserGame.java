@@ -60,4 +60,15 @@ public class UserGame extends BaseEntity{
     public void addCard(Card card){
         cards.add(card);
     }
+
+    private Integer position;
+
+    public Integer getX() {
+        return (int)((position%24) * 20) - 13;
+    } 
+
+    public Integer getY() {
+        return (Math.floorDiv(position, 24) * 20) + 10;
+    }
+
 }

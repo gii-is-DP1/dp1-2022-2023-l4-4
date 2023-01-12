@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 import org.springframework.cluedo.achievement.Achievement;
 import org.springframework.cluedo.model.BaseEntity;
 
@@ -24,6 +26,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Audited
 @Table(name = "users")
 public class User extends BaseEntity{
 
@@ -48,6 +51,8 @@ public class User extends BaseEntity{
 	
 	private String tag;
 
+
+	@NotAudited
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JoinTable(name="user_friends",joinColumns = @JoinColumn(
        name = "id1", referencedColumnName = "id"),
@@ -61,7 +66,9 @@ public class User extends BaseEntity{
 	
 	private String authority;
   
-	@ManyToMany(cascade = CascadeType.ALL)
+	@NotAudited
+	@ManyToMany(cascade=CascadeType.ALL)
+
 	private List<Achievement> achievements;
 
 

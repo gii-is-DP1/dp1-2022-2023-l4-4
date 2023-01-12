@@ -1,7 +1,8 @@
 package org.springframework.cluedo.game;
 
-import java.time.Duration;
-import java.util.ArrayList;
+
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,11 +10,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.accusation.AccusationService;
 import org.springframework.cluedo.accusation.FinalAccusation;
+import org.springframework.cluedo.achievement.AchievementService;
 import org.springframework.cluedo.card.CardService;
 import org.springframework.cluedo.celd.Celd;
 import org.springframework.cluedo.enumerates.Phase;
 import org.springframework.cluedo.enumerates.Status;import org.springframework.cluedo.exceptions.DataNotFound;
 import org.springframework.cluedo.exceptions.WrongPhaseException;
+import org.springframework.cluedo.statistics.UserStatisticsService;
 import org.springframework.cluedo.turn.Turn;
 import org.springframework.cluedo.turn.TurnService;
 import org.springframework.cluedo.user.User;
@@ -33,15 +36,19 @@ public class GameService {
 	private UserService userService;
 	private UserGameService userGameService;
 	private AccusationService accusationService;
+	private UserStatisticsService userStatisticsService;
+	private AchievementService achievementService;
 
 	@Autowired
-	public GameService(GameRepository gameRepository, TurnService turnService, CardService cardService, UserService userService, UserGameService userGameService, AccusationService accusationService) {
+	public GameService(GameRepository gameRepository, TurnService turnService,AchievementService achievementService, CardService cardService, UserService userService, UserGameService userGameService, AccusationService accusationService, UserStatisticsService userStatisticsService) {
 		this.gameRepository = gameRepository;
 		this.turnService = turnService;
 		this.cardService = cardService;
 		this.userService = userService;
 		this.userGameService = userGameService;
 		this.accusationService = accusationService;
+		this.userStatisticsService = userStatisticsService;
+		this.achievementService = achievementService;
 	}
     
     @Transactional(readOnly = true)
@@ -66,7 +73,7 @@ public class GameService {
 
 	public void initGame(Game copy){
         copy.setStatus(Status.IN_PROGRESS);
-        copy.setDuration(Duration.ofMinutes(0));
+        copy.setStartTime(Timestamp.from(Instant.now()));
         copy.setRound(1);
 		userService.initializePlayers(copy.getLobby(), copy);
 		copy.setActualPlayer(copy.getPlayers().get(0));
@@ -154,8 +161,11 @@ public class GameService {
 		if(finalAccusation.isCorrect()){
 			game.setWinner(finalAccusation.getTurn().getUserGame().getUser());	
 		}
+		game.setEndTime(Timestamp.from(Instant.now()));
 		game.setStatus(Status.FINISHED);
 		saveGame(game);
+		userStatisticsService.updateStatistics(game);
+		achievementService.checkAchievementsGame(game);
 
 	}
 
@@ -183,7 +193,7 @@ public class GameService {
 			game.setLobby(new ArrayList<>());
 			saveGame(game);
             deleteGame(game);
-        } 
+        }
     }
 	public void leaveGameInProgress(User user, Game game) {
 		List<UserGame> ugs = game.getPlayers();

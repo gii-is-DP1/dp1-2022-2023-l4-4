@@ -9,7 +9,11 @@
     <jsp:body>
         <div class="container">
             <h2>
+                It's DICE time!
+            </h2>
+            <h2>
                 <form:form  class="form-horizontal">
+                    <img src="/resources/images/dice.png">
                     <div class="form-group">
                         <button class="btn btn-default" type="submit">Throw Dice</button>
                     </div>

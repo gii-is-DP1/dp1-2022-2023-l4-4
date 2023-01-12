@@ -46,12 +46,12 @@ public class AccusationService {
     }
 
     public List<Accusation> getAllAcusationsByGame(Game game){
-        return accusationRepository.findAllByGame(game);
+        return accusationRepository.findAllByGame(game.getId());
     }
 
     public Boolean isFinalAccusationCorrect(Turn turn){
-        CrimeScene crimeScene = crimeSceneRepository.findByGame(turn.getUserGame().getGame());
-        FinalAccusation finalAccusation = finalAccusationRepository.findByTurn(turn);
+        CrimeScene crimeScene = crimeSceneRepository.findByGame(turn.getUserGame().getGame().getId());
+        FinalAccusation finalAccusation = finalAccusationRepository.findByTurn(turn.getId());
         if(crimeScene.getCards().containsAll(finalAccusation.getCards())){
             return true;
         }else{
@@ -60,7 +60,7 @@ public class AccusationService {
     }
 
     public Optional<Accusation> thisTurnAccusation(Turn turn){
-        return accusationRepository.findByTurn(turn);
+        return accusationRepository.findByTurn(turn.getId());
     }
 
     public FinalAccusation saveFinalAccusation(FinalAccusation finalAccusation) {

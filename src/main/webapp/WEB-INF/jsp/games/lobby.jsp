@@ -28,10 +28,10 @@
                 </th>
                 <th>
                     <c:if test="${player.imageurl != null}">
-                        <img class="img-responsive" src="${player.imageurl}" style="width: 75px !important; height: 75px !important;"/>
+                        <img class="img-responsive" src="${player.imageurl}" style="width: 75px !important; height: 50px !important;"/>
                     </c:if>
                     <c:if test="${player.imageurl == null}">
-                        <img class="img-responsive" src="https://www.softzone.es/app/uploads/2018/04/guest.png" style="width: 75px !important; height: 75px !important;"/>
+                        <img class="img-responsive" src="https://www.softzone.es/app/uploads/2018/04/guest.png" style="width: 50px !important; height: 75px !important;"/>
                     </c:if>
                 </th>
             </tr>

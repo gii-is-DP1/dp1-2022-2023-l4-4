@@ -33,7 +33,6 @@ public class TurnService {
         turn.setRound(round);
         Optional<Turn> previousTurn = turnRepository.getTurn(userGame.getId(),round-1);
         if(previousTurn.isPresent()){
-            
             turn.setInitialCeld(previousTurn.get().getFinalCeld());
         } else{
             turn.setInitialCeld(celdService.getCenter());
@@ -78,7 +77,6 @@ public class TurnService {
         if(turn.getPhase()!=Phase.MOVEMENT){
             throw new WrongPhaseException();
         }
-        //celdController.movement()
         turn.setFinalCeld(finalCeld);
         turn.setPhase(Phase.ACCUSATION);
         return (turn);

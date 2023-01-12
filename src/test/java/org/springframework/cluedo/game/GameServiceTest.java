@@ -4,7 +4,9 @@ package org.springframework.cluedo.game;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+import java.sql.Timestamp;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -105,7 +107,7 @@ public class GameServiceTest {
         mockGames.add(game2);
         mockGames.add(game3);
 
-        gameService = new GameService(gameRepository, null, cardService, userService, null,null);
+        gameService = new GameService(gameRepository, null, null, cardService, userService, null, null, null);
     }
 
     @Test
@@ -115,7 +117,8 @@ public class GameServiceTest {
         game1.setPlayers(List.of(ug));
         gameService.initGame(game1);
         assertEquals(Status.IN_PROGRESS, game1.getStatus());
-        assertEquals(Duration.ofMinutes(0), game1.getDuration());
+        //el juego no ha terminado, no tiene duración
+        assertEquals(null, game1.getDuration());
         assertEquals(ug, game1.getActualPlayer());
     }
 
@@ -146,10 +149,27 @@ public class GameServiceTest {
     @Test
     void shouldDeleteUserFromLobby() {
         Game game1 = mockGames.get(0);
-        User user = game1.getLobby().get(0);
+        User user = game1.getLobby().get(1);
         assertEquals(true, game1.getLobby().contains(user));
         when(gameRepository.save(game1)).thenReturn(game1);
         gameService.deleteUserFromLobby(user, game1);
         assertEquals(false, game1.getLobby().contains(user));
     }
+
+    @Test
+    void shouldReturnDuration(){
+        Game game = mockGames.get(0);
+        game.setStartTime(Timestamp.valueOf(LocalDateTime.of(2023, 1, 1, 16, 30, 0)));
+        game.setEndTime(Timestamp.valueOf(LocalDateTime.of(2023, 1, 1, 17, 0, 0)));
+        assertEquals(Duration.ofMinutes(30), game.getDuration());
+    }
+
+    @Test
+    void shouldReturnNullDuration(){
+        Game game = mockGames.get(0);
+        game.setStartTime(Timestamp.valueOf(LocalDateTime.of(2023, 1, 1, 16, 30, 0)));
+        assertEquals(null, game.getDuration());
+    }
+
+    //Los tests restantes toman relevancia en cada uno de los servicios a los que se invoca
 }

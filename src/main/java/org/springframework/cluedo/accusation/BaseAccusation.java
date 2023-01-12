@@ -20,17 +20,17 @@ import lombok.Setter;
 public class BaseAccusation extends BaseEntity{
     
     @ManyToOne
-    @JoinColumn(name = "suspect_card_id")
+    @JoinColumn(name = "suspect_card")
     @NotNull
     private Card suspectCard;
 
     @ManyToOne
-    @JoinColumn(name = "weapon_card_id")
+    @JoinColumn(name = "weapon_card")
     @NotNull
     private Card weaponCard;
 
     @ManyToOne
-    @JoinColumn(name = "room_card_id")
+    @JoinColumn(name = "room_card")
     @NotNull
     private Card roomCard;
     

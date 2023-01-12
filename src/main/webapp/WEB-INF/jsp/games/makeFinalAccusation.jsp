@@ -8,9 +8,20 @@
 <cluedo:layout pageName="Accusation">
     <jsp:body>
         <div class="container">
+            <h2>Make your FINAL ACCUSATION</h2>
+            <div>
+                <h3 style="padding-top: 3%;">
+                    View all accusations made
+                </h3>
+                <a  href="/games/${game.id}/play/accusations"  target="_blank">
+                    <button class="btn btn-default" style="font-size:105%;">
+                        Accusations
+                    </button>
+                </a>
+            </div>
             <form:form  modelAttribute="finalAccusation" class="form-horizontal">
                 <input type="hidden" name="turn" value=${finalAccusation.turn.id}>
-                <div class="form-group has-feedback" style="font-size:120%">
+                <div class="form-group has-feedback" style="font-size:120%;padding-top: 3%;">
                     <cluedo:selectField name = "roomCard" label="Room" names="${rooms}" size="6"></cluedo:selectField>
                     <cluedo:selectField name = "suspectCard" label="Suspect" names="${suspects}" size="6"></cluedo:selectField>
                     <cluedo:selectField name = "weaponCard" label="Weapons" names="${weapons}" size="6"></cluedo:selectField>

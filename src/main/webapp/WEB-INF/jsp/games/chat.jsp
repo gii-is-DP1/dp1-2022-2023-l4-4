@@ -5,9 +5,14 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="cluedo" tagdir="/WEB-INF/tags" %>
-
+<style>
+    h2{text-align: center}
+</style>
 <cluedo:layout pageName="chat">
     <jsp:body>
+    <h2>
+        GAME CHAT
+    </h2>
         <c:forEach items="${messages}" var="m">
             <c:choose>
                 <c:when test="${m.player.id==userNowId}">
@@ -34,7 +39,7 @@
             <div class="form-group">
                 <button class="btn btn-default"  type="submit">Enviar</button>
             </div>
-    </form:form>   
+        </form:form>   
     </jsp:body>
 </cluedo:layout>
 

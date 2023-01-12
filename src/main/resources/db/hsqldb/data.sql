@@ -688,6 +688,13 @@ INSERT INTO players(game_id,user_game_id) VALUES
 (1,1),
 (1,2);
 
+INSERT INTO accusations(id, room_card, suspect_card, weapon_card, turn, shown_card, player_who_shows) VALUES (1,1,10,17,1,1,2);
+
+INSERT INTO crime_scenes(id, room_card, suspect_card, weapon_card, game) VALUES (1,1,10,17,1);
+
+INSERT INTO final_accusations(id, room_card, suspect_card, weapon_card, turn, is_correct) VALUES (1,1,10,17,1,1);
+
+
 --game 2, host 1, size, 3, private, finished
 INSERT INTO games(id,host_id,lobby_size,is_private,status,winner_id) VALUES (2,1,3,1,2,2);
 
@@ -719,7 +726,10 @@ INSERT INTO lobbies(game_id,user_id) VALUES
 (3,2),
 (3,3); 
 
-INSERT INTO user_statistics(id, xp, total_games, total_time, total_rounds,total_accusations, victories, afk_counter, longest_game_id, shortest_game_id, total_final_accusations, user_id) VALUES (1,100,2,20,20,20,2,0,1,2,2,1),
-(2,100,2,20,20,20,2,0,1,2,2,2), (3,100,2,20,20,20,2,0,1,2,2,3), (4,100,2,20,20,20,2,0,1,2,2,4);
+INSERT INTO user_statistics(id, xp, total_games, total_time, total_rounds,total_accusations, victories, afk_counter, longest_game_id, shortest_game_id, total_final_accusations, user_id) VALUES
+(1,100,2,20,20,20,2,0,null,null,2,1),
+(2,100,2,20,20,20,2,0,null,null,2,2), 
+(3,100,2,20,20,20,2,0,null,null,2,3), 
+(4,100,2,20,20,20,2,0,null,null,2,4);
 
 INSERT INTO notifications(id,text,link,timestamp,user_id1,user_id2) VALUES (1,'Pablo te ha invitado a una partida', 100,'12:56',1,2);

@@ -153,6 +153,7 @@ public class UserService {
 			Integer order = ThreadLocalRandom.current().nextInt(orderList.size());
 			userGame.setOrderUser(orderList.get(order));
 			orderList.remove(orderList.get(order));
+			userGame.setPosition(326);
 			userGameService.saveUserGame(userGame);
 			copy.addPlayers(userGame);
 		}
