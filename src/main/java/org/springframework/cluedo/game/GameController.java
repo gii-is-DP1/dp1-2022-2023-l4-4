@@ -797,12 +797,10 @@ public class GameController {
         }
         ModelAndView result=checkPhase(game,Phase.FINAL); 
         if (result==null){
-            System.out.println("ENTRA AQUI");
             gameService.finishTurn(game);
             return new ModelAndView("redirect:/games/"+game.getId()+"/play");
 
         }
-        System.out.println("PASA POR AQUI");
         return result;
     }
     
