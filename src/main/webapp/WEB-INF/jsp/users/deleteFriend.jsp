@@ -10,7 +10,7 @@
 
 <cluedo:layout pageName="addFriends">
 
-    <h2 style="font-size:150%">Find friends</h2>
+    <h2 style="font-size:150%">Delete friends</h2>
 
     
     <form:form modelAttribute="UsernameForm" class="form-horizontal">

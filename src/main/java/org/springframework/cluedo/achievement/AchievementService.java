@@ -56,42 +56,43 @@ public class AchievementService {
 	public void checkToObtainAchievement(Achievement achievement, User user){
 		UserStatistics stats = userStatisticsRepository.findMyStatistics(user);
 		if(!user.getAchievements().contains(achievement)){
+			
 			switch(achievement.getMetric()){
 				case VICTORIES:
 					if(stats.getVictories()>=achievement.getGoal()){
 						obtainAchievement(achievement, user);
-						break;
 					}
+					break;
 				case EXPERIENCE:
 					if(stats.getXp()>=achievement.getGoal()){
 						obtainAchievement(achievement, user);
-						break;
 					}
+					break;
 				case TOTAL_GAMES:
 					if(stats.getTotalGames()>=achievement.getGoal()){
 						obtainAchievement(achievement, user);
-						break;
 					}
+					break;
 				case TOTAL_ROUNDS:
 					if(stats.getTotalRounds()>=achievement.getGoal()){
 						obtainAchievement(achievement, user);
-						break;
 					}
+					break;
 				case TOTAL_TIME:
 					if(stats.getTotalTime()>=achievement.getGoal()){
 						obtainAchievement(achievement, user);
-						break;
 					}
+					break;
 				case TOTAL_ACUSATIONS:
 					if(stats.getTotalAccusations()>=achievement.getGoal()){
 						obtainAchievement(achievement, user);
-						break;
 					}
+					break;
 				case TOTAL_FINAL_ACUSATIONS:
 					if(stats.getTotalFinalAccusations()>=achievement.getGoal()){
 						obtainAchievement(achievement, user);
-						break;
 					}
+					break;
 			}
 		}
 	}

@@ -23,7 +23,7 @@
             <td style = "font-size: 120%;"><c:out value="${stats.totalTime} "/></td>
         </tr>
         <tr>
-            <th style = "font-size: 120%;">Total Games</th>
+            <th style = "font-size: 120%;">Total Accusations</th>
             <td style = "font-size: 120%;"><c:out value="${stats.totalAccusations}"/></td>
         </tr>
         <tr>

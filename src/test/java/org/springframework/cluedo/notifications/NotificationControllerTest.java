@@ -107,13 +107,14 @@ public class NotificationControllerTest {
     }
     @WithMockUser
     @Test
-    public void testGetAllAchievements() throws Exception{
+    public void testGetAllNotifications() throws Exception{
         when(notificationService.getNotificationsByReceiverId(user1.getId())).thenReturn(notifications);
         mockMvc.perform(get("/notifications/"+user1.getId())).
                 andExpect(status().isOk()).
                 andExpect(view().name("notifications/myNotifications")).
                 andExpect(model().attributeExists("notification"));
     }
+
 
     @WithMockUser
     @Test

@@ -2,6 +2,8 @@ package org.springframework.cluedo.game;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -46,6 +48,7 @@ import java.util.Set;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
+@ExtendWith(MockitoExtension.class)
 @WebMvcTest(controllers = GameController.class, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class), excludeAutoConfiguration = SecurityConfiguration.class)
 public class GameControllerTest {
 
@@ -545,7 +548,6 @@ public class GameControllerTest {
                 andExpect(model().attributeExists("room")).
                 andExpect(model().attributeExists("accusation"));
     }
-
 
     @WithMockUser
     @Test

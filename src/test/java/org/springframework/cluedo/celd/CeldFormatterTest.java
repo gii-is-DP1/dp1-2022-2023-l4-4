@@ -82,9 +82,9 @@ public class CeldFormatterTest {
         assertEquals(c, celds.get(0));
     }
 
-    //@Test
+    @Test
     public void testShouldParseException() throws DataNotFound{
-        when(service.getById(0)).thenReturn(celds.get(0));
+        when(service.getById(0)).thenThrow(new DataNotFound());
         assertThrows(ParseException.class, () -> {formatter.parse("0", Locale.ENGLISH);});
     }
 

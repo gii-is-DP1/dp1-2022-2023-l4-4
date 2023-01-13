@@ -22,7 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import org.springframework.context.annotation.FilterType;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 

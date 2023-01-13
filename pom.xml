@@ -307,6 +307,7 @@
                 <version>${wro4j.version}</version>
                 <executions>
                     <execution>
+                        <?m2e ignore?>
                         <phase>generate-resources</phase>
                         <goals>
                             <goal>run</goal>
