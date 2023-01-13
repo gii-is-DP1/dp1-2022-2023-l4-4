@@ -566,8 +566,8 @@ public class GameControllerTest {
                         .param("roomCard", "1")
                         .param("weaponCard", "2")
                         .param("suspectCard", "3"))
-                        .andExpect(status().is3xxRedirection())
-                        .andExpect(view().name("redirect:/games/" + ipGame.getId() + "/play"));
+                        .andExpect(status().is2xxSuccessful())
+                        .andExpect(view().name("games/onGame"));
         }
 
     @WithMockUser
