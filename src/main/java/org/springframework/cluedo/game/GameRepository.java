@@ -28,6 +28,9 @@ public interface GameRepository extends CrudRepository<Game,Integer>{
      @Query("select g from Game g where :user member of g.lobby and g.status!=org.springframework.cluedo.enumerates.Status.FINISHED")
      Game getMyNotFinishedGame(@Param("user") User user);
 
+     @Query("select g from Game g where g.status=org.springframework.cluedo.enumerates.Status.IN_PROGRESS AND g.isPrivate = false")
+     List<Game> findAllInProgressGames();
+     
      @Modifying
      @Query("UPDATE Game u SET u.winner=null WHERE u.winner.id = :id")
      void setWinnerNull(@Param("id")Integer id);

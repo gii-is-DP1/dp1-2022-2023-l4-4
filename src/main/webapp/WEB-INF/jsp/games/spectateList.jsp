@@ -9,35 +9,21 @@
     th {font-size: 110%;}
     td {font-size:105%}
 </style>
-<petclinic:layout pageName="gameListing">
+<petclinic:layout pageName="spectateList">
     <h2 style="font-size: 150%">
-        Active games
+        Spectate games
     </h2>
     <div >
         <table class="table">
             <th style="border:none">
-                <a href="/games/new">
-                    <button class="btn btn-default" style="font-size: 105%">
-                    New Game
-                    </button>
-                </a>
-            </th>
-            <th style="border:none">
-                <a href="/games/past">
+                <a href="/games">
                     <button class="btn btn-default" style="float: right;font-size: 105%">
-                    Finished games
+                    Lobby List
                     </button>
                 </a>
             </th>
             <th style="border:none">
                 <a href="/games/spectate">
-                    <button class="btn btn-default" style="float: right;font-size: 105%">
-                    Spectate games
-                    </button>
-                </a>
-            </th>
-            <th style="border:none">
-                <a href="/games">
                     <button class="btn btn-default" style="font-size: 105%">
                     Refresh
                     </button>
@@ -92,9 +78,9 @@
                     </c:forEach>
                 </td>
                 <td>
-                    <a  href="/games/${game.id}" >
+                    <a  href="/games/${game.id}/spectate" >
                         <button class="btn btn-default" style="font-size:105%">
-                            Join Game
+                            Spectate
                         </button>
                     </a>
                 </td>
