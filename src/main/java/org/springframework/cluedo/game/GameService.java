@@ -197,6 +197,10 @@ public class GameService {
 		}
 	}
 
+    public List<Game> getAllInProgressGames() {
+        return gameRepository.findAllInProgressGames();
+    }
+
 } 
 
 	

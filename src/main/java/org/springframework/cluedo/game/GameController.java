@@ -51,6 +51,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class GameController {
     
     private static final String ACCUSATION_LIST = "games/accusationList";
+    private static final String GAME_SPECTATE_LISTING = "games/spectateList";
 	private final String GAME_LISTING="games/gameList";
     private final String GAME_PAST_LISTING="games/gamePastList";
     private final String CREATE_NEW_GAME="games/createNewGame";
@@ -63,6 +64,7 @@ public class GameController {
     private final String FINAL_DECISION_VIEW="games/makeFinalDecision";
     private final String FINAL_ACCUSATION_VIEW="games/makeFinalAccusation";
     private final String SELECT_CARD_TO_SHOW = "games/showCard";
+    private final String SPECTATE = "games/spectate";
     private GameService gameService;
     private UserService userService;
     private TurnService turnService;
@@ -843,6 +845,14 @@ public class GameController {
         return new ModelAndView(NOTES_VIEW);
     }
 
+    @GetMapping("/spectate")
+    @Transactional
+    public ModelAndView spectateGameList() {
+        ModelAndView result=new ModelAndView(GAME_SPECTATE_LISTING);
+        result.addObject("games", gameService.getAllInProgressGames());
+        return result;
+    }
+
     @GetMapping("/{gameId}/spectate")
     @Transactional
     public ModelAndView spectateGame(@PathVariable("gameId") Integer gameId, HttpServletResponse response) throws WrongPhaseException,DataNotFound{
@@ -857,13 +867,10 @@ public class GameController {
         if(!gameService.isGameInProgress(game)) {
             return wrongStatus(game);
         }
-        ModelAndView result = new ModelAndView(ON_GAME);
-        //response.addHeader("Refresh", "3");
-        Optional<User> nrLoggedUser=userService.getLoggedUser();
+        ModelAndView result = new ModelAndView(SPECTATE);
+        response.addHeader("Refresh", "3");
         Turn actualTurn = turnService.getActualTurn(game).get();
         Optional<Accusation> nrAccusation =  accusationService.thisTurnAccusation(actualTurn);
-        result.addObject("cards",userGameService.getUsergameByGameAndUser(game, nrLoggedUser.get()).getCards()
-            .stream().sorted(Comparator.comparing( Card::getCardName)).collect(Collectors.toList()));
         result.addObject("phase", actualTurn.getPhase());
         result.addObject("game", game);
         if(actualTurn.getPhase().equals(Phase.ACCUSATION) && nrAccusation.isPresent()){    
