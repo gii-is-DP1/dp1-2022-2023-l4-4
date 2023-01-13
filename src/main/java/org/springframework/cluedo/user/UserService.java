@@ -180,20 +180,14 @@ public class UserService {
 		//La variable palabra almacena el resultado final 
 			String palabra = "#"; 
 			String numero = "";
-		//La variable caracteres es un número aleatorio entre 2 y 20 que define la 
-		//longitud de la palabra. 
+		
 			int caracteres = 4; 
-		//Con un bucle for, que recorreremos las veces que tengamos almacenadas en la 
-		//variable caracteres, que será como mínimo 2, iremos concatenando los 
-		//caracteres aleatorios. 
+		
 				 for (int i=0; i<caracteres; i++){ 
-		//Para generar caracteres aleatorios hay que recurrir al valor numérico de estos 
-		//caracteres en el alfabeto Ascii. En este programa vamos a generar palabras con 
-		//letras minúsculas, que se encuentran en el rango 65-90. El método floor 
-		//devuelve el máximo entero. 
+		 
 				 int codigoAscii = (int)Math.floor(Math.random()*(90 -
 				 65)+65); 
-		//para pasar el código a carácter basta con hacer un cast a char 
+	
 				 palabra = palabra + (char)codigoAscii; 
 				 } 
 				 for(int i=0;i<caracteres;i++){
