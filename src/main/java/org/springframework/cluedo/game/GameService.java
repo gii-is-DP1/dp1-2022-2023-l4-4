@@ -1,7 +1,9 @@
 package org.springframework.cluedo.game;
 
+
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +11,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cluedo.accusation.AccusationService;
 import org.springframework.cluedo.accusation.FinalAccusation;
+import org.springframework.cluedo.achievement.AchievementService;
 import org.springframework.cluedo.card.CardService;
 import org.springframework.cluedo.celd.Celd;
 import org.springframework.cluedo.enumerates.Phase;
@@ -35,9 +38,10 @@ public class GameService {
 	private UserGameService userGameService;
 	private AccusationService accusationService;
 	private UserStatisticsService userStatisticsService;
+	private AchievementService achievementService;
 
 	@Autowired
-	public GameService(GameRepository gameRepository, TurnService turnService, CardService cardService, UserService userService, UserGameService userGameService, AccusationService accusationService, UserStatisticsService userStatisticsService) {
+	public GameService(GameRepository gameRepository, TurnService turnService,AchievementService achievementService, CardService cardService, UserService userService, UserGameService userGameService, AccusationService accusationService, UserStatisticsService userStatisticsService) {
 		this.gameRepository = gameRepository;
 		this.turnService = turnService;
 		this.cardService = cardService;
@@ -45,6 +49,7 @@ public class GameService {
 		this.userGameService = userGameService;
 		this.accusationService = accusationService;
 		this.userStatisticsService = userStatisticsService;
+		this.achievementService = achievementService;
 	}
     
     @Transactional(readOnly = true)
@@ -161,6 +166,7 @@ public class GameService {
 		game.setStatus(Status.FINISHED);
 		saveGame(game);
 		userStatisticsService.updateStatistics(game);
+		achievementService.checkAchievementsGame(game);
 
 	}
 
@@ -185,6 +191,8 @@ public class GameService {
             game.removeLobbyUser(user);
             saveGame(game);
         } else {
+			game.setLobby(new ArrayList<>());
+			saveGame(game);
             deleteGame(game);
         }
     }

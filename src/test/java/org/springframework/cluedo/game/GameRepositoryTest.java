@@ -9,8 +9,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
@@ -68,5 +70,37 @@ public class GameRepositoryTest {
         Game myGame = repo.getMyNotFinishedGame(user);
         assertNotNull(myGame);
         assertTrue(myGame.getStatus()!=Status.FINISHED);
+    }
+    
+    @Test
+    public void testSetWinnerNull(){
+
+        repo.setWinnerNull(user.getId());
+
+        List<Game> myGames = repo.findMyFinishedGames(user);
+        assertTrue(!myGames.isEmpty());
+        Game firstGame = myGames.stream().findFirst().get();
+        assertTrue(firstGame.getWinner()==null && firstGame.getId()==1);
+        
+    }
+
+    @Test
+    public void testSetHostNull(){
+        repo.setHostNull(user.getId());
+        List<Game> myGames = repo.findMyFinishedGames(user);
+        assertTrue(!myGames.isEmpty());
+        Game firstGame = myGames.stream().findFirst().get();
+        assertTrue(firstGame.getHost()==null && firstGame.getId()==1);
+    }
+
+    @Test
+    public void testDeleteUserInLobby(){
+        Game myGameBefore = repo.getMyNotFinishedGame(user);
+        assertNotNull(myGameBefore);
+
+        repo.deleteUserInLobby(user.getId());
+
+        Game myGameAfter = repo.getMyNotFinishedGame(user);
+        assertNull(myGameAfter);
     }
 }

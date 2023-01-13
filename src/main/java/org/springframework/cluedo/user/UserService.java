@@ -13,9 +13,14 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cluedo.achievement.AchievementRepository;
 import org.springframework.cluedo.card.Card;
 import org.springframework.cluedo.enumerates.SuspectType;
 import org.springframework.cluedo.game.Game;
+import org.springframework.cluedo.game.GameRepository;
+import org.springframework.cluedo.message.MessageRepository;
+import org.springframework.cluedo.notification.NotificationRepository;
+import org.springframework.cluedo.statistics.UserStatisticsRepository;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,19 +32,34 @@ public class UserService {
 
 	private UserRepository userRepository;
 	private UserGameService userGameService;
+	private UserStatisticsRepository userStatisticsRepository;
+	private UserGameRepository userGameRepository;
+	private GameRepository gameRepository;
+	private MessageRepository messageRepository;
+	private NotificationRepository notificationRepository;
+	private AchievementRepository achievementRepository;
 	
-
 	@Autowired
-	public UserService(UserRepository userRepository,UserGameService userGameService) {
+	public UserService(UserRepository userRepository,UserGameService userGameService,
+	UserStatisticsRepository userStatisticsRepository,UserGameRepository userGameRepository,
+	GameRepository gameRepository,MessageRepository messageRepository,NotificationRepository notificationRepository,
+	AchievementRepository achievementRepository) {
 		this.userRepository = userRepository;
 		this.userGameService = userGameService;
+		this.userStatisticsRepository = userStatisticsRepository;
+		this.userGameRepository = userGameRepository;
+		this.gameRepository=gameRepository;
+		this.messageRepository=messageRepository;
+		this.notificationRepository = notificationRepository;
+		this.achievementRepository = achievementRepository;
 	}
 
-	@Transactional
+	@Transactional(readOnly = true)
 	public List<User> getAllUsers(){
 		
 		return userRepository.findAll();
 	}
+	@Transactional(readOnly = true)
 	public List<User> getXUsers(int page){
 		Integer normal =3;
 		Integer min= normal*page;
@@ -75,15 +95,28 @@ public class UserService {
 	public User findUserByTag(String tag) {
 		return userRepository.findByTag(tag);
 	}
+
 	@Transactional
 	public void deleteUser(int id){
-		userRepository.deleteById(id);
-	}
+		userStatisticsRepository.deleteUserStatisticByUserId(id);    
+		userGameRepository.setNullUser(id);
+		gameRepository.setWinnerNull(id);
+		gameRepository.setHostNull(id);
+		gameRepository.deleteUserInLobby(id); 
+		notificationRepository.deleteNotificactionsByReceiverId(id);
+		notificationRepository.deleteNotificationsBySenderId(id);
+		messageRepository.setNullUser(id);
+		userRepository.deleteUserFriendsUserToDelete(id);
+		achievementRepository.deleteUsersAchievementsUserToDelete(id);
+		userRepository.deleteUser(id);
+	}  
 
 	@Transactional(readOnly = true)
 	public Optional<User> findUserByUsername(String username) {
 		return userRepository.findByUsername(username);
 	}
+	
+	@Transactional(readOnly = true)
 	public List<User> findUserFriends(Integer id) {
 		return userRepository.findFriendsById(id);
 	}
@@ -146,6 +179,7 @@ public class UserService {
 	public String generarTag(){
 		//La variable palabra almacena el resultado final 
 			String palabra = "#"; 
+			String numero = "";
 		//La variable caracteres es un número aleatorio entre 2 y 20 que define la 
 		//longitud de la palabra. 
 			int caracteres = 4; 
@@ -162,12 +196,22 @@ public class UserService {
 		//para pasar el código a carácter basta con hacer un cast a char 
 				 palabra = palabra + (char)codigoAscii; 
 				 } 
-				 String numero = (ThreadLocalRandom.current().nextInt(8)+1)+"";
-				 String result = palabra + numero+numero+numero+numero;
+				 for(int i=0;i<caracteres;i++){
+					String num = (ThreadLocalRandom.current().nextInt(8)+1)+"";
+					numero = numero +num;
+				 }
+				
+				 String result = palabra + numero;
 				 List<String> allTags = userRepository.findAllTags();
 				 if(allTags.contains(result)){
 					result = generarTag();
 				 }
 				 return result; 
 			 } 
+
+		@Transactional(readOnly = true)
+		public boolean isInANotFinishedGame(User user) {
+			Game game = gameRepository.getMyNotFinishedGame(user);
+			return game!=null;
+		}
 }

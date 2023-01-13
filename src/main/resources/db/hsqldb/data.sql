@@ -670,7 +670,7 @@ INSERT INTO connected_celds(id2,id1) VALUES
  (244,135);
 
 --game 1 host 1, lobbysize 4, public, finished
-INSERT INTO games(id,host_id,lobby_size,is_private,status) VALUES (1,1,4,0,2);
+INSERT INTO games(id,host_id,lobby_size,is_private,status,winner_id) VALUES (1,1,4,0,2,1);
 
 INSERT INTO message(id,text,user_id,game_id) VALUES (1,'Bienvenido',1,1);
 
@@ -694,8 +694,9 @@ INSERT INTO crime_scenes(id, room_card, suspect_card, weapon_card, game) VALUES 
 
 INSERT INTO final_accusations(id, room_card, suspect_card, weapon_card, turn, is_correct) VALUES (1,1,10,17,1,1);
 
---game 2, host 2, size, 3, private, ingame
-INSERT INTO games(id,host_id,lobby_size,is_private,status) VALUES (2,2,3,1,2);
+
+--game 2, host 1, size, 3, private, finished
+INSERT INTO games(id,host_id,lobby_size,is_private,status,winner_id) VALUES (2,1,3,1,2,2);
 
 INSERT INTO lobbies(game_id,user_id) VALUES 
 (2,1),
@@ -720,12 +721,15 @@ INSERT INTO players(game_id,user_game_id) VALUES
 INSERT INTO games(id,host_id,lobby_size,is_private,status) VALUES (3,3,6,0,0);
 
 
-INSERT INTO lobbies(game_id,user_id) VALUES 
+INSERT INTO lobbies(game_id,user_id) VALUES
 (3,1),
 (3,2),
-(3,3);
+(3,3); 
 
-INSERT INTO user_statistics(id, xp, total_games, total_time, total_rounds,total_accusations, victories, afk_counter, longest_game_id, shortest_game_id, total_final_accusations, user_id) VALUES (1,100,2,20,20,20,2,0,1,2,2,1),
-(2,100,2,20,20,20,2,0,1,2,2,2), (3,100,2,20,20,20,2,0,1,2,2,3), (4,100,2,20,20,20,2,0,1,2,2,4);
+INSERT INTO user_statistics(id, xp, total_games, total_time, total_rounds,total_accusations, victories, afk_counter, longest_game_id, shortest_game_id, total_final_accusations, user_id) VALUES
+(1,100,2,20,20,20,2,0,null,null,2,1),
+(2,100,2,20,20,20,2,0,null,null,2,2), 
+(3,100,2,20,20,20,2,0,null,null,2,3), 
+(4,100,2,20,20,20,2,0,null,null,2,4);
 
 INSERT INTO notifications(id,text,link,timestamp,user_id1,user_id2) VALUES (1,'Pablo te ha invitado a una partida', 100,'12:56',1,2);

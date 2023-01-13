@@ -42,7 +42,7 @@ public class UserStatisticsService {
 	}
 
     @Transactional
-    public void updateStatistics(Game game){
+    public void updateStatistics(Game game){ 
        for(UserGame userGame : game.getPlayers()){
             User user=userGame.getUser(); 
             UserStatistics stats = userStatisticsRepository.findMyStatistics(user);
@@ -53,16 +53,11 @@ public class UserStatisticsService {
             if(game.getWinner().equals(user) || userGame.getIsEliminated()) 
                 stats.setTotalFinalAccusations(stats.getTotalAccusations()+1);
             stats.setTotalAccusations(stats.getTotalAccusations()+ userGame.getAccusationsNumber());
-            if(stats.getLongestGame()==null && stats.getShortestGame()==null){
+            if(stats.getLongestGame()==null || stats.getLongestGame().getDuration().compareTo(game.getDuration())<0){
                 stats.setLongestGame(game);
+            }
+            if(stats.getShortestGame()==null || stats.getShortestGame().getDuration().compareTo(game.getDuration())>0){
                 stats.setShortestGame(game);
-            } else {
-                if(stats.getLongestGame().getDuration().compareTo(game.getDuration())<0){
-                    stats.setLongestGame(game);
-                }
-                if(stats.getShortestGame().getDuration().compareTo(game.getDuration())>0){
-                    stats.setShortestGame(game);
-                }
             }
             save(stats);
         }

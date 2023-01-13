@@ -72,4 +72,12 @@ public class UserRepositoryTest {
         assertNotNull(tags);
         assertTrue(!tags.isEmpty());
     }
+
+    @Test
+    public void testDeleteUserFriendsUserToDelete(){
+        repo.deleteUserFriendsUserToDelete(1);
+        List<User> friends = repo.findFriendsById(1);
+        assertTrue(friends.isEmpty());
+    }
+
 }

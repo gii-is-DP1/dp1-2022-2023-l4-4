@@ -16,15 +16,4 @@
             </c:forEach>
         </ul></p>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <spring:url value="/resources/images/pets.png" htmlEscape="true" var="petsImage"/>
-            <img class="img-responsive" src="${petsImage}"/>
-        </div>
-    </div>
-    <div>
-        <button>
-            <a href="/" target="_blank"> New Window</a>
-        </button>
-    </div>
 </petclinic:layout>
