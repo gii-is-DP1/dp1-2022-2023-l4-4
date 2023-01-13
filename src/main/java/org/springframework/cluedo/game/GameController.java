@@ -51,11 +51,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class GameController {
     
     private static final String ACCUSATION_LIST = "games/accusationList";
-<<<<<<< HEAD
     private static final String GAME_SPECTATE_LISTING = "games/spectateList";
-=======
     private static final String WINNER_VIEW = "games/winner";
->>>>>>> c7f6a3a2a1e2c552e2353a450204479ca7586b8f
 	private final String GAME_LISTING="games/gameList";
     private final String GAME_PAST_LISTING="games/gamePastList";
     private final String CREATE_NEW_GAME="games/createNewGame";
