@@ -115,6 +115,7 @@ public class NotificationControllerTest {
                 andExpect(model().attributeExists("notification"));
     }
 
+
     @WithMockUser
     @Test
     public void testShowFriendsToInvite() throws Exception{
