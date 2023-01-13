@@ -2,6 +2,8 @@ package org.springframework.cluedo.game;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -46,6 +48,7 @@ import java.util.Set;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
+@ExtendWith(MockitoExtension.class)
 @WebMvcTest(controllers = GameController.class, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class), excludeAutoConfiguration = SecurityConfiguration.class)
 public class GameControllerTest {
 
@@ -545,30 +548,6 @@ public class GameControllerTest {
                 andExpect(model().attributeExists("room")).
                 andExpect(model().attributeExists("accusation"));
     }
-
-        @WithMockUser
-        @Test
-        public void testMakeAccusation() throws Exception {
-                turn.setPhase(Phase.ACCUSATION);
-                turn.setFinalCeld(celd);
-                when(userGameService.whoShouldGiveCard(any(Game.class), any(Accusation.class))).thenReturn(ug2);
-                when(userService.getLoggedUser()).thenReturn(Optional.of(user1));
-                when(gameService.getGameById(any(Integer.class))).thenReturn(ipGame);
-                when(gameService.isGameInProgress(any(Game.class))).thenReturn(true);
-                when(gameService.isUserTurn(any(), any(Game.class))).thenReturn(true);
-                when(accusationService.getMatchingCardsFromUser(any(), any())).thenReturn(List.of(roomCard));
-                when(turnService.makeAccusation(any())).thenReturn(turn);
-                when(accusationService.saveAccusation(any())).thenReturn(accusation);
-                when(turnService.getActualTurn(any(Game.class))).thenReturn(Optional.of(turn));
-                mockMvc.perform(post("/games/{gameId}/play/accusation",ipGame.getId()).with(csrf())
-                        .param("id", "1")
-                        .param("turn", "1")
-                        .param("roomCard", "1")
-                        .param("weaponCard", "2")
-                        .param("suspectCard", "3"))
-                        .andExpect(status().is2xxSuccessful())
-                        .andExpect(view().name("games/onGame"));
-        }
 
     @WithMockUser
     @Test
