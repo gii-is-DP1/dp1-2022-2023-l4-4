@@ -922,8 +922,6 @@ public class GameController {
         }
         ModelAndView result = new ModelAndView(SPECTATE);
         response.addHeader("Refresh", "3");
-        Optional<User> nrLoggedUser=userService.getLoggedUser();
-
         Turn actualTurn = turnService.getActualTurn(game).get();
         Optional<Accusation> nrAccusation =  accusationService.thisTurnAccusation(actualTurn);
         result.addObject("phase", actualTurn.getPhase());
